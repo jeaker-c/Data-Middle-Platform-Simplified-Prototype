@@ -1,1 +1,9 @@
 node_modules
+# 编辑 .gitignore 文件
+echo "dist/" >> .gitignore
+echo "node_modules/" >> .gitignore
+echo "*.log" >> .gitignore
+
+git add .gitignore
+git commit -m "更新 .gitignore"
+git push origin main
