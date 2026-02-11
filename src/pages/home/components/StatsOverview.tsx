@@ -75,11 +75,11 @@ export default function StatsOverview() {
   }, []);
 
   return (
-    <section id="overview" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">数据概览</h2>
-          <p className="text-lg text-gray-600">实时监控平台数据状态，掌握最新动态</p>
+    <section className="pb-8">
+      <div className="max-w-[1600px] mx-auto px-6">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900">数据概览</h2>
+          <p className="text-sm text-gray-500 mt-1">实时监控平台数据状态，掌握最新动态</p>
         </div>
 
         {/* 统计卡片 */}

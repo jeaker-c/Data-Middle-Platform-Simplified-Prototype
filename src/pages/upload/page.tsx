@@ -115,11 +115,11 @@ export default function UploadPage() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      <div className="pt-24 pb-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">数据上传</h1>
-            <p className="text-lg text-gray-600">支持多种数据格式，提供便捷的上传体验</p>
+      <div className="pt-24 pb-8">
+        <div className="max-w-[1600px] mx-auto px-6">
+          <div className="mb-8">
+            <h1 className="text-2xl font-bold text-gray-900">数据上传</h1>
+            <p className="text-sm text-gray-500 mt-1">支持多种数据格式，提供便捷的上传体验</p>
           </div>
 
           <div className="grid grid-cols-3 gap-8">

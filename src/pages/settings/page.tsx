@@ -13,14 +13,14 @@ export default function Settings() {
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       
-      <div className="pt-24 pb-20">
-        <div className="max-w-7xl mx-auto px-6">
+      <div className="pt-24 pb-8">
+        <div className="max-w-[1600px] mx-auto px-6">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">系统设置</h1>
-            <p className="text-gray-600">管理用户、角色权限和系统配置</p>
+            <h1 className="text-2xl font-bold text-gray-900">系统设置</h1>
+            <p className="text-sm text-gray-500 mt-1">管理用户、角色权限和系统配置</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
             <SettingsTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
             <div className="p-6">

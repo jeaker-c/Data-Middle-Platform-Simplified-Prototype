@@ -7,7 +7,7 @@ export default function Navbar() {
   const location = useLocation();
 
   // 判断是否在子页面
-  const isSubPage = ['/settings', '/overview', '/upload', '/data-query', '/tools'].includes(location.pathname);
+  const isSubPage = ['/settings', '/overview', '/upload', '/data-query', '/tools'].includes(location.pathname) || location.pathname.startsWith('/tasks') || location.pathname.startsWith('/experiments');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +32,7 @@ export default function Navbar() {
         showWhiteBg ? 'bg-white shadow-md' : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="w-full px-6">
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
             <img 
@@ -41,7 +41,7 @@ export default function Navbar() {
               className="h-10 w-auto object-contain"
             />
             <span className={`text-xl font-bold ${showWhiteBg ? 'text-gray-900' : 'text-white'}`}>
-              数据中台
+              数据驾驶舱 · AI 数据智能体
             </span>
           </div>
 
@@ -55,12 +55,20 @@ export default function Navbar() {
               数据概览
             </button>
             <button
-              onClick={() => navigate('/upload')}
+              onClick={() => navigate('/tasks')}
               className={`text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${
                 showWhiteBg ? 'text-gray-700 hover:text-teal-600' : 'text-white hover:text-teal-200'
-              } ${location.pathname === '/upload' ? 'text-teal-600' : ''}`}
+              } ${location.pathname.startsWith('/tasks') ? 'text-teal-600' : ''}`}
             >
-              数据上传
+              数据任务
+            </button>
+            <button
+              onClick={() => navigate('/experiments')}
+              className={`text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${
+                showWhiteBg ? 'text-gray-700 hover:text-teal-600' : 'text-white hover:text-teal-200'
+              } ${location.pathname.startsWith('/experiments') ? 'text-teal-600' : ''}`}
+            >
+              育种项目
             </button>
             <button
               onClick={() => navigate('/data-query')}

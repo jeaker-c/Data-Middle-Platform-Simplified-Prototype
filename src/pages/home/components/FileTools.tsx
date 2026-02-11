@@ -72,11 +72,11 @@ export default function FileTools() {
 
 
   return (
-    <section id="tools" className="py-20 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">文件处理工具</h2>
-          <p className="text-lg text-gray-600">专业的数据处理工具集，提升工作效率</p>
+    <section className="pb-8">
+      <div className="max-w-[1600px] mx-auto px-6">
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-gray-900">文件处理工具</h2>
+          <p className="text-sm text-gray-500 mt-1">专业的数据处理工具集，提升工作效率</p>
         </div>
 
         <div className="grid grid-cols-3 gap-8">
