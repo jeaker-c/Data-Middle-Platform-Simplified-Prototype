@@ -67,6 +67,20 @@ export default function NewTaskPage() {
   const [strategyId, setStrategyId] = useState('');
   const [remarks, setRemarks] = useState('');
 
+  // Manual entry state
+  const [isManualProject, setIsManualProject] = useState(false);
+  const [customProjectName, setCustomProjectName] = useState('');
+  const [isManualStrategy, setIsManualStrategy] = useState(false);
+  const [customStrategyName, setCustomStrategyName] = useState('');
+
+  // Effect: When switching to manual project, force manual strategy
+  useEffect(() => {
+    if (isManualProject) {
+      setIsManualStrategy(true);
+      setProjectId('');
+    }
+  }, [isManualProject]);
+
   const filteredStrategies = MOCK_STRATEGIES.filter(s => s.projectId === projectId);
 
   const handleDataTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -189,34 +203,72 @@ export default function NewTaskPage() {
                     </select>
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">育种项目</label>
-                    <select
-                        value={projectId}
-                        onChange={(e) => {
-                            setProjectId(e.target.value);
-                            setStrategyId('');
-                        }}
-                        className="w-full border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-teal-500 focus:ring-teal-500"
-                    >
-                        <option value="">请选择育种项目</option>
-                        {MOCK_PROJECTS.map(p => (
-                            <option key={p.id} value={p.id}>{p.name}</option>
-                        ))}
-                    </select>
+                    <div className="flex justify-between items-center mb-2">
+                        <label className="block text-sm font-medium text-gray-700">育种项目</label>
+                        <button 
+                            onClick={() => setIsManualProject(!isManualProject)}
+                            className="text-xs text-teal-600 hover:text-teal-700 font-medium"
+                        >
+                            {isManualProject ? '选择已有项目' : '手动填写'}
+                        </button>
+                    </div>
+                    {isManualProject ? (
+                        <input 
+                            type="text" 
+                            value={customProjectName}
+                            onChange={(e) => setCustomProjectName(e.target.value)}
+                            placeholder="请输入新项目名称"
+                            className="w-full border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                        />
+                    ) : (
+                        <select
+                            value={projectId}
+                            onChange={(e) => {
+                                setProjectId(e.target.value);
+                                setStrategyId('');
+                            }}
+                            className="w-full border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                        >
+                            <option value="">请选择育种项目</option>
+                            {MOCK_PROJECTS.map(p => (
+                                <option key={p.id} value={p.id}>{p.name}</option>
+                            ))}
+                        </select>
+                    )}
                 </div>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">育种策略</label>
-                    <select
-                        value={strategyId}
-                        onChange={(e) => setStrategyId(e.target.value)}
-                        disabled={!projectId}
-                        className="w-full border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-teal-500 focus:ring-teal-500 disabled:bg-gray-100 disabled:text-gray-400"
-                    >
-                        <option value="">请选择育种策略</option>
-                        {filteredStrategies.map(s => (
-                            <option key={s.id} value={s.id}>{s.name}</option>
-                        ))}
-                    </select>
+                    <div className="flex justify-between items-center mb-2">
+                        <label className="block text-sm font-medium text-gray-700">育种策略</label>
+                        {!isManualProject && (
+                            <button 
+                                onClick={() => setIsManualStrategy(!isManualStrategy)}
+                                className="text-xs text-teal-600 hover:text-teal-700 font-medium"
+                            >
+                                {isManualStrategy ? '选择已有策略' : '手动填写'}
+                            </button>
+                        )}
+                    </div>
+                    {isManualStrategy ? (
+                        <input 
+                            type="text" 
+                            value={customStrategyName}
+                            onChange={(e) => setCustomStrategyName(e.target.value)}
+                            placeholder="请输入新策略名称"
+                            className="w-full border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-teal-500 focus:ring-teal-500"
+                        />
+                    ) : (
+                        <select
+                            value={strategyId}
+                            onChange={(e) => setStrategyId(e.target.value)}
+                            disabled={!projectId}
+                            className="w-full border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-teal-500 focus:ring-teal-500 disabled:bg-gray-100 disabled:text-gray-400"
+                        >
+                            <option value="">请选择育种策略</option>
+                            {filteredStrategies.map(s => (
+                                <option key={s.id} value={s.id}>{s.name}</option>
+                            ))}
+                        </select>
+                    )}
                 </div>
             </div>
 

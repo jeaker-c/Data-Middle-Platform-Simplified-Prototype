@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import BatchTagModal from './BatchTagModal';
 
 // Static data moved outside component
 const tools = [
@@ -61,9 +62,15 @@ const usageStats = [
 
 export default function FileTools() {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
+  const [showBatchTagModal, setShowBatchTagModal] = useState(false);
 
   const handleToolSelect = useCallback((id: string) => {
-    setSelectedTool(id);
+    if (id === 'batch-tag') {
+      setShowBatchTagModal(true);
+      setSelectedTool(null);
+    } else {
+      setSelectedTool(id);
+    }
   }, []);
 
   const handleCloseTool = useCallback(() => {
@@ -86,7 +93,7 @@ export default function FileTools() {
               {tools.map((tool) => (
                 <div
                   key={tool.id}
-                  onClick={() => setSelectedTool(tool.id)}
+                  onClick={() => handleToolSelect(tool.id)}
                   className={`bg-white rounded-xl p-6 border-2 transition-all cursor-pointer ${
                     selectedTool === tool.id
                       ? 'border-teal-500 shadow-lg'
@@ -272,6 +279,7 @@ export default function FileTools() {
           </div>
         </div>
       </div>
+      <BatchTagModal show={showBatchTagModal} onClose={() => setShowBatchTagModal(false)} />
     </section>
   );
 }
