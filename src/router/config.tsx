@@ -12,9 +12,7 @@ const LoginPage = lazy(() => import("../pages/login/page"));
 const TaskListPage = lazy(() => import("../pages/tasks/page"));
 const NewTaskPage = lazy(() => import("../pages/tasks/new/page"));
 const TaskDetailPage = lazy(() => import("../pages/tasks/detail/page"));
-const ExperimentListPage = lazy(() => import("../pages/experiments/page"));
-const NewExperimentPage = lazy(() => import("../pages/experiments/new/page"));
-const MaterialDiagnosisResultsPage = lazy(() => import("../pages/experiments/results/page"));
+
 
 const Loading = () => (
   <div className="flex items-center justify-center h-screen w-full">
@@ -65,22 +63,7 @@ const routes: RouteObject[] = [
     path: "/tasks/:id",
     element: lazyLoad(TaskDetailPage),
   },
-  {
-    path: "/experiments",
-    element: lazyLoad(ExperimentListPage),
-  },
-  {
-    path: "/experiments/new",
-    element: lazyLoad(NewExperimentPage),
-  },
-  {
-    path: "/experiments/results",
-    element: lazyLoad(MaterialDiagnosisResultsPage),
-  },
-  {
-    path: "/experiments/:id/edit",
-    element: lazyLoad(NewExperimentPage),
-  },
+
   {
     path: "/settings",
     element: lazyLoad(Settings),

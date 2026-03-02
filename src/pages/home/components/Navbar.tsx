@@ -62,14 +62,7 @@ export default function Navbar() {
             >
               数据任务
             </button>
-            <button
-              onClick={() => navigate('/experiments')}
-              className={`text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${
-                showWhiteBg ? 'text-gray-700 hover:text-teal-600' : 'text-white hover:text-teal-200'
-              } ${location.pathname.startsWith('/experiments') ? 'text-teal-600' : ''}`}
-            >
-              育种项目
-            </button>
+
             <button
               onClick={() => navigate('/data-query')}
               className={`text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${
