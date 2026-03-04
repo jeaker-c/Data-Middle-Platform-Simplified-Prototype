@@ -18,13 +18,22 @@ interface SheetInfo {
   isDataTable: boolean;
 }
 
+interface ImageRecord {
+  id: string;
+  name: string;
+  type: string;
+  resolution: string;
+  status: 'success' | 'error' | 'warning';
+}
+
 interface FileRecognitionStepProps {
   onNext: () => void;
-  taskType: 'phenotype' | 'genotype';
+  taskType: 'phenotype' | 'genotype' | 'image';
 }
 
 export default function FileRecognitionStep({ onNext, taskType }: FileRecognitionStepProps) {
   const [files, setFiles] = useState<FileRecord[]>([]);
+  const [imageFiles, setImageFiles] = useState<ImageRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,7 +55,7 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
             ]
           }
         ]);
-      } else {
+      } else if (taskType === 'genotype') {
         setFiles([
           {
             id: '1',
@@ -67,12 +76,98 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
             ]
           }
         ]);
+      } else {
+         // Image task
+         setImageFiles([
+             { id: '1', name: 'IMG_A001_Corn.jpg', type: 'JPG', resolution: '1920x1080', status: 'success' },
+             { id: '2', name: 'IMG_A002_Soybean.png', type: 'PNG', resolution: '3840x2160', status: 'success' },
+             { id: '3', name: 'IMG_B003_Rice.jpg', type: 'JPG', resolution: '1024x768', status: 'success' },
+             { id: '4', name: '损坏的图片文件.jpg', type: 'JPG', resolution: '0x0', status: 'error' },
+             { id: '5', name: 'A004_Wheat.webp', type: 'WEBP', resolution: '1280x720', status: 'warning' },
+         ]);
       }
       setLoading(false);
     }, 1500);
 
     return () => clearTimeout(timer);
   }, [taskType]);
+
+  if (taskType === 'image') {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-end border-b border-gray-100 pb-4">
+          <div>
+            <h3 className="text-lg font-bold text-gray-900">文件解析</h3>
+            <p className="text-sm text-gray-500 mt-1">结构扫描 · 操作向导</p>
+          </div>
+        </div>
+
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
+          <i className="ri-information-line text-blue-600 mt-0.5"></i>
+          <div className="text-sm text-blue-700">
+            <p className="font-medium mb-1">系统自动识别结果</p>
+            <p>共检测到 128 张图片。检测到 1 个损坏的文件以及 2 个不支持的格式。</p>
+          </div>
+        </div>
+
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+          <div className="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+            <div className="grid grid-cols-4 w-full text-xs font-bold text-gray-400 uppercase tracking-wider">
+               <span>资源文件名</span>
+               <span>类型</span>
+               <span>分辨率</span>
+               <span className="text-right">解析状态</span>
+            </div>
+          </div>
+          
+          {loading ? (
+            <div className="p-12 text-center">
+               <div className="w-10 h-10 border-4 border-teal-200 border-t-teal-600 rounded-full animate-spin mx-auto mb-4"></div>
+               <p className="text-gray-500">正在分析图片资源...</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-100">
+              {imageFiles.map(file => (
+                <div key={file.id} className="grid grid-cols-4 px-6 py-5 hover:bg-gray-50/50 transition-colors items-center">
+                  <div className="font-bold text-gray-800">{file.name}</div>
+                  <div className="text-gray-400 font-bold text-sm">{file.type}</div>
+                  <div className="text-gray-500 font-bold text-sm">{file.resolution}</div>
+                  <div className="text-right">
+                    {file.status === 'success' && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-600 border border-green-100">
+                         识别成功
+                      </span>
+                    )}
+                    {file.status === 'error' && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-600 border border-red-100">
+                         文件损坏
+                      </span>
+                    )}
+                    {file.status === 'warning' && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-orange-50 text-orange-600 border border-orange-100">
+                         不支持{file.type}格式
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-end pt-4">
+          <button
+            onClick={onNext}
+            disabled={loading}
+            className={`px-6 py-2.5 bg-teal-600 text-white rounded-lg font-medium shadow-sm transition-all flex items-center gap-2 ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-teal-700 hover:shadow-md'}`}
+          >
+            下一步
+            <i className="ri-arrow-right-line"></i>
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

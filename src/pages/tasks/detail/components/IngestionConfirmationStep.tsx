@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface IngestionConfirmationStepProps {
   onComplete: () => void;
   onBack: () => void;
-  taskType?: 'phenotype' | 'genotype';
+  taskType?: 'phenotype' | 'genotype' | 'image';
 }
 
 export default function IngestionConfirmationStep({ onComplete, onBack, taskType = 'phenotype' }: IngestionConfirmationStepProps) {
@@ -24,6 +24,91 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
     abnormalMaterials: 12,
     snpCount: '45,230'
   };
+
+  if (taskType === 'image') {
+    return (
+      <div className="flex flex-col h-full">
+         <div className="flex-1 flex flex-col items-center justify-center -mt-10">
+           {/* Success Icon */}
+           <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mb-6 border border-teal-100">
+             <i className="ri-checkbox-line text-4xl text-teal-600"></i>
+           </div>
+           
+           <h2 className="text-2xl font-bold text-gray-900 mb-2">准备就绪，待入库确认</h2>
+            
+            {/* Stats Cards */}
+            <div className="grid grid-cols-3 gap-8 w-full max-w-4xl mb-12 mt-12">
+              <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm flex flex-col items-center text-center">
+                 <div className="text-xs font-bold text-gray-400 uppercase mb-2">已匹配数据总数</div>
+                 <div className="text-4xl font-bold text-indigo-600 flex items-baseline gap-2">
+                   384 <span className="text-sm font-medium text-gray-400">份</span>
+                 </div>
+              </div>
+
+              <div className="bg-green-50/50 rounded-2xl p-8 border border-green-100 shadow-sm flex flex-col items-center text-center">
+                 <div className="text-xs font-bold text-green-600 uppercase mb-2">匹配材料 (绿色标注)</div>
+                 <div className="text-4xl font-bold text-green-700 flex items-baseline gap-2">
+                   152 <span className="text-sm font-medium text-green-600/60">份</span>
+                 </div>
+              </div>
+
+              <div className="bg-red-50/50 rounded-2xl p-8 border border-red-100 shadow-sm flex flex-col items-center text-center">
+                 <div className="text-xs font-bold text-red-600 uppercase mb-2">异常图片 (红色标注)</div>
+                 <div className="text-4xl font-bold text-red-700 flex items-baseline gap-2">
+                   12 <span className="text-sm font-medium text-red-600/60">份</span>
+                 </div>
+              </div>
+           </div>
+
+           {/* Policy Card */}
+           <div className="w-full max-w-4xl bg-gray-900 rounded-3xl p-10 text-white relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-teal-900/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+              
+              <div className="flex items-center gap-3 mb-8">
+                 <div className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center border border-gray-700">
+                    <i className="ri-shield-check-line text-teal-400 text-xl"></i>
+                 </div>
+                 <h3 className="text-xl font-bold">入库自动化策略执行说明</h3>
+              </div>
+
+              <div className="space-y-6">
+                 {/* Policy 1 */}
+                 <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700/50 flex gap-5">
+                    <div className="w-12 h-12 rounded bg-teal-900/30 flex items-center justify-center text-teal-400 font-mono font-bold text-lg shrink-0 border border-teal-900/50">
+                      01
+                    </div>
+                    <div>
+                       <h4 className="font-bold text-teal-400 mb-1">入库合格图像</h4>
+                       <p className="text-gray-300 font-light leading-relaxed">
+                         系统将自动剔除 <span className="text-red-400 font-medium border-b border-red-400/30">12 份</span> 未匹配图像，仅入库 <span className="text-teal-400 font-medium border-b border-teal-400/30">372 份</span> 已匹配图像。
+                       </p>
+                    </div>
+                 </div>
+              </div>
+           </div>
+         </div>
+
+         {/* Actions */}
+         <div className="flex justify-center gap-4 pt-8 pb-4 shrink-0">
+            <button
+              onClick={() => window.confirm('确定要取消本次任务吗？') && onBack()}
+              className="px-8 py-3 bg-white border border-gray-200 text-gray-600 rounded-xl font-medium hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm flex items-center gap-2"
+            >
+              <i className="ri-delete-bin-line"></i>
+              取消任务
+            </button>
+            <button
+              onClick={onComplete}
+              className="px-12 py-3 bg-teal-600 text-white rounded-xl font-bold shadow-lg shadow-teal-200 hover:bg-teal-700 hover:shadow-xl transition-all flex items-center gap-2"
+            >
+              <i className="ri-save-3-line text-lg"></i>
+              确认入库
+              <i className="ri-arrow-right-line"></i>
+            </button>
+         </div>
+      </div>
+    );
+  }
 
   if (taskType === 'genotype') {
     return (

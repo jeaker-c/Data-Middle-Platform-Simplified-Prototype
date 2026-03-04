@@ -9,9 +9,12 @@ import IngestionConfirmationStep from './components/IngestionConfirmationStep';
 import GenotypeProcessingStep from './components/GenotypeProcessingStep';
 import GenotypeConversionStep from './components/GenotypeConversionStep';
 import GenotypeQCStep from './components/GenotypeQCStep';
+import AttributeAssociationStep from './components/AttributeAssociationStep';
+import ImageQCStep from './components/ImageQCStep';
+import ManualBindingStep from './components/ManualBindingStep';
 
 type StepStatus = 'pending' | 'processing' | 'completed' | 'error';
-type TaskType = 'phenotype' | 'genotype';
+type TaskType = 'phenotype' | 'genotype' | 'image';
 
 interface Step {
   id: number;
@@ -37,6 +40,14 @@ const GENOTYPE_STEPS: Step[] = [
   { id: 5, key: 'ingestion', name: '入库确认', status: 'pending', description: '确认入库' },
 ];
 
+const IMAGE_STEPS: Step[] = [
+  { id: 1, key: 'file_recognition', name: '解压并扫描', status: 'processing', description: '解压文件并扫描图片' },
+  { id: 2, key: 'attribute_association', name: '属性关联', status: 'pending', description: '关联图片属性信息' },
+  { id: 3, key: 'image_qc', name: '匹配结果', status: 'pending', description: '检查图像匹配结果' },
+  { id: 4, key: 'manual_binding', name: '手动绑定/重命名', status: 'pending', description: '人工修正绑定' },
+  { id: 5, key: 'resource_sync', name: '资源同步', status: 'pending', description: '同步至资源库' },
+];
+
 export default function TaskDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -46,7 +57,13 @@ export default function TaskDetailPage() {
 
   // Reset steps when task type changes
   useEffect(() => {
-    setSteps(taskType === 'phenotype' ? PHENOTYPE_STEPS : GENOTYPE_STEPS);
+    if (taskType === 'phenotype') {
+      setSteps(PHENOTYPE_STEPS);
+    } else if (taskType === 'genotype') {
+      setSteps(GENOTYPE_STEPS);
+    } else {
+      setSteps(IMAGE_STEPS);
+    }
     setActiveStepId(1);
   }, [taskType]);
 
@@ -94,7 +111,7 @@ export default function TaskDetailPage() {
         default:
           return <div>Unknown Step</div>;
       }
-    } else {
+    } else if (taskType === 'genotype') {
       switch (activeStep.key) {
         case 'file_recognition':
           return <FileRecognitionStep onNext={handleNext} taskType="genotype" />;
@@ -106,6 +123,22 @@ export default function TaskDetailPage() {
           return <GenotypeQCStep onNext={handleNext} onBack={handleBack} />;
         case 'ingestion':
           return <IngestionConfirmationStep onComplete={handleComplete} onBack={handleBack} taskType="genotype" />;
+        default:
+          return <div>Unknown Step</div>;
+      }
+    } else {
+      // Image Task
+      switch (activeStep.key) {
+        case 'file_recognition':
+          return <FileRecognitionStep onNext={handleNext} taskType="image" />;
+        case 'attribute_association':
+          return <AttributeAssociationStep onNext={handleNext} onBack={handleBack} />;
+        case 'image_qc':
+          return <ImageQCStep onNext={handleNext} onBack={handleBack} />;
+        case 'manual_binding':
+          return <ManualBindingStep onNext={handleNext} onBack={handleBack} />;
+        case 'resource_sync':
+          return <IngestionConfirmationStep onComplete={handleComplete} onBack={handleBack} taskType="image" />;
         default:
           return <div>Unknown Step</div>;
       }
@@ -132,15 +165,17 @@ export default function TaskDetailPage() {
                 <span className={`px-2 py-0.5 rounded text-xs font-medium border ${
                   taskType === 'phenotype' 
                     ? 'bg-green-50 text-green-700 border-green-200' 
-                    : 'bg-blue-50 text-blue-700 border-blue-200'
+                    : taskType === 'genotype'
+                      ? 'bg-blue-50 text-blue-700 border-blue-200'
+                      : 'bg-indigo-50 text-indigo-700 border-indigo-200'
                 }`}>
-                  {taskType === 'phenotype' ? '表型数据' : '基因型数据'}
+                  {taskType === 'phenotype' ? '表型数据' : taskType === 'genotype' ? '基因型数据' : '图像数据'}
                 </span>
               </div>
               <div className="flex items-center gap-4 text-xs text-gray-500 mt-1">
                 <div className="flex items-center gap-1.5">
                   <i className="ri-file-list-3-line"></i>
-                  <span>任务: {taskType === 'phenotype' ? '2024春季表型数据上传' : '玉米群体基因型入库'}</span>
+                  <span>任务: {taskType === 'phenotype' ? '2024春季表型数据上传' : taskType === 'genotype' ? '玉米群体基因型入库' : '2026年参试品种图片'}</span>
                 </div>
                 <span className="w-0.5 h-0.5 bg-gray-300 rounded-full"></span>
                 <div className="flex items-center gap-1.5">
@@ -170,6 +205,12 @@ export default function TaskDetailPage() {
                   className={`px-2.5 py-0.5 text-xs font-medium rounded-md transition-all ${taskType === 'genotype' ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   基因型
+                </button>
+                <button 
+                  onClick={() => setTaskType('image')}
+                  className={`px-2.5 py-0.5 text-xs font-medium rounded-md transition-all ${taskType === 'image' ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                  图像
                 </button>
              </div>
 

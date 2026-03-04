@@ -6,7 +6,7 @@ interface Task {
   id: string;
   name: string;
   dataType: string;
-  status: 'processing' | 'pending_mapping' | 'validating' | 'fixing' | 'stored' | 'error';
+  status: 'processing' | 'pending_mapping' | 'validating' | 'fixing' | 'stored' | 'error' | 'image_qc';
   errorCount: number;
   updatedAt: string;
   creator: string;
@@ -48,6 +48,15 @@ const MOCK_TASKS: Task[] = [
     errorCount: 0,
     updatedAt: '2024-03-21 10:00',
     creator: '赵六'
+  },
+  {
+    id: 'T005',
+    name: '2026年参试品种图片',
+    dataType: '图像',
+    status: 'image_qc',
+    errorCount: 0,
+    updatedAt: '2024-03-22 11:20',
+    creator: '钱七'
   }
 ];
 export default function TaskListPage() {
@@ -63,7 +72,8 @@ export default function TaskListPage() {
       validating: 'bg-purple-100 text-purple-800',
       fixing: 'bg-red-100 text-red-800',
       stored: 'bg-green-100 text-green-800',
-      error: 'bg-gray-100 text-gray-800'
+      error: 'bg-gray-100 text-gray-800',
+      image_qc: 'bg-indigo-100 text-indigo-800'
     };
     
     const labels = {
@@ -72,7 +82,8 @@ export default function TaskListPage() {
       validating: '规则校验中',
       fixing: '需修正',
       stored: '已存储',
-      error: '异常'
+      error: '异常',
+      image_qc: '图像质检'
     };
 
     return (
@@ -122,6 +133,7 @@ export default function TaskListPage() {
               <option value="基因型数据">基因型数据</option>
               <option value="环境数据">环境数据</option>
               <option value="非结构化文档">非结构化文档</option>
+              <option value="图像">图像</option>
             </select>
           </div>
           <div className="w-48">
@@ -138,6 +150,7 @@ export default function TaskListPage() {
               <option value="fixing">需修正</option>
               <option value="stored">已存储</option>
               <option value="error">异常</option>
+              <option value="image_qc">图像质检</option>
             </select>
           </div>
           <div className="flex-1 min-w-[240px]">

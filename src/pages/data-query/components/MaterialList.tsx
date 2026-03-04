@@ -44,6 +44,9 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                 环境
               </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                图像
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 标签
               </th>
               <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -96,6 +99,9 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                   ) : (
                     <span className="text-gray-400">-</span>
                   )}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <i className="ri-check-line text-green-500 text-lg"></i>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   <div className="flex gap-1 flex-wrap">
