@@ -3,6 +3,7 @@ import { useState } from 'react';
 interface AttributeAssociationStepProps {
   onNext: () => void;
   onBack: () => void;
+  taskType?: 'phenotype' | 'genotype' | 'image' | 'directory_scan';
 }
 
 interface PreviewItem {
@@ -13,7 +14,7 @@ interface PreviewItem {
   matchDepth: 'exact' | 'fuzzy' | 'none';
 }
 
-export default function AttributeAssociationStep({ onNext, onBack }: AttributeAssociationStepProps) {
+export default function AttributeAssociationStep({ onNext, onBack, taskType = 'image' }: AttributeAssociationStepProps) {
   const [targetField, setTargetField] = useState('material_id'); // material_id | material_name
   const [matchLogic, setMatchLogic] = useState<'exact' | 'fuzzy'>('fuzzy');
   const [ignoreExtension, setIgnoreExtension] = useState(true);
@@ -21,7 +22,7 @@ export default function AttributeAssociationStep({ onNext, onBack }: AttributeAs
   const [autoExtractId, setAutoExtractId] = useState(false);
 
   // Mock data based on prototype
-  const previewData: PreviewItem[] = [
+  const imagePreviewData: PreviewItem[] = [
     { 
       id: '1', 
       fileName: 'IMG_A001_Corn.jpg', 
@@ -45,22 +46,39 @@ export default function AttributeAssociationStep({ onNext, onBack }: AttributeAs
     },
   ];
 
+  const directoryPreviewData: PreviewItem[] = [
+    { 
+      id: '1', 
+      fileName: 'A001_CORN/', 
+      systemParsedId: autoExtractId ? 'A001' : 'A001_CORN', 
+      matchedTarget: 'A001 (玉米-金302)', 
+      matchDepth: 'exact' 
+    },
+    { 
+      id: '2', 
+      fileName: 'B002_SOYBEAN/', 
+      systemParsedId: autoExtractId ? 'B002' : 'B002_SOYBEAN', 
+      matchedTarget: 'B002 (大豆-鲁青1号)', 
+      matchDepth: 'exact' 
+    },
+    { 
+      id: '3', 
+      fileName: 'C999_TEST/', 
+      systemParsedId: autoExtractId ? 'C999' : 'C999_TEST', 
+      matchedTarget: null, 
+      matchDepth: 'none' 
+    },
+  ];
+
+  const previewData = taskType === 'directory_scan' ? directoryPreviewData : imagePreviewData;
   const matchRate = 66.7;
 
   return (
     <div className="space-y-8">
-       {/* Header Section */}
-       <div className="flex justify-between items-end border-b border-gray-100 pb-4">
-          <div>
-            <h3 className="text-lg font-bold text-gray-900">数据映射</h3>
-            <p className="text-sm text-gray-500 mt-1">属性关联 · 操作向导</p>
-          </div>
-       </div>
-
        {/* Configuration Card */}
        <div className="bg-gray-50 rounded-2xl p-8 border border-gray-200">
           <div className="flex items-center justify-between text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-1">
-             <span>图片源属性 (SOURCE)</span>
+             <span>{taskType === 'directory_scan' ? '父级目录 (FOLDER)' : '图片源属性 (SOURCE)'}</span>
              <span>材料库目标字段 (TARGET)</span>
           </div>
           
@@ -69,11 +87,11 @@ export default function AttributeAssociationStep({ onNext, onBack }: AttributeAs
              {/* Source */}
              <div className="flex-1 bg-white p-5 rounded-xl border border-teal-500 shadow-[0_0_0_1px_rgba(20,184,166,0.2)] relative overflow-hidden flex items-center gap-4">
                 <div className="w-12 h-12 bg-teal-50 rounded-lg flex items-center justify-center text-teal-600 text-2xl shrink-0">
-                   <i className="ri-file-list-line"></i>
+                   {taskType === 'directory_scan' ? <i className="ri-folder-open-line"></i> : <i className="ri-file-list-line"></i>}
                 </div>
                 <div>
-                   <div className="font-bold text-gray-900 text-lg">图片文件名</div>
-                   <div className="text-xs text-teal-600 font-medium mt-0.5">ORIGINAL FILENAME</div>
+                   <div className="font-bold text-gray-900 text-lg">{taskType === 'directory_scan' ? '子文件夹名' : '图片文件名'}</div>
+                   <div className="text-xs text-teal-600 font-medium mt-0.5">{taskType === 'directory_scan' ? 'SUBFOLDER NAME' : 'ORIGINAL FILENAME'}</div>
                 </div>
              </div>
 
@@ -208,7 +226,7 @@ export default function AttributeAssociationStep({ onNext, onBack }: AttributeAs
              <table className="w-full text-sm text-left">
                <thead className="bg-gray-50/50 border-b border-gray-100 text-gray-400 uppercase text-xs font-bold tracking-wider">
                  <tr>
-                   <th className="px-8 py-4">源文件名 (ORIGINAL)</th>
+                   <th className="px-8 py-4">{taskType === 'directory_scan' ? '父级目录 (FOLDER)' : '源文件名 (ORIGINAL)'}</th>
                    <th className="px-6 py-4">系统处理后标识</th>
                    <th className="px-6 py-4">库匹配目标 (TARGET)</th>
                    <th className="px-8 py-4 text-right">匹配深度</th>
@@ -219,7 +237,7 @@ export default function AttributeAssociationStep({ onNext, onBack }: AttributeAs
                    <tr key={item.id} className="hover:bg-gray-50/80 transition-colors">
                      <td className="px-8 py-5">
                        <div className="flex items-center gap-3">
-                         <i className="ri-image-2-line text-indigo-500"></i>
+                         {taskType === 'directory_scan' ? <i className="ri-folder-3-line text-indigo-500"></i> : <i className="ri-image-2-line text-indigo-500"></i>}
                          <span className="font-bold text-gray-800">{item.fileName}</span>
                        </div>
                      </td>

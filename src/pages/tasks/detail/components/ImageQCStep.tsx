@@ -3,6 +3,7 @@ import { useState } from 'react';
 interface ImageQCStepProps {
   onNext: () => void;
   onBack: () => void;
+  taskType?: 'phenotype' | 'genotype' | 'image' | 'directory_scan';
 }
 
 interface QCItem {
@@ -13,11 +14,11 @@ interface QCItem {
   message: string;
 }
 
-export default function ImageQCStep({ onNext, onBack }: ImageQCStepProps) {
+export default function ImageQCStep({ onNext, onBack, taskType = 'image' }: ImageQCStepProps) {
   const [showOnlyExceptions, setShowOnlyExceptions] = useState(false);
 
   // Mock Data
-  const qcList: QCItem[] = [
+  const imageQcList: QCItem[] = [
     { id: '1', fileName: 'IMG_A001_Corn.jpg', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 A001' },
     { id: '2', fileName: 'IMG_A002_Soybean.png', checkItem: '格式合规', status: 'error', message: '限制格式为 JPG，检测到 PNG' },
     { id: '3', fileName: 'IMG_A002_Soybean_Copy.jpg', checkItem: '重名校验', status: 'warning', message: '名称与已有记录重复' },
@@ -28,6 +29,15 @@ export default function ImageQCStep({ onNext, onBack }: ImageQCStepProps) {
     { id: '7', fileName: 'IMG_C005_Corn.jpg', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 C005' },
     { id: '8', fileName: 'IMG_C006_Corn.jpg', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 C006' },
   ];
+
+  const directoryQcList: QCItem[] = [
+    { id: '1', fileName: 'A001_CORN/', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 A001' },
+    { id: '2', fileName: 'B002_SOYBEAN/', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 B002' },
+    { id: '3', fileName: 'C999_TEST/', checkItem: '库匹配', status: 'error', message: '未找到对应材料' },
+    { id: '4', fileName: 'D004_INVALID/', checkItem: '库匹配', status: 'error', message: '未找到对应材料' },
+  ];
+
+  const qcList = taskType === 'directory_scan' ? directoryQcList : imageQcList;
 
   const filteredList = showOnlyExceptions 
     ? qcList.filter(item => item.status !== 'passed')
@@ -43,11 +53,12 @@ export default function ImageQCStep({ onNext, onBack }: ImageQCStepProps) {
   };
 
   const getIconForStatus = (status: QCItem['status']) => {
+    if (taskType === 'directory_scan') return 'ri-folder-3-line text-indigo-500';
     switch (status) {
-      case 'passed': return 'ri-image-line text-green-500'; // Or just image icon
+      case 'passed': return 'ri-image-line text-blue-500'; // Or just image icon
       case 'error': return 'ri-image-line text-red-500';
       case 'warning': return 'ri-image-line text-orange-500';
-      case 'fatal': return 'ri-image-line text-pink-500';
+      case 'fatal': return 'ri-image-line text-gray-400';
       default: return 'ri-image-line text-gray-400';
     }
   };

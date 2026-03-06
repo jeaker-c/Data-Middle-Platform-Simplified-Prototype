@@ -37,23 +37,30 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
            <h2 className="text-2xl font-bold text-gray-900 mb-2">准备就绪，待入库确认</h2>
             
             {/* Stats Cards */}
-            <div className="grid grid-cols-3 gap-8 w-full max-w-4xl mb-12 mt-12">
-              <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm flex flex-col items-center text-center">
-                 <div className="text-xs font-bold text-gray-400 uppercase mb-2">已匹配数据总数</div>
-                 <div className="text-4xl font-bold text-indigo-600 flex items-baseline gap-2">
+            <div className="grid grid-cols-4 gap-6 w-full max-w-5xl mb-12 mt-12">
+              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center text-center">
+                 <div className="text-xs font-bold text-gray-400 uppercase mb-2">待入库总数</div>
+                 <div className="text-4xl font-bold text-gray-900 flex items-baseline gap-2">
                    384 <span className="text-sm font-medium text-gray-400">份</span>
                  </div>
               </div>
 
-              <div className="bg-green-50/50 rounded-2xl p-8 border border-green-100 shadow-sm flex flex-col items-center text-center">
-                 <div className="text-xs font-bold text-green-600 uppercase mb-2">匹配材料 (绿色标注)</div>
+              <div className="bg-green-50/50 rounded-2xl p-6 border border-green-100 shadow-sm flex flex-col items-center text-center">
+                 <div className="text-xs font-bold text-green-600 uppercase mb-2">匹配现有</div>
                  <div className="text-4xl font-bold text-green-700 flex items-baseline gap-2">
                    152 <span className="text-sm font-medium text-green-600/60">份</span>
                  </div>
               </div>
 
-              <div className="bg-red-50/50 rounded-2xl p-8 border border-red-100 shadow-sm flex flex-col items-center text-center">
-                 <div className="text-xs font-bold text-red-600 uppercase mb-2">异常图片 (红色标注)</div>
+              <div className="bg-purple-50/50 rounded-2xl p-6 border border-purple-100 shadow-sm flex flex-col items-center text-center">
+                 <div className="text-xs font-bold text-purple-600 uppercase mb-2">新增材料</div>
+                 <div className="text-4xl font-bold text-purple-700 flex items-baseline gap-2">
+                   2 <span className="text-sm font-medium text-purple-600/60">份</span>
+                 </div>
+              </div>
+
+              <div className="bg-red-50/50 rounded-2xl p-6 border border-red-100 shadow-sm flex flex-col items-center text-center">
+                 <div className="text-xs font-bold text-red-600 uppercase mb-2">异常删除</div>
                  <div className="text-4xl font-bold text-red-700 flex items-baseline gap-2">
                    12 <span className="text-sm font-medium text-red-600/60">份</span>
                  </div>
@@ -61,50 +68,41 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
            </div>
 
            {/* Policy Card */}
-           <div className="w-full max-w-4xl bg-gray-900 rounded-3xl p-10 text-white relative overflow-hidden">
+           <div className="w-full max-w-5xl bg-gray-900 rounded-3xl p-10 text-white relative overflow-hidden flex flex-col justify-center">
               <div className="absolute top-0 right-0 w-64 h-64 bg-teal-900/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
               
-              <div className="flex items-center gap-3 mb-8">
-                 <div className="w-10 h-10 rounded-lg bg-gray-800 flex items-center justify-center border border-gray-700">
-                    <i className="ri-shield-check-line text-teal-400 text-xl"></i>
+              <div className="flex items-start gap-5">
+                 <div className="w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center border border-gray-700 shrink-0 mt-1">
+                    <i className="ri-shield-check-line text-teal-400 text-2xl"></i>
                  </div>
-                 <h3 className="text-xl font-bold">入库自动化策略执行说明</h3>
-              </div>
+                 
+                 <div className="flex-1">
+                   <h3 className="text-xl font-bold leading-relaxed">
+                     系统将自动同步 <span className="text-white">372 份</span>合格图像资源。其中包括 <span className="text-purple-400 font-bold border-b-2 border-purple-400/30 px-1">2 份</span> 新材料条目的自动化创建。
+                   </h3>
+                   <div className="h-px bg-gray-800 w-full my-6"></div>
+                   
+                   <div className="flex items-center justify-between">
+                      <button
+                        onClick={() => window.confirm('确定要取消本次任务吗？') && onBack()}
+                        className="px-8 py-4 bg-gray-800 border border-gray-700 text-gray-300 rounded-2xl font-bold hover:bg-gray-700 hover:text-white transition-all flex items-center gap-2"
+                      >
+                        <i className="ri-delete-bin-line"></i>
+                        取消任务
+                      </button>
 
-              <div className="space-y-6">
-                 {/* Policy 1 */}
-                 <div className="bg-gray-800/50 rounded-xl p-6 border border-gray-700/50 flex gap-5">
-                    <div className="w-12 h-12 rounded bg-teal-900/30 flex items-center justify-center text-teal-400 font-mono font-bold text-lg shrink-0 border border-teal-900/50">
-                      01
-                    </div>
-                    <div>
-                       <h4 className="font-bold text-teal-400 mb-1">入库合格图像</h4>
-                       <p className="text-gray-300 font-light leading-relaxed">
-                         系统将自动剔除 <span className="text-red-400 font-medium border-b border-red-400/30">12 份</span> 未匹配图像，仅入库 <span className="text-teal-400 font-medium border-b border-teal-400/30">372 份</span> 已匹配图像。
-                       </p>
-                    </div>
+                      <button
+                        onClick={onComplete}
+                        className="px-16 py-4 bg-teal-600 text-white rounded-2xl font-bold shadow-lg shadow-teal-900/50 hover:bg-teal-500 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-3 text-lg"
+                      >
+                        <i className="ri-save-3-line"></i>
+                        执行入库同步
+                        <i className="ri-arrow-right-line"></i>
+                      </button>
+                   </div>
                  </div>
               </div>
            </div>
-         </div>
-
-         {/* Actions */}
-         <div className="flex justify-center gap-4 pt-8 pb-4 shrink-0">
-            <button
-              onClick={() => window.confirm('确定要取消本次任务吗？') && onBack()}
-              className="px-8 py-3 bg-white border border-gray-200 text-gray-600 rounded-xl font-medium hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm flex items-center gap-2"
-            >
-              <i className="ri-delete-bin-line"></i>
-              取消任务
-            </button>
-            <button
-              onClick={onComplete}
-              className="px-12 py-3 bg-teal-600 text-white rounded-xl font-bold shadow-lg shadow-teal-200 hover:bg-teal-700 hover:shadow-xl transition-all flex items-center gap-2"
-            >
-              <i className="ri-save-3-line text-lg"></i>
-              确认入库
-              <i className="ri-arrow-right-line"></i>
-            </button>
          </div>
       </div>
     );

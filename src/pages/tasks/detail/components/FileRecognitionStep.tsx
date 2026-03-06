@@ -28,18 +28,27 @@ interface ImageRecord {
 
 interface FileRecognitionStepProps {
   onNext: () => void;
-  taskType: 'phenotype' | 'genotype' | 'image';
+  taskType: 'phenotype' | 'genotype' | 'image' | 'directory_scan';
 }
 
 export default function FileRecognitionStep({ onNext, taskType }: FileRecognitionStepProps) {
   const [files, setFiles] = useState<FileRecord[]>([]);
   const [imageFiles, setImageFiles] = useState<ImageRecord[]>([]);
+  const [directoryFiles, setDirectoryFiles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Simulate file recognition process
     const timer = setTimeout(() => {
-      if (taskType === 'phenotype') {
+      if (taskType === 'directory_scan') {
+         setDirectoryFiles([
+            { id: '1', path: 'A001_Corn/', name: 'IMG_001.jpg', resolution: '1920x1080', status: 'valid' },
+            { id: '2', path: 'A001_Corn/', name: 'IMG_002.jpg', resolution: '1920x1080', status: 'valid' },
+            { id: '3', path: 'B002_Soybean/', name: 'Side_View.png', resolution: '3840x2160', status: 'valid' },
+            { id: '4', path: 'B002_Soybean/', name: 'Top_View.jpg', resolution: '1024x768', status: 'valid' },
+            { id: '5', path: 'C003_Rice/', name: 'IMG_Invalid.bmp', resolution: 'N/A', status: 'invalid_format' },
+         ]);
+      } else if (taskType === 'phenotype') {
         setFiles([
           {
             id: '1',
@@ -92,16 +101,90 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
     return () => clearTimeout(timer);
   }, [taskType]);
 
-  if (taskType === 'image') {
+  if (taskType === 'directory_scan') {
     return (
       <div className="space-y-6">
-        <div className="flex justify-between items-end border-b border-gray-100 pb-4">
+        <div className="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 flex items-start gap-5">
+          <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center border border-indigo-100 text-indigo-600 shrink-0">
+             <i className="ri-folder-open-line text-2xl"></i>
+          </div>
           <div>
-            <h3 className="text-lg font-bold text-gray-900">文件解析</h3>
-            <p className="text-sm text-gray-500 mt-1">结构扫描 · 操作向导</p>
+            <h4 className="font-bold text-gray-900 text-lg mb-1">结构化目录扫描完成</h4>
+            <div className="flex items-center gap-2 text-indigo-800 text-sm font-medium">
+               <span>系统检测到压缩包包含 <span className="underline decoration-indigo-300 decoration-2 underline-offset-2">12 个子文件夹</span>。</span>
+               <span className="flex items-center gap-1 bg-indigo-600 text-white px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wide">
+                 当前模式: 目录模式
+               </span>
+            </div>
           </div>
         </div>
 
+        <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm">
+          <div className="px-8 py-5 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+            <div className="grid grid-cols-4 w-full text-xs font-bold text-gray-400 uppercase tracking-wider">
+               <span>解析路径 (Relative Path)</span>
+               <span>资源名称</span>
+               <span>分辨率规格</span>
+               <span className="text-right">解析状态</span>
+            </div>
+          </div>
+          
+          {loading ? (
+            <div className="p-12 text-center">
+               <div className="w-10 h-10 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+               <p className="text-gray-500">正在递归扫描目录结构...</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-50">
+              {directoryFiles.map(file => (
+                <div key={file.id} className="grid grid-cols-4 px-8 py-6 hover:bg-gray-50/50 transition-colors items-center group">
+                  <div className="flex items-center gap-2 font-bold text-indigo-600">
+                    <i className="ri-folder-3-line text-gray-300 group-hover:text-indigo-400 transition-colors"></i>
+                    {file.path}
+                  </div>
+                  <div className="font-bold text-gray-800">{file.name}</div>
+                  <div className="text-gray-500 font-bold text-sm">{file.resolution}</div>
+                  <div className="text-right">
+                    {file.status === 'valid' && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-bold bg-green-50 text-green-600 border border-green-100 uppercase tracking-wide">
+                         识别成功
+                      </span>
+                    )}
+                    {file.status === 'invalid_format' && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-md text-xs font-bold bg-orange-50 text-orange-600 border border-orange-100 uppercase tracking-wide">
+                         不支持文件中的图片格式
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-between pt-8 items-center">
+          <button
+             className="px-8 py-3 bg-gray-50 border border-gray-200 text-gray-500 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-gray-100 hover:text-gray-700 transition-all"
+          >
+             PREV / 上一阶段
+          </button>
+          
+          <button
+            onClick={onNext}
+            disabled={loading}
+            className={`px-10 py-3 bg-gray-900 text-white rounded-full font-bold shadow-lg transition-all flex items-center gap-3 text-sm uppercase tracking-widest ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-black hover:shadow-xl hover:-translate-y-0.5'}`}
+          >
+            Next / 推进执行
+            <i className="ri-arrow-right-line text-lg"></i>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (taskType === 'image') {
+    return (
+      <div className="space-y-6">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start gap-3">
           <i className="ri-information-line text-blue-600 mt-0.5"></i>
           <div className="text-sm text-blue-700">

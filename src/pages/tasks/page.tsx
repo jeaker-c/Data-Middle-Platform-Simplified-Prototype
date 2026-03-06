@@ -57,6 +57,15 @@ const MOCK_TASKS: Task[] = [
     errorCount: 0,
     updatedAt: '2024-03-22 11:20',
     creator: '钱七'
+  },
+  {
+    id: 'T006',
+    name: '2026年参试品种图片文件夹存放',
+    dataType: '图像',
+    status: 'processing',
+    errorCount: 0,
+    updatedAt: '2024-03-23 09:30',
+    creator: '孙八'
   }
 ];
 export default function TaskListPage() {
