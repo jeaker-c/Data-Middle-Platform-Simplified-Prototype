@@ -14,7 +14,7 @@ import ImageQCStep from './components/ImageQCStep';
 import ManualBindingStep from './components/ManualBindingStep';
 
 type StepStatus = 'pending' | 'processing' | 'completed' | 'error';
-type TaskType = 'phenotype' | 'genotype' | 'image' | 'directory_scan';
+type TaskType = 'phenotype' | 'genotype' | 'image' | 'directory_scan' | 'environment';
 
 interface Step {
   id: number;
@@ -48,6 +48,11 @@ const IMAGE_STEPS: Step[] = [
   { id: 5, key: 'resource_sync', name: '资源同步', status: 'pending', description: '同步至资源库' },
 ];
 
+const ENVIRONMENT_STEPS: Step[] = [
+  { id: 1, key: 'file_recognition', name: '文件解析', status: 'processing', description: '解析文件结构' },
+  { id: 2, key: 'ingestion', name: '入库确认', status: 'pending', description: '最终确认入库' },
+];
+
 export default function TaskDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -65,6 +70,8 @@ export default function TaskDetailPage() {
       setSteps(GENOTYPE_STEPS);
     } else if (taskType === 'directory_scan') {
       setSteps(IMAGE_STEPS);
+    } else if (taskType === 'environment') {
+      setSteps(ENVIRONMENT_STEPS);
     } else {
       setSteps(IMAGE_STEPS);
       // Show modal when switching to image task for demo purposes
@@ -151,6 +158,15 @@ export default function TaskDetailPage() {
           return <ManualBindingStep onNext={handleNext} onBack={handleBack} />;
         case 'resource_sync':
           return <IngestionConfirmationStep onComplete={handleComplete} onBack={handleBack} taskType="image" />;
+        default:
+          return <div>Unknown Step</div>;
+      }
+    } else if (taskType === 'environment') {
+      switch (activeStep.key) {
+        case 'file_recognition':
+          return <FileRecognitionStep onNext={handleNext} taskType="environment" />;
+        case 'ingestion':
+          return <IngestionConfirmationStep onComplete={handleComplete} onBack={handleBack} taskType="environment" />;
         default:
           return <div>Unknown Step</div>;
       }
@@ -302,9 +318,15 @@ export default function TaskDetailPage() {
                 </button>
                 <button 
                   onClick={() => setTaskType('image')}
-                  className={`px-2.5 py-0.5 text-xs font-medium rounded-md transition-all ${taskType === 'image' ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                  className={`px-2.5 py-0.5 text-xs font-medium rounded-md transition-all ${taskType === 'image' || taskType === 'directory_scan' ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   图像
+                </button>
+                <button 
+                  onClick={() => setTaskType('environment')}
+                  className={`px-2.5 py-0.5 text-xs font-medium rounded-md transition-all ${taskType === 'environment' ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                  环境
                 </button>
              </div>
 

@@ -85,6 +85,39 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
             ]
           }
         ]);
+      } else if (taskType === 'environment') {
+        setFiles([
+          {
+            id: '1',
+            name: '2024Q1_德州基地_温度报表.xlsx',
+            type: 'Excel',
+            size: '1.2 MB',
+            sheetCount: 1,
+            status: 'success',
+            sheets: [
+              { name: '温度数据', rowCount: 450, colCount: 8, isEmpty: false, isDataTable: true }
+            ]
+          },
+          {
+            id: '2',
+            name: '2024Q1_德州基地_湿度报表.xlsx',
+            type: 'Excel',
+            size: '850 KB',
+            sheetCount: 1,
+            status: 'success',
+            sheets: [
+              { name: '湿度数据', rowCount: 450, colCount: 6, isEmpty: false, isDataTable: true }
+            ]
+          },
+          {
+            id: '3',
+            name: '2024Q1_德州基地_风速报表.csv',
+            type: 'CSV',
+            size: '2.4 MB',
+            sheetCount: 0,
+            status: 'success',
+          }
+        ]);
       } else {
          // Image task
          setImageFiles([

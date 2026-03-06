@@ -41,15 +41,6 @@ const MOCK_TASKS: Task[] = [
     creator: '王五'
   },
   {
-    id: 'T004',
-    name: '玉米新品种测试报告.pdf',
-    dataType: '非结构化文档',
-    status: 'processing',
-    errorCount: 0,
-    updatedAt: '2024-03-21 10:00',
-    creator: '赵六'
-  },
-  {
     id: 'T005',
     name: '2026年参试品种图片',
     dataType: '图像',
