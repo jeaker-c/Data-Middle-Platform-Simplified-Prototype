@@ -7,7 +7,7 @@ interface IngestionConfirmationStepProps {
 }
 
 export default function IngestionConfirmationStep({ onComplete, onBack, taskType = 'phenotype' }: IngestionConfirmationStepProps) {
-  const [conflictMode, setConflictMode] = useState<'overwrite' | 'version' | 'skip'>('version');
+  const [conflictMode, setConflictMode] = useState<'overwrite' | 'skip'>('overwrite');
   const [ingestionScope, setIngestionScope] = useState<'all' | 'valid_only'>('all');
   
   const summary = {
@@ -451,25 +451,8 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
               className="mt-1 text-teal-600 focus:ring-teal-500"
             />
             <div>
-              <div className="font-medium text-gray-900">覆盖已有数据</div>
+              <div className="font-medium text-gray-900">覆盖已有数据 (推荐)</div>
               <div className="text-sm text-gray-500 mt-1">若系统中已存在相同主键的数据，将直接使用新数据覆盖旧数据。此操作不可撤销。</div>
-            </div>
-          </div>
-
-          <div 
-            className={`flex items-start gap-3 p-4 border rounded-lg cursor-pointer transition-colors ${conflictMode === 'version' ? 'border-teal-500 bg-teal-50' : 'hover:bg-gray-50'}`}
-            onClick={() => setConflictMode('version')}
-          >
-            <input 
-              type="radio" 
-              name="conflict" 
-              checked={conflictMode === 'version'}
-              readOnly
-              className="mt-1 text-teal-600 focus:ring-teal-500"
-            />
-            <div>
-              <div className="font-medium text-gray-900">新建数据版本 (推荐)</div>
-              <div className="text-sm text-gray-500 mt-1">保留旧数据，将新数据作为新版本存入。系统将自动维护版本号。</div>
             </div>
           </div>
 
