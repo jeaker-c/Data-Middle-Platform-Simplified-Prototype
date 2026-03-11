@@ -89,33 +89,15 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
         setFiles([
           {
             id: '1',
-            name: '2024Q1_德州基地_温度报表.xlsx',
+            name: '2024Q1_德州基地_环境监测数据.xlsx',
             type: 'Excel',
             size: '1.2 MB',
-            sheetCount: 1,
+            sheetCount: 2,
             status: 'success',
             sheets: [
-              { name: '温度数据', rowCount: 450, colCount: 8, isEmpty: false, isDataTable: true }
+               { name: 'Sheet1', rowCount: 450, colCount: 8, isEmpty: false, isDataTable: true },
+               { name: 'Sheet2', rowCount: 450, colCount: 6, isEmpty: false, isDataTable: true }
             ]
-          },
-          {
-            id: '2',
-            name: '2024Q1_德州基地_湿度报表.xlsx',
-            type: 'Excel',
-            size: '850 KB',
-            sheetCount: 1,
-            status: 'success',
-            sheets: [
-              { name: '湿度数据', rowCount: 450, colCount: 6, isEmpty: false, isDataTable: true }
-            ]
-          },
-          {
-            id: '3',
-            name: '2024Q1_德州基地_风速报表.csv',
-            type: 'CSV',
-            size: '2.4 MB',
-            sheetCount: 0,
-            status: 'success',
           }
         ]);
       } else {
@@ -339,19 +321,19 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
                     )}
                   </td>
                   <td className="px-6 py-4">
-                     {file.sheets && (
-                       <div className="text-xs text-gray-500 space-y-1">
-                         {file.sheets.map((sheet, idx) => (
-                           <div key={idx} className="flex items-center gap-2">
-                             <i className="ri-table-line"></i>
-                             <span className="font-medium text-gray-700">{sheet.name}</span>
-                             <span className="text-gray-400">({sheet.rowCount}行, {sheet.colCount}列)</span>
-                             {sheet.isEmpty && <span className="text-red-400">[空]</span>}
-                           </div>
-                         ))}
-                       </div>
-                     )}
-                  </td>
+             {file.sheets && (
+               <div className="text-xs text-gray-500 space-y-1">
+                 {file.sheets.map((sheet, idx) => (
+                   <div key={idx} className="flex items-center gap-2">
+                     <i className="ri-table-line"></i>
+                     {/* <span className="font-medium text-gray-700">{sheet.name}</span> */}
+                     <span className="text-gray-400">({sheet.rowCount}行, {sheet.colCount}列)</span>
+                     {sheet.isEmpty && <span className="text-red-400">[空]</span>}
+                   </div>
+                 ))}
+               </div>
+             )}
+          </td>
                 </tr>
               ))}
             </tbody>

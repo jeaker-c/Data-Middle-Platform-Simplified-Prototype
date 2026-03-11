@@ -26,9 +26,7 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
   };
 
   const [envFiles, setEnvFiles] = useState([
-    { id: '1', name: '2024Q1_德州基地_温度报表.xlsx', size: '1.2 MB', items: 450, status: 'verified', type: 'excel' },
-    { id: '2', name: '2024Q1_德州基地_湿度报表.xlsx', size: '850 KB', items: 450, status: 'verified', type: 'excel' },
-    { id: '3', name: '2024Q1_德州基地_风速报表.csv', size: '2.4 MB', items: 380, status: 'verified', type: 'csv' },
+    { id: '1', name: '2024Q1_德州基地_环境监测数据.xlsx', size: '1.2 MB', items: 900, status: 'verified', type: 'excel' },
   ]);
 
   const [searchStation, setSearchStation] = useState('');
@@ -82,49 +80,67 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
                <div 
                  key={file.id} 
                  onClick={() => setSelectedStation(fileStationMap[file.id] || null)}
-                 className={`group p-5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                 className={`group p-5 rounded-2xl border transition-all cursor-pointer flex flex-col gap-4 ${
                     fileStationMap[file.id] 
                       ? 'bg-indigo-50/30 border-indigo-200' 
                       : 'bg-white border-gray-100 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-50'
                  }`}
                >
-                 <div className="flex items-center gap-5">
-                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${
-                     file.type === 'zip' ? 'bg-purple-50 text-purple-600' : 'bg-green-50 text-green-600'
-                   }`}>
-                     <i className={`ri-file-${file.type === 'zip' ? 'zip' : 'excel'}-2-line`}></i>
-                   </div>
-                   <div>
-                     <h4 className="font-bold text-gray-900 mb-1">{file.name}</h4>
-                     <div className="flex items-center gap-3 text-xs font-medium text-gray-400">
-                       <span>{file.size}</span>
-                       <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-                       <span>{file.items}条</span>
+                 <div className="flex items-center justify-between">
+                   <div className="flex items-center gap-5">
+                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 ${
+                       file.type === 'zip' ? 'bg-purple-50 text-purple-600' : 'bg-green-50 text-green-600'
+                     }`}>
+                       <i className={`ri-file-${file.type === 'zip' ? 'zip' : 'excel'}-2-line`}></i>
                      </div>
+                     <div>
+                       <h4 className="font-bold text-gray-900 mb-1">{file.name}</h4>
+                       <div className="flex items-center gap-3 text-xs font-medium text-gray-400">
+                         <span>{file.size}</span>
+                         <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                         <span>{file.items}条</span>
+                       </div>
+                     </div>
+                   </div>
+
+                   <div className="flex items-center gap-4">
+                     {fileStationMap[file.id] ? (
+                       <div className="flex flex-col items-end">
+                         <span className="text-xs font-bold text-indigo-600">{stations.find(s => s.id === fileStationMap[file.id])?.name}</span>
+                         <span className="text-[10px] text-indigo-400 font-mono">{fileStationMap[file.id]}</span>
+                       </div>
+                     ) : (
+                       <span className="text-xs text-gray-400 italic">待关联试验点</span>
+                     )}
+                     
+                     <span className="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-bold uppercase tracking-wider border border-green-100">
+                       Verified
+                     </span>
                    </div>
                  </div>
 
-                 <div className="flex items-center gap-4">
-                   {fileStationMap[file.id] ? (
-                     <div className="flex flex-col items-end">
-                       <span className="text-xs font-bold text-indigo-600">{stations.find(s => s.id === fileStationMap[file.id])?.name}</span>
-                       <span className="text-[10px] text-indigo-400 font-mono">{fileStationMap[file.id]}</span>
-                     </div>
-                   ) : (
-                     <span className="text-xs text-gray-400 italic">待关联站点</span>
-                   )}
-                   
-                   <span className="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-bold uppercase tracking-wider border border-green-100">
-                     Verified
-                   </span>
-                 </div>
+                 {/* Confirmation Button moved inside file card */}
+                 <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!fileStationMap[file.id]) {
+                      alert('请先选择目标试验点');
+                      return;
+                    }
+                    onComplete();
+                  }}
+                  disabled={!fileStationMap[file.id]}
+                  className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${
+                    fileStationMap[file.id]
+                      ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-md hover:shadow-lg' 
+                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  <i className="ri-save-3-line"></i>
+                  确认关联并同步
+                </button>
                </div>
              ))}
-
-             <button className="w-full py-8 border-2 border-dashed border-gray-100 rounded-2xl text-gray-400 hover:border-indigo-200 hover:text-indigo-500 hover:bg-indigo-50/30 transition-all flex flex-col items-center justify-center gap-2 group">
-               <i className="ri-add-line text-2xl group-hover:scale-110 transition-transform"></i>
-               <span className="text-xs font-bold tracking-widest uppercase">继续添加更多资源</span>
-             </button>
            </div>
         </div>
 
@@ -134,14 +150,14 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
               <div className="flex items-center gap-2 mb-6 text-gray-400 text-xs font-bold uppercase tracking-wider">
                 <i className="ri-map-pin-line text-teal-500"></i>
-                匹配目标站点
+                匹配目标试验点
               </div>
 
               <div className="relative mb-6">
                 <i className="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                 <input 
                   type="text" 
-                  placeholder="输入站点名称/编号搜索" 
+                  placeholder="输入试验点名称/编号搜索" 
                   className="w-full pl-10 pr-4 py-3 bg-gray-50 border-transparent rounded-xl text-sm font-medium focus:bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-100 outline-none transition-all"
                   value={searchStation}
                   onChange={(e) => setSearchStation(e.target.value)}
@@ -184,64 +200,10 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
               </div>
            </div>
 
-           {/* Sync Card */}
-           <div className="bg-[#0f172a] rounded-[32px] p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-teal-500/20 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
-              
-              <div className="relative z-10">
-                <div className="flex items-center gap-2 mb-6 text-teal-400 text-xs font-bold uppercase tracking-[0.2em]">
-                  <i className="ri-shield-check-line"></i>
-                  Sync Authorization
-                </div>
-
-                <h3 className="text-gray-400 text-sm mb-2 font-medium">将确认入库以下批次数据至:</h3>
-                <div className="text-2xl font-bold mb-6 truncate leading-tight">
-                  {selectedStation 
-                    ? stations.find(s => s.id === selectedStation)?.name 
-                    : <span className="text-gray-600 italic">请先选择站点...</span>}
-                </div>
-
-                <div className="flex gap-3 mb-8">
-                  <span className="px-3 py-1 rounded bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 uppercase tracking-wide">
-                    Items: {envFiles.reduce((acc, f) => acc + f.items, 0)}
-                  </span>
-                  {selectedStation && (
-                    <span className="px-3 py-1 rounded bg-slate-800 border border-slate-700 text-xs font-bold text-slate-300 uppercase tracking-wide">
-                      Station: {selectedStation}
-                    </span>
-                  )}
-                </div>
-
-                <button
-                  onClick={() => {
-                    if (!selectedStation) {
-                      alert('请先选择目标站点');
-                      return;
-                    }
-                    // Apply to all for demo simplicity, or could apply to currently selected file
-                    const newMap = { ...fileStationMap };
-                    envFiles.forEach(f => {
-                        if (!newMap[f.id]) newMap[f.id] = selectedStation;
-                    });
-                    setFileStationMap(newMap);
-                    
-                    // If all files have stations, then complete
-                    if (Object.keys(newMap).length >= envFiles.length) {
-                         onComplete();
-                    }
-                  }}
-                  disabled={!selectedStation}
-                  className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all ${
-                    selectedStation 
-                      ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-900/50 hover:-translate-y-0.5' 
-                      : 'bg-slate-800 text-slate-500 cursor-not-allowed'
-                  }`}
-                >
-                  <i className="ri-save-3-line text-lg"></i>
-                  确认关联并同步
-                </button>
-              </div>
-           </div>
+           {/* Sync Card - Removed */}
+           {/* <div className="bg-[#0f172a] rounded-[32px] p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
+              ... content removed ...
+           </div> */}
         </div>
       </div>
     );
