@@ -12,6 +12,17 @@ export interface Material {
   updateTime?: string;
 }
 
+export interface Experiment {
+  id: string;
+  name: string;
+  year: string;
+  type: string;
+  materialCount: number;
+  siteCount: number;
+  status: 'completed' | 'ongoing';
+  sites: string[];
+}
+
 export interface FilterState {
   globalSearch: string;
   // Material Dimension

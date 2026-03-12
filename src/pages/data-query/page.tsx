@@ -3,9 +3,10 @@ import Navbar from '../home/components/Navbar';
 import MaterialFilter from './components/MaterialFilter';
 import MaterialList from './components/MaterialList';
 import MaterialDrawer from './components/MaterialDrawer';
+import ExperimentDrawer from './components/ExperimentDrawer';
 import BatchActionBar from './components/BatchActionBar';
 import DataAgent from './components/DataAgent';
-import { Material, FilterState, initialFilterState } from './types';
+import { Material, Experiment, FilterState, initialFilterState } from './types';
 
 // Mock Data
 const MOCK_MATERIALS: Material[] = [
@@ -47,8 +48,10 @@ export default function MaterialManagementPage() {
   // State
   const [filters, setFilters] = useState<FilterState>(initialFilterState);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [activeDimension, setActiveDimension] = useState('material'); // State to track active dimension
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [detailDrawerMaterial, setDetailDrawerMaterial] = useState<Material | null>(null);
+  const [detailDrawerExperiment, setDetailDrawerExperiment] = useState<Experiment | null>(null);
 
   // Filter Logic
   const filteredData = useMemo(() => {
@@ -148,6 +151,7 @@ export default function MaterialManagementPage() {
               filters={filters} 
               onFilterChange={setFilters}
               isOpen={isFilterOpen} 
+              onDimensionChange={setActiveDimension} // Pass handler
             />
           </div>
 
@@ -159,28 +163,25 @@ export default function MaterialManagementPage() {
               onSelect={handleSelect}
               onSelectAll={handleSelectAll}
               onViewDetail={(item) => setDetailDrawerMaterial(item)}
+              onViewExperiment={(exp) => setDetailDrawerExperiment(exp)}
+              activeDimension={activeDimension} // Pass active dimension
             />
           </div>
-
-          {/* 2.2.5 Batch Actions */}
-          <BatchActionBar 
-            selectedCount={selectedIds.length} 
-            onClearSelection={() => setSelectedIds([])} 
-          />
-
-          {/* 2.2.4 Material Detail Drawer (Overlay) */}
+          
           <MaterialDrawer 
-            material={detailDrawerMaterial} 
-            isOpen={!!detailDrawerMaterial} 
-            onClose={() => setDetailDrawerMaterial(null)} 
+            isOpen={!!detailDrawerMaterial}
+            material={detailDrawerMaterial}
+            onClose={() => setDetailDrawerMaterial(null)}
           />
-        </div>
 
-        {/* Right: Agent Area (25%) */}
-        <div className="w-1/4 bg-white h-full">
-          <DataAgent onFilterUpdate={handleFilterUpdate} />
+          <ExperimentDrawer
+            isOpen={!!detailDrawerExperiment}
+            experiment={detailDrawerExperiment}
+            onClose={() => setDetailDrawerExperiment(null)}
+          />
+          {/* ... */}
         </div>
-
+        {/* ... */}
       </div>
     </div>
   );

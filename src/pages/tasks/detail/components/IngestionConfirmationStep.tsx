@@ -34,10 +34,15 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
 
   // Store station selection for each file
   const [fileStationMap, setFileStationMap] = useState<Record<string, string>>({});
+  const [fileYearMap, setFileYearMap] = useState<Record<string, string>>({}); // Store year selection
 
   const handleStationSelect = (stationId: string) => {
     setSelectedStation(stationId);
     // Auto-assign to currently selected files if needed, or just keep state for next action
+  };
+
+  const handleYearSelect = (fileId: string, year: string) => {
+    setFileYearMap(prev => ({ ...prev, [fileId]: year }));
   };
 
   const assignStationToFile = (fileId: string, stationId: string) => {
@@ -104,14 +109,30 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
                    </div>
 
                    <div className="flex items-center gap-4">
-                     {fileStationMap[file.id] ? (
-                       <div className="flex flex-col items-end">
-                         <span className="text-xs font-bold text-indigo-600">{stations.find(s => s.id === fileStationMap[file.id])?.name}</span>
-                         <span className="text-[10px] text-indigo-400 font-mono">{fileStationMap[file.id]}</span>
-                       </div>
-                     ) : (
-                       <span className="text-xs text-gray-400 italic">待关联试验点</span>
-                     )}
+                     <div className="flex flex-col items-end gap-1">
+                       {fileStationMap[file.id] ? (
+                         <div className="flex flex-col items-end">
+                           <span className="text-xs font-bold text-indigo-600">{stations.find(s => s.id === fileStationMap[file.id])?.name}</span>
+                           <span className="text-[10px] text-indigo-400 font-mono">{fileStationMap[file.id]}</span>
+                         </div>
+                       ) : (
+                         <span className="text-xs text-gray-400 italic">待关联试验点</span>
+                       )}
+                       
+                       {/* Year Selection */}
+                       <select 
+                         className="text-xs border-gray-200 rounded py-0.5 pl-2 pr-6 focus:ring-teal-500 focus:border-teal-500 text-gray-600"
+                         value={fileYearMap[file.id] || ''}
+                         onChange={(e) => handleYearSelect(file.id, e.target.value)}
+                         onClick={(e) => e.stopPropagation()}
+                       >
+                         <option value="">选择年份...</option>
+                         <option value="2026">2026</option>
+                         <option value="2025">2025</option>
+                         <option value="2024">2024</option>
+                         <option value="2023">2023</option>
+                       </select>
+                     </div>
                      
                      <span className="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-bold uppercase tracking-wider border border-green-100">
                        Verified
@@ -127,9 +148,13 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
                       alert('请先选择目标试验点');
                       return;
                     }
+                    if (!fileYearMap[file.id]) {
+                      alert('请选择采集年份');
+                      return;
+                    }
                     onComplete();
                   }}
-                  disabled={!fileStationMap[file.id]}
+                  disabled={!fileStationMap[file.id] || !fileYearMap[file.id]}
                   className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${
                     fileStationMap[file.id]
                       ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-md hover:shadow-lg' 
