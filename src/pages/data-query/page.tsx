@@ -181,7 +181,10 @@ export default function MaterialManagementPage() {
           />
           {/* ... */}
         </div>
-        {/* ... */}
+        
+        <div className="w-1/4 h-full">
+          <DataAgent onFilterUpdate={handleFilterUpdate} />
+        </div>
       </div>
     </div>
   );

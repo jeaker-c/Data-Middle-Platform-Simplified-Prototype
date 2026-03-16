@@ -1,4 +1,3 @@
-import { useState, useCallback } from 'react';
 
 const stats = [
   {
@@ -52,28 +51,6 @@ const phenotypeData = [
 ];
 
 export default function StatsOverview() {
-  const [selectedGenotype, setSelectedGenotype] = useState<number[]>([]);
-  const [selectedPhenotype, setSelectedPhenotype] = useState<number[]>([]);
-  const [showProcessModal, setShowProcessModal] = useState(false);
-  const [processType, setProcessType] = useState<'vcf' | 'phenotype' | null>(null);
-
-  const handleSelectGenotype = useCallback((id: number) => {
-    setSelectedGenotype(prev => 
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-    );
-  }, []);
-
-  const handleSelectPhenotype = useCallback((id: number) => {
-    setSelectedPhenotype(prev => 
-      prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
-    );
-  }, []);
-
-  const handleProcess = useCallback((type: 'vcf' | 'phenotype') => {
-    setProcessType(type);
-    setShowProcessModal(true);
-  }, []);
-
   return (
     <section className="pb-8">
       <div className="max-w-[1600px] mx-auto px-6">
@@ -108,32 +85,12 @@ export default function StatsOverview() {
           <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900">基因型数据</h3>
-              <button
-                onClick={() => handleProcess('vcf')}
-                disabled={selectedGenotype.length === 0}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap ${
-                  selectedGenotype.length > 0
-                    ? 'bg-teal-600 text-white hover:bg-teal-700 cursor-pointer'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                <i className="ri-file-transfer-line mr-2"></i>
-                下机数据转VCF
-              </button>
             </div>
 
             <div className="space-y-3">
               {genotypeData.map((file) => (
                 <div key={file.id} className="bg-white rounded-lg p-4 hover:shadow-md transition-all">
                   <div className="flex items-center gap-3">
-                    <label className="flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectedGenotype.includes(file.id)}
-                        onChange={() => handleSelectGenotype(file.id)}
-                        className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-500 cursor-pointer"
-                      />
-                    </label>
                     <div className="w-10 h-10 flex items-center justify-center bg-blue-50 rounded-lg flex-shrink-0">
                       <i className="ri-dna-line text-xl text-blue-600"></i>
                     </div>
@@ -162,47 +119,18 @@ export default function StatsOverview() {
                 </div>
               ))}
             </div>
-
-            {selectedGenotype.length > 0 && (
-              <div className="mt-4 p-3 bg-teal-50 rounded-lg border border-teal-200">
-                <p className="text-sm text-teal-700">
-                  <i className="ri-information-line mr-2"></i>
-                  已选择 {selectedGenotype.length} 个文件
-                </p>
-              </div>
-            )}
           </div>
 
           {/* 表型数据 */}
           <div className="bg-gray-50 rounded-xl p-6 border border-gray-200">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-bold text-gray-900">表型数据</h3>
-              <button
-                onClick={() => handleProcess('phenotype')}
-                disabled={selectedPhenotype.length === 0}
-                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap ${
-                  selectedPhenotype.length > 0
-                    ? 'bg-purple-600 text-white hover:bg-purple-700 cursor-pointer'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                <i className="ri-file-check-line mr-2"></i>
-                表型数据处理
-              </button>
             </div>
 
             <div className="space-y-3">
               {phenotypeData.map((file) => (
                 <div key={file.id} className="bg-white rounded-lg p-4 hover:shadow-md transition-all">
                   <div className="flex items-center gap-3">
-                    <label className="flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectedPhenotype.includes(file.id)}
-                        onChange={() => handleSelectPhenotype(file.id)}
-                        className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 cursor-pointer"
-                      />
-                    </label>
                     <div className="w-10 h-10 flex items-center justify-center bg-purple-50 rounded-lg flex-shrink-0">
                       <i className="ri-plant-line text-xl text-purple-600"></i>
                     </div>
@@ -231,104 +159,9 @@ export default function StatsOverview() {
                 </div>
               ))}
             </div>
-
-            {selectedPhenotype.length > 0 && (
-              <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
-                <p className="text-sm text-purple-700">
-                  <i className="ri-information-line mr-2"></i>
-                  已选择 {selectedPhenotype.length} 个文件
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </div>
-
-      {/* 处理弹窗 */}
-      {showProcessModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-lg">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900">
-                {processType === 'vcf' ? '下机数据转VCF' : '表型数据处理'}
-              </h3>
-              <button
-                onClick={() => setShowProcessModal(false)}
-                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all cursor-pointer"
-              >
-                <i className="ri-close-line text-xl"></i>
-              </button>
-            </div>
-
-            <div className="space-y-4 mb-6">
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-700 mb-2">
-                  <strong>已选择文件：</strong>
-                </p>
-                <p className="text-sm text-gray-600">
-                  {processType === 'vcf' 
-                    ? `${selectedGenotype.length} 个基因型数据文件`
-                    : `${selectedPhenotype.length} 个表型数据文件`
-                  }
-                </p>
-              </div>
-
-              {processType === 'vcf' ? (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">转换选项</label>
-                  <select className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 cursor-pointer">
-                    <option>标准VCF格式</option>
-                    <option>压缩VCF格式 (VCF.gz)</option>
-                    <option>BCF格式</option>
-                  </select>
-                </div>
-              ) : (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">处理类型</label>
-                  <div className="space-y-2">
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 cursor-pointer" defaultChecked />
-                      <span className="text-sm text-gray-700">数据格式质检</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 cursor-pointer" defaultChecked />
-                      <span className="text-sm text-gray-700">性状字段范围质检</span>
-                    </label>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input type="checkbox" className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500 cursor-pointer" />
-                      <span className="text-sm text-gray-700">数据标准化</span>
-                    </label>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setShowProcessModal(false)}
-                className="flex-1 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors whitespace-nowrap cursor-pointer"
-              >
-                取消
-              </button>
-              <button
-                onClick={() => {
-                  setShowProcessModal(false);
-                  if (processType === 'vcf') {
-                    setSelectedGenotype([]);
-                  } else {
-                    setSelectedPhenotype([]);
-                  }
-                }}
-                className={`flex-1 px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
-                  processType === 'vcf' ? 'bg-teal-600 hover:bg-teal-700' : 'bg-purple-600 hover:bg-purple-700'
-                }`}
-              >
-                开始处理
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 }

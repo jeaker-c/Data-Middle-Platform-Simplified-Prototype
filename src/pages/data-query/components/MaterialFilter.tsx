@@ -202,41 +202,18 @@ export default function MaterialFilter({ filters, onFilterChange, isOpen, onDime
         {activeDimension === 'genotype' && (
           <div className="space-y-6 animate-in fade-in zoom-in-95 duration-200">
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">基因型属性</span>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">基因型筛选</span>
               <div className="flex flex-wrap gap-4">
-                <select 
-                  className="w-48 text-sm border-gray-300 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-500 py-2.5"
-                  value={filters.genotypeType}
-                  onChange={(e) => handleChange('genotypeType', e.target.value)}
-                >
-                  <option value="">所有基因型类型</option>
-                  <option value="SNP">SNP</option>
-                  <option value="Indel">Indel</option>
-                </select>
-
-                <div className="flex items-center gap-2 bg-gray-50 px-3 rounded-lg border border-gray-200">
+                <div className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
                   <span className="text-sm text-gray-500">位点数 ≥</span>
                   <input 
                     type="number" 
-                    className="w-24 text-sm border-transparent bg-transparent focus:ring-0 text-gray-900 font-medium"
+                    className="w-24 text-sm border-transparent bg-transparent focus:ring-0 text-gray-900 font-medium p-0"
                     value={filters.siteCountMin}
                     onChange={(e) => handleChange('siteCountMin', e.target.value)}
                   />
                 </div>
               </div>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">数据完整性</span>
-              <select 
-                 className="w-48 text-sm border-gray-300 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-500 py-2.5"
-                 value={filters.isVCFComplete}
-                 onChange={(e) => handleChange('isVCFComplete', e.target.value)}
-              >
-                 <option value="all">VCF文件状态</option>
-                 <option value="yes">完整</option>
-                 <option value="no">不完整/缺失</option>
-              </select>
             </div>
           </div>
         )}
