@@ -28,7 +28,7 @@ interface ImageRecord {
 
 interface FileRecognitionStepProps {
   onNext: () => void;
-  taskType: 'phenotype' | 'genotype' | 'image' | 'directory_scan';
+  taskType: 'material' | 'phenotype' | 'genotype' | 'image' | 'directory_scan' | 'environment';
 }
 
 export default function FileRecognitionStep({ onNext, taskType }: FileRecognitionStepProps) {
@@ -48,7 +48,7 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
             { id: '4', path: 'B002_Soybean/', name: 'Top_View.jpg', resolution: '1024x768', status: 'valid' },
             { id: '5', path: 'C003_Rice/', name: 'IMG_Invalid.bmp', resolution: 'N/A', status: 'invalid_format' },
          ]);
-      } else if (taskType === 'phenotype') {
+      } else if (taskType === 'phenotype' || taskType === 'material') {
         setFiles([
           {
             id: '1',

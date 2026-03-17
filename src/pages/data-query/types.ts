@@ -6,6 +6,7 @@ export interface Material {
   phenotypeCount: number; // 0 means no phenotype
   hasGenotype: boolean;
   hasEnvironment: boolean;
+  genotypeSiteCount?: number;
   tags: string[];
   // Additional details for drawer
   description?: string;
@@ -23,6 +24,14 @@ export interface Experiment {
   sites: string[];
 }
 
+export interface PhenotypeRecord {
+  traitName: string;
+  year: string;
+  experimentName: string;
+  siteName: string;
+  dataPoint: number;
+}
+
 export interface FilterState {
   globalSearch: string;
   // Material Dimension
@@ -35,6 +44,7 @@ export interface FilterState {
   year: string;
   location: string;
   // Phenotype Dimension
+  phenotypeTrait: string;
   traits: string[];
   phenotypeMin: string;
   phenotypeMax: string;
@@ -61,6 +71,7 @@ export const initialFilterState: FilterState = {
   experiments: [],
   year: '',
   location: '',
+  phenotypeTrait: '',
   traits: [],
   phenotypeMin: '',
   phenotypeMax: '',

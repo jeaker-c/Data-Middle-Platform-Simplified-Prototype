@@ -8,6 +8,11 @@ interface GenotypeConversionStepProps {
 export default function GenotypeConversionStep({ onNext, onBack }: GenotypeConversionStepProps) {
   const [status, setStatus] = useState<'converting' | 'success' | 'error'>('converting');
   const [progress, setProgress] = useState(0);
+  const outputFiles = [
+    'maize_genotype_v3-sheet1.vcf',
+    'maize_genotype_v1-sheet2.vcf',
+    'maize_genotype_v2-sheet2.vcf'
+  ];
 
   useEffect(() => {
     if (status === 'converting') {
@@ -57,18 +62,19 @@ export default function GenotypeConversionStep({ onNext, onBack }: GenotypeConve
           <h2 className="text-2xl font-bold text-gray-900 mb-2">格式转换成功！</h2>
           <p className="text-gray-500 mb-8">已成功生成标准 VCF 文件，准备进行质量控制分析</p>
 
-          <div className="grid grid-cols-3 gap-6 mb-8 text-left">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <span className="text-sm text-gray-500 block mb-1">输出文件</span>
-              <span className="font-medium text-gray-900 block truncate">maize_genotype_std.vcf</span>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <span className="text-sm text-gray-500 block mb-1">SNP 位点数</span>
-              <span className="font-medium text-gray-900 text-lg">45,230</span>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <span className="text-sm text-gray-500 block mb-1">包含材料数</span>
-              <span className="font-medium text-gray-900 text-lg">384</span>
+          <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 mb-8 text-left">
+            <div className="text-sm text-gray-500 font-medium mb-4">输出文件</div>
+            <div className="space-y-3">
+              {outputFiles.map((file) => (
+                <div key={file} className="bg-white border border-gray-200 rounded-lg px-4 py-3 flex items-center">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className="w-9 h-9 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center shrink-0">
+                      <i className="ri-file-text-line"></i>
+                    </div>
+                    <span className="font-medium text-gray-900 truncate">{file}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 

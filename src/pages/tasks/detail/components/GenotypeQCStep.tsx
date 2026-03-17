@@ -16,6 +16,12 @@ const MOCK_QC_DATA = [
 
 export default function GenotypeQCStep({ onNext, onBack }: GenotypeQCStepProps) {
   const [filterStatus, setFilterStatus] = useState<'all' | 'warning' | 'error'>('all');
+  const [activeFile, setActiveFile] = useState('maize_genotype_v3-sheet1.vcf');
+  const qcFiles = [
+    'maize_genotype_v3-sheet1.vcf',
+    'maize_genotype_v1-sheet2.vcf',
+    'maize_genotype_v2-sheet2.vcf'
+  ];
 
   const filteredData = MOCK_QC_DATA.filter(item => 
     filterStatus === 'all' ? true : 
@@ -26,7 +32,20 @@ export default function GenotypeQCStep({ onNext, onBack }: GenotypeQCStepProps) 
   return (
     <div className="flex flex-col h-full space-y-6">
       {/* Top: Summary Cards */}
-      <div className="grid grid-cols-5 gap-4">
+      <div className="space-y-4">
+        <div className="max-w-md">
+          <select
+            value={activeFile}
+            onChange={(e) => setActiveFile(e.target.value)}
+            className="w-full text-sm border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 bg-white"
+          >
+            {qcFiles.map((f) => (
+              <option key={f} value={f}>{f}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="grid grid-cols-5 gap-4">
         <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
           <p className="text-sm text-gray-500 mb-1">总材料数</p>
           <p className="text-2xl font-bold text-gray-900">384</p>
@@ -46,6 +65,7 @@ export default function GenotypeQCStep({ onNext, onBack }: GenotypeQCStepProps) 
         <div className="bg-white p-4 rounded-xl border border-red-100 bg-red-50/50 shadow-sm">
           <p className="text-sm text-red-600 mb-1">异常材料 (&gt;15%缺失)</p>
           <p className="text-2xl font-bold text-red-600">12</p>
+        </div>
         </div>
       </div>
 

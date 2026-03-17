@@ -1,4 +1,4 @@
-import { Material, Experiment } from '../types';
+import { Material, Experiment, PhenotypeRecord } from '../types';
 
 interface MaterialListProps {
   data: Material[];
@@ -7,6 +7,7 @@ interface MaterialListProps {
   onSelectAll: () => void;
   onViewDetail: (material: Material) => void;
   onViewExperiment?: (experiment: Experiment) => void;
+  onViewPhenotype?: (record: PhenotypeRecord) => void;
   activeDimension?: string; // New prop to control table view
 }
 
@@ -23,8 +24,19 @@ const getMockExperiment = (idx: number): Experiment => ({
     : ['海南三亚', '甘肃张掖']
 });
 
-export default function MaterialList({ data, selectedIds, onSelect, onSelectAll, onViewDetail, onViewExperiment, activeDimension = 'material' }: MaterialListProps) {
+export default function MaterialList({ data, selectedIds, onSelect, onSelectAll, onViewDetail, onViewExperiment, onViewPhenotype, activeDimension = 'material' }: MaterialListProps) {
   const allSelected = data.length > 0 && selectedIds.length === data.length;
+  const phenotypePreviewRows = [
+    { experimentName: '试验A', siteName: '试验点1', dataPoint: 24 },
+    { experimentName: '试验A', siteName: '试验点2', dataPoint: 35 },
+    { experimentName: '试验A', siteName: '试验点3', dataPoint: 456 },
+    { experimentName: '试验A', siteName: '试验点4', dataPoint: 3 },
+    { experimentName: '试验A', siteName: '试验点5', dataPoint: 12 },
+    { experimentName: '试验B', siteName: '试验点1', dataPoint: 2 },
+    { experimentName: '试验B', siteName: '试验点3', dataPoint: 56 },
+    { experimentName: '试验B', siteName: '试验点4', dataPoint: 2 },
+    { experimentName: '试验B', siteName: '试验点5', dataPoint: 4 }
+  ];
 
   // Phenotype View
   if (activeDimension === 'phenotype') {
@@ -38,55 +50,68 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                   <input type="checkbox" className="rounded text-teal-600 focus:ring-teal-500 border-gray-300" />
                 </th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  性状名称
+                  性状
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  年份
+                </th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  试验名称
                 </th>
                 <th scope="col" className="px-6 py-3 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  材料数量
+                  试验点
                 </th>
                 <th scope="col" className="px-6 py-3 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  试验数量
-                </th>
-                <th scope="col" className="px-6 py-3 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  试验点数量
+                  数据点
                 </th>
                 <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  下载
+                  查看
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {['株高 (Plant Height)', '穗位高 (Ear Height)', '穗长 (Ear Length)', '产量 (Yield)', '倒折率 (Stalk Lodging)'].map((trait, idx) => (
-                <tr key={idx} className="hover:bg-gray-50 transition-colors">
+              {phenotypePreviewRows.map((row, idx) => (
+                <tr key={`${row.experimentName}_${row.siteName}_${idx}`} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-5 whitespace-nowrap">
                     <input type="checkbox" className="rounded text-teal-600 focus:ring-teal-500 border-gray-300" />
                   </td>
                   <td className="px-6 py-5 whitespace-nowrap">
+                    <span className="text-sm font-bold text-gray-700">株高</span>
+                  </td>
+                  <td className="px-6 py-5 whitespace-nowrap">
+                    <span className="text-sm font-bold text-gray-700">2025年</span>
+                  </td>
+                  <td className="px-6 py-5 whitespace-nowrap">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-lg bg-teal-50 flex items-center justify-center text-teal-600">
-                        <i className="ri-bar-chart-fill"></i>
+                        <i className="ri-flask-line"></i>
                       </div>
-                      <span className="text-base font-bold text-gray-900">{trait}</span>
+                      <span className="text-base font-bold text-gray-900">{row.experimentName}</span>
                     </div>
                   </td>
                   <td className="px-6 py-5 whitespace-nowrap text-center">
-                    <span className="inline-block px-3 py-1 bg-gray-50 border border-gray-200 rounded-full text-sm font-bold text-gray-700">
-                      {idx === 3 ? '2100' : (idx === 2 ? '950' : (idx === 4 ? '840' : '1280'))}
-                    </span>
+                    <span className="text-sm font-bold text-gray-700">{row.siteName}</span>
                   </td>
                   <td className="px-6 py-5 whitespace-nowrap text-center">
-                    <span className="text-sm font-bold text-indigo-600">
-                      {idx === 3 ? '68' : (idx === 2 ? '32' : (idx === 4 ? '20' : '45'))}
-                    </span>
-                  </td>
-                  <td className="px-6 py-5 whitespace-nowrap text-center">
-                    <span className="text-sm font-bold text-green-600">
-                      {idx === 3 ? '15' : (idx === 2 ? '8' : (idx === 4 ? '6' : '12'))}
-                    </span>
+                    <span className="text-sm font-bold text-gray-700">{row.dataPoint}</span>
                   </td>
                   <td className="px-6 py-5 whitespace-nowrap text-right">
-                    <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-all">
-                      <i className="ri-download-line"></i>
-                    </button>
+                    <div className="flex justify-end">
+                      <button
+                        onClick={() =>
+                          onViewPhenotype?.({
+                            traitName: '株高',
+                            year: '2025年',
+                            experimentName: row.experimentName,
+                            siteName: row.siteName,
+                            dataPoint: row.dataPoint
+                          })
+                        }
+                        className="w-8 h-8 rounded-full border border-gray-200 inline-flex items-center justify-center text-gray-400 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-all"
+                      >
+                        <i className="ri-eye-line"></i>
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -252,102 +277,6 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                   </tr>
                 );
               })}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  }
-
-  // Genotype View
-  if (activeDimension === 'genotype') {
-    return (
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider w-10">
-                  <input type="checkbox" className="rounded text-teal-600 focus:ring-teal-500 border-gray-300" />
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider w-32">
-                  DNA 样本编号
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  材料名称
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  SNP 总数
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  缺失率
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  杂合率
-                </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  状态
-                </th>
-                <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">
-                  下载
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {data.map((item, idx) => (
-                <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-6 py-5 whitespace-nowrap">
-                    <input type="checkbox" className="rounded text-teal-600 focus:ring-teal-500 border-gray-300" />
-                  </td>
-                  <td className="px-6 py-5 whitespace-nowrap">
-                    <span className="text-sm font-bold text-slate-700">DNA_{String.fromCharCode(65 + (idx % 3))}{String(idx + 1).padStart(2, '0')}</span>
-                  </td>
-                  <td className="px-6 py-5 whitespace-nowrap">
-                    <span className="text-base font-bold text-gray-900">{item.name}</span>
-                  </td>
-                  <td className="px-6 py-5 whitespace-nowrap">
-                    <span className="text-sm font-bold text-gray-800">55,432</span>
-                  </td>
-                  <td className="px-6 py-5 whitespace-nowrap">
-                    <div className="flex flex-col gap-1 w-20">
-                      <span className={`text-sm font-bold ${idx === 2 ? 'text-red-500' : 'text-slate-600'}`}>
-                         {idx === 2 ? '8.92%' : (idx === 1 ? '1.45%' : '0.82%')}
-                      </span>
-                      <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full rounded-full ${idx === 2 ? 'bg-red-500' : 'bg-indigo-500'}`} 
-                          style={{ width: idx === 2 ? '40%' : '10%' }}
-                        ></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-5 whitespace-nowrap">
-                    <div className="flex flex-col gap-1 w-20">
-                      <span className={`text-sm font-bold ${idx === 2 ? 'text-orange-500' : 'text-slate-600'}`}>
-                         {idx === 2 ? '15.2%' : (idx === 1 ? '0.4%' : '2.5%')}
-                      </span>
-                      <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-                         <div 
-                          className={`h-full rounded-full ${idx === 2 ? 'bg-orange-500' : 'bg-teal-500'}`} 
-                          style={{ width: idx === 2 ? '60%' : '15%' }}
-                        ></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-5 whitespace-nowrap">
-                     {idx === 2 ? (
-                        <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-red-50 text-red-600">异常</span>
-                     ) : (
-                        <span className="inline-flex px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-600">已质检</span>
-                     )}
-                  </td>
-                  <td className="px-6 py-5 whitespace-nowrap text-right">
-                    <button className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-all">
-                      <i className="ri-download-line"></i>
-                    </button>
-                  </td>
-                </tr>
-              ))}
             </tbody>
           </table>
         </div>

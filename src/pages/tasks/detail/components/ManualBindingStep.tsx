@@ -21,6 +21,12 @@ interface FixItem {
   matchedId?: string | null; // Added field to store matched material ID
 }
 
+interface SearchResult {
+  id: string;
+  name: string;
+  code: string;
+}
+
 export default function ManualBindingStep({ onNext, onBack }: ManualBindingStepProps) {
   const [selectedItem, setSelectedItem] = useState<string>('1');
   const [searchQuery, setSearchQuery] = useState('');

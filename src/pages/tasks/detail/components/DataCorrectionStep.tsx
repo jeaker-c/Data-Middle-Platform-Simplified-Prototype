@@ -3,24 +3,37 @@ import React, { useState } from 'react';
 interface DataCorrectionStepProps {
   onNext: () => void;
   onBack: () => void;
+  taskType?: 'material' | 'phenotype' | 'genotype' | 'image' | 'directory_scan' | 'environment';
 }
 
-export default function DataCorrectionStep({ onNext, onBack }: DataCorrectionStepProps) {
+export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenotype' }: DataCorrectionStepProps) {
   const [errorCount, setErrorCount] = useState(15);
-  const [rows, setRows] = useState([
+  
+  const [phenotypeRows, setPhenotypeRows] = useState([
     { id: 102, crop_id: 'CROP-2025102', height: '350', ear_height: '85', reason: '株高超出正常范围 (0-300)', fixed: false },
     { id: 145, crop_id: 'CROP-2025145', height: '175', ear_height: '', reason: '必填字段缺失：穗位高', fixed: false },
     { id: 288, crop_id: 'CROP-2025001', height: '160', ear_height: '80', reason: '作物编号重复', fixed: false },
     { id: 289, crop_id: 'CROP-2025289', height: 'abc', ear_height: '82', reason: '株高必须为数值', fixed: false },
   ]);
 
+  const [materialRows, setMaterialRows] = useState([
+    { id: 1, name: 'XY25H3007', pedigree: 'XYNO_004/XYNO_624', type: '杂交种', rachis_color: '红', grain_color: '白', grain_type: '硬粒', gmo: '是', reason: '材料名称重复', fixed: false },
+    { id: 11, name: 'XY25H3007', pedigree: 'XYNO_552/XYNO_615', type: '杂交种', rachis_color: '1', grain_color: '黄', grain_type: '半马齿', gmo: 'TRUE', reason: '转基因只能填写为是/否', fixed: false },
+    { id: 111, name: 'SH000464', pedigree: '中垦玉21母本/NF119母本', type: '', rachis_color: '白', grain_color: '白', grain_type: '马齿', gmo: '', reason: '必填字段缺失', fixed: false },
+  ]);
+
+  const rows = taskType === 'material' ? materialRows : phenotypeRows;
+  const setRows = taskType === 'material' ? setMaterialRows : setPhenotypeRows;
+
   const handleFix = (id: number, field: string, value: string) => {
+    // @ts-ignore
     setRows(rows.map(row => 
       row.id === id ? { ...row, [field]: value, fixed: true } : row
     ));
   };
 
   const handleDelete = (id: number) => {
+    // @ts-ignore
     setRows(rows.filter(row => row.id !== id));
   };
 
@@ -63,43 +76,137 @@ export default function DataCorrectionStep({ onNext, onBack }: DataCorrectionSte
       <div className="border rounded-lg overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">行号</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作物编号</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">株高(cm)</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">穗位高</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">错误原因</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
-            </tr>
+            {taskType === 'material' ? (
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">行号</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">材料名称</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">系谱</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">材料类型</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">穗轴颜色</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">籽粒颜色</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">籽粒类型</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">转基因</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">错误原因</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+              </tr>
+            ) : (
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">行号</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作物编号</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">株高(cm)</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">穗位高</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">错误原因</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+              </tr>
+            )}
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {rows.map((row) => (
               <tr key={row.id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.id}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <input 
-                    type="text"
-                    value={row.crop_id}
-                    onChange={(e) => handleFix(row.id, 'crop_id', e.target.value)}
-                    className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('作物编号') ? 'border-red-300 bg-red-50' : ''}`}
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <input 
-                    type="text"
-                    value={row.height}
-                    onChange={(e) => handleFix(row.id, 'height', e.target.value)}
-                    className={`block w-24 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('株高') ? 'border-red-300 bg-red-50' : ''}`}
-                  />
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  <input 
-                    type="text"
-                    value={row.ear_height}
-                    onChange={(e) => handleFix(row.id, 'ear_height', e.target.value)}
-                    className={`block w-24 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('穗位高') ? 'border-red-300 bg-red-50' : ''}`}
-                  />
-                </td>
+                {taskType === 'material' ? (
+                  <>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.name}
+                        onChange={(e) => handleFix(row.id, 'name', e.target.value)}
+                        // @ts-ignore
+                        className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('材料名称') ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.pedigree}
+                        onChange={(e) => handleFix(row.id, 'pedigree', e.target.value)}
+                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.type}
+                        onChange={(e) => handleFix(row.id, 'type', e.target.value)}
+                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.rachis_color}
+                        onChange={(e) => handleFix(row.id, 'rachis_color', e.target.value)}
+                        // @ts-ignore
+                        className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('穗轴颜色') || row.rachis_color === '1' ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.grain_color}
+                        onChange={(e) => handleFix(row.id, 'grain_color', e.target.value)}
+                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.grain_type}
+                        onChange={(e) => handleFix(row.id, 'grain_type', e.target.value)}
+                        className="block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.gmo}
+                        onChange={(e) => handleFix(row.id, 'gmo', e.target.value)}
+                        // @ts-ignore
+                        className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('转基因') ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.crop_id}
+                        onChange={(e) => handleFix(row.id, 'crop_id', e.target.value)}
+                        // @ts-ignore
+                        className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('作物编号') ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.height}
+                        onChange={(e) => handleFix(row.id, 'height', e.target.value)}
+                        // @ts-ignore
+                        className={`block w-24 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('株高') ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <input 
+                        type="text"
+                        // @ts-ignore
+                        value={row.ear_height}
+                        onChange={(e) => handleFix(row.id, 'ear_height', e.target.value)}
+                        // @ts-ignore
+                        className={`block w-24 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('穗位高') ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                  </>
+                )}
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
                    {row.fixed ? (
                      <span className="text-green-600 flex items-center gap-1">

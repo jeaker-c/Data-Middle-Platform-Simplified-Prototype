@@ -61,17 +61,6 @@ export default function MaterialFilter({ filters, onFilterChange, isOpen, onDime
           <span className={`text-sm font-medium ${activeDimension === 'phenotype' ? 'text-teal-700' : 'text-gray-700'}`}>表型维度</span>
         </label>
 
-        <label className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ${activeDimension === 'genotype' ? 'bg-teal-50' : 'hover:bg-gray-50'}`}>
-          <input 
-            type="radio" 
-            name="dimension"
-            className="w-4 h-4 text-teal-600 focus:ring-teal-500 border-gray-300"
-            checked={activeDimension === 'genotype'}
-            onChange={() => handleDimensionCheck('genotype')}
-          />
-          <span className={`text-sm font-medium ${activeDimension === 'genotype' ? 'text-teal-700' : 'text-gray-700'}`}>基因型维度</span>
-        </label>
-
         <label className={`flex items-center gap-3 p-2 rounded cursor-pointer transition-colors ${activeDimension === 'environment' ? 'bg-teal-50' : 'hover:bg-gray-50'}`}>
           <input 
             type="radio" 
@@ -107,16 +96,28 @@ export default function MaterialFilter({ filters, onFilterChange, isOpen, onDime
 
             <div className="flex flex-col gap-2">
               <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">数据覆盖度</span>
-              <div className="flex flex-wrap gap-4">
-                <select 
-                   className="w-48 text-sm border-gray-300 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-500 py-2.5"
-                   value={filters.hasGenotype}
-                   onChange={(e) => handleChange('hasGenotype', e.target.value)}
-                >
-                   <option value="all">是否有基因型数据</option>
-                   <option value="yes">是</option>
-                   <option value="no">否</option>
-                </select>
+              <div className="flex flex-wrap gap-4 items-start">
+                <div className="flex flex-col gap-3">
+                  <select 
+                     className="w-48 text-sm border-gray-300 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-500 py-2.5"
+                     value={filters.hasGenotype}
+                     onChange={(e) => handleChange('hasGenotype', e.target.value)}
+                  >
+                     <option value="all">是否有基因型数据</option>
+                     <option value="yes">是</option>
+                     <option value="no">否</option>
+                  </select>
+
+                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200 w-48">
+                    <span className="text-sm text-gray-500 whitespace-nowrap">位点数 ≥</span>
+                    <input 
+                      type="number" 
+                      className="w-full text-sm border-transparent bg-transparent focus:ring-0 text-gray-900 font-medium p-0"
+                      value={filters.siteCountMin}
+                      onChange={(e) => handleChange('siteCountMin', e.target.value)}
+                    />
+                  </div>
+                </div>
 
                 <select 
                    className="w-48 text-sm border-gray-300 rounded-lg shadow-sm focus:border-teal-500 focus:ring-teal-500 py-2.5"
@@ -194,26 +195,6 @@ export default function MaterialFilter({ filters, onFilterChange, isOpen, onDime
                 </select>
               </div>
               <p className="text-xs text-gray-500 mt-1">按性状名称查看统计数据。</p>
-            </div>
-          </div>
-        )}
-
-        {/* Genotype Dimension Content */}
-        {activeDimension === 'genotype' && (
-          <div className="space-y-6 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">基因型筛选</span>
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
-                  <span className="text-sm text-gray-500">位点数 ≥</span>
-                  <input 
-                    type="number" 
-                    className="w-24 text-sm border-transparent bg-transparent focus:ring-0 text-gray-900 font-medium p-0"
-                    value={filters.siteCountMin}
-                    onChange={(e) => handleChange('siteCountMin', e.target.value)}
-                  />
-                </div>
-              </div>
             </div>
           </div>
         )}

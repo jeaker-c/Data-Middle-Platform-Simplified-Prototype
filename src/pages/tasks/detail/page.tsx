@@ -14,7 +14,7 @@ import ImageQCStep from './components/ImageQCStep';
 import ManualBindingStep from './components/ManualBindingStep';
 
 type StepStatus = 'pending' | 'processing' | 'completed' | 'error';
-type TaskType = 'phenotype' | 'genotype' | 'image' | 'directory_scan' | 'environment';
+type TaskType = 'material' | 'phenotype' | 'genotype' | 'image' | 'directory_scan' | 'environment';
 
 interface Step {
   id: number;
@@ -53,27 +53,29 @@ const ENVIRONMENT_STEPS: Step[] = [
   { id: 2, key: 'ingestion', name: '入库确认', status: 'pending', description: '最终确认入库' },
 ];
 
+const cloneSteps = (base: Step[]) => base.map(s => ({ ...s }));
+
 export default function TaskDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [taskType, setTaskType] = useState<TaskType>('phenotype');
   const [activeStepId, setActiveStepId] = useState<number>(1);
-  const [steps, setSteps] = useState<Step[]>(PHENOTYPE_STEPS);
+  const [steps, setSteps] = useState<Step[]>(cloneSteps(PHENOTYPE_STEPS));
 
   const [showFolderModal, setShowFolderModal] = useState(false);
 
   // Reset steps when task type changes
   useEffect(() => {
-    if (taskType === 'phenotype') {
-      setSteps(PHENOTYPE_STEPS);
+    if (taskType === 'phenotype' || taskType === 'material') {
+      setSteps(cloneSteps(PHENOTYPE_STEPS));
     } else if (taskType === 'genotype') {
-      setSteps(GENOTYPE_STEPS);
+      setSteps(cloneSteps(GENOTYPE_STEPS));
     } else if (taskType === 'directory_scan') {
-      setSteps(IMAGE_STEPS);
+      setSteps(cloneSteps(IMAGE_STEPS));
     } else if (taskType === 'environment') {
-      setSteps(ENVIRONMENT_STEPS);
+      setSteps(cloneSteps(ENVIRONMENT_STEPS));
     } else {
-      setSteps(IMAGE_STEPS);
+      setSteps(cloneSteps(IMAGE_STEPS));
       // Show modal when switching to image task for demo purposes
       // In real app, this would be triggered by file upload detection
       setShowFolderModal(true);
@@ -115,12 +117,27 @@ export default function TaskDetailPage() {
   };
 
   const renderStepContent = () => {
-    if (taskType === 'phenotype') {
+    if (taskType === 'material') {
+      switch (activeStep.key) {
+        case 'file_recognition':
+          return <FileRecognitionStep onNext={handleNext} taskType="material" />;
+        case 'sheet_mapping':
+          return <SheetSelectionStep onNext={handleNext} onBack={handleBack} taskType="material" />;
+        case 'validation':
+          return <DataValidationStep onNext={handleNext} onBack={handleBack} taskType="material" />;
+        case 'preview_correction':
+          return <DataCorrectionStep onNext={handleNext} onBack={handleBack} taskType="material" />;
+        case 'ingestion':
+          return <IngestionConfirmationStep onComplete={handleComplete} onBack={handleBack} taskType="material" />;
+        default:
+          return <div>Unknown Step</div>;
+      }
+    } else if (taskType === 'phenotype') {
       switch (activeStep.key) {
         case 'file_recognition':
           return <FileRecognitionStep onNext={handleNext} taskType="phenotype" />;
         case 'sheet_mapping':
-          return <SheetSelectionStep onNext={handleNext} onBack={handleBack} />;
+          return <SheetSelectionStep onNext={handleNext} onBack={handleBack} taskType="phenotype" />;
         case 'validation':
           return <DataValidationStep onNext={handleNext} onBack={handleBack} />;
         case 'preview_correction':
@@ -273,19 +290,21 @@ export default function TaskDetailPage() {
               <div className="flex items-center gap-3">
                 <h1 className="text-lg font-bold text-gray-900">任务详情</h1>
                 <span className={`px-2 py-0.5 rounded text-xs font-medium border ${
-                  taskType === 'phenotype' 
+                  taskType === 'phenotype' || taskType === 'material'
                     ? 'bg-green-50 text-green-700 border-green-200' 
                     : taskType === 'genotype'
                       ? 'bg-blue-50 text-blue-700 border-blue-200'
-                      : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                      : taskType === 'environment'
+                        ? 'bg-teal-50 text-teal-700 border-teal-200'
+                        : 'bg-indigo-50 text-indigo-700 border-indigo-200'
                 }`}>
-                  {taskType === 'phenotype' ? '表型数据' : taskType === 'genotype' ? '基因型数据' : '图像数据'}
+                  {taskType === 'material' ? '材料数据' : taskType === 'phenotype' ? '表型数据' : taskType === 'genotype' ? '基因型数据' : taskType === 'environment' ? '环境数据' : '图像数据'}
                 </span>
               </div>
               <div className="flex items-center gap-4 text-xs text-gray-500 mt-1">
                 <div className="flex items-center gap-1.5">
                   <i className="ri-file-list-3-line"></i>
-                  <span>任务: {taskType === 'phenotype' ? '2024春季表型数据上传' : taskType === 'genotype' ? '玉米群体基因型入库' : '2026年参试品种图片'}</span>
+                  <span>任务: {taskType === 'material' ? '2024春季材料数据上传' : taskType === 'phenotype' ? '2024春季表型数据上传' : taskType === 'genotype' ? '玉米群体基因型入库' : taskType === 'environment' ? '2024Q1环境数据入库' : '2026年参试品种图片'}</span>
                 </div>
                 <span className="w-0.5 h-0.5 bg-gray-300 rounded-full"></span>
                 <div className="flex items-center gap-1.5">
@@ -304,6 +323,12 @@ export default function TaskDetailPage() {
           <div className="flex items-center gap-3">
              {/* Dev Toggle for Demo */}
              <div className="flex bg-gray-100 rounded-lg p-0.5 mr-2">
+                <button 
+                  onClick={() => setTaskType('material')}
+                  className={`px-2.5 py-0.5 text-xs font-medium rounded-md transition-all ${taskType === 'material' ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}
+                >
+                  材料
+                </button>
                 <button 
                   onClick={() => setTaskType('phenotype')}
                   className={`px-2.5 py-0.5 text-xs font-medium rounded-md transition-all ${taskType === 'phenotype' ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}

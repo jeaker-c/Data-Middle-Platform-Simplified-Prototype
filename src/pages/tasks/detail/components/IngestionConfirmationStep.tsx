@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 interface IngestionConfirmationStepProps {
   onComplete: () => void;
   onBack: () => void;
-  taskType?: 'phenotype' | 'genotype' | 'image' | 'directory_scan' | 'environment';
+  taskType?: 'material' | 'phenotype' | 'genotype' | 'image' | 'directory_scan' | 'environment';
 }
 
 export default function IngestionConfirmationStep({ onComplete, onBack, taskType = 'phenotype' }: IngestionConfirmationStepProps) {
@@ -30,15 +30,16 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
   ]);
 
   const [searchStation, setSearchStation] = useState('');
-  const [selectedStation, setSelectedStation] = useState<string | null>(null);
+  const [selectedStations, setSelectedStations] = useState<string[]>([]);
 
   // Store station selection for each file
   const [fileStationMap, setFileStationMap] = useState<Record<string, string>>({});
   const [fileYearMap, setFileYearMap] = useState<Record<string, string>>({}); // Store year selection
 
   const handleStationSelect = (stationId: string) => {
-    setSelectedStation(stationId);
-    // Auto-assign to currently selected files if needed, or just keep state for next action
+    setSelectedStations(prev => (
+      prev.includes(stationId) ? prev.filter(id => id !== stationId) : [...prev, stationId]
+    ));
   };
 
   const handleYearSelect = (fileId: string, year: string) => {
@@ -84,7 +85,7 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
              {envFiles.map(file => (
                <div 
                  key={file.id} 
-                 onClick={() => setSelectedStation(fileStationMap[file.id] || null)}
+                 onClick={() => setSelectedStations(fileStationMap[file.id] ? [fileStationMap[file.id]] : [])}
                  className={`group p-5 rounded-2xl border transition-all cursor-pointer flex flex-col gap-4 ${
                     fileStationMap[file.id] 
                       ? 'bg-indigo-50/30 border-indigo-200' 
@@ -199,27 +200,27 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
                         // For this demo, let's assume we are assigning to all unassigned files or just showing selection
                     }}
                     className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between group ${
-                      selectedStation === station.id 
+                      selectedStations.includes(station.id) 
                         ? 'bg-teal-600 border-teal-600 text-white shadow-lg shadow-teal-200' 
                         : 'bg-white border-gray-100 hover:border-teal-500 hover:shadow-md'
                     }`}
                   >
                     <div className="flex items-center gap-4">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                        selectedStation === station.id ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-teal-50 group-hover:text-teal-600'
+                        selectedStations.includes(station.id) ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-teal-50 group-hover:text-teal-600'
                       }`}>
                         <i className="ri-map-pin-2-line"></i>
                       </div>
                       <div>
-                        <div className={`font-bold text-sm mb-0.5 ${selectedStation === station.id ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`font-bold text-sm mb-0.5 ${selectedStations.includes(station.id) ? 'text-white' : 'text-gray-900'}`}>
                           {station.name}
                         </div>
-                        <div className={`text-xs font-mono ${selectedStation === station.id ? 'text-teal-100' : 'text-gray-400'}`}>
+                        <div className={`text-xs font-mono ${selectedStations.includes(station.id) ? 'text-teal-100' : 'text-gray-400'}`}>
                           {station.id}
                         </div>
                       </div>
                     </div>
-                    {selectedStation === station.id && <i className="ri-check-line text-xl"></i>}
+                    {selectedStations.includes(station.id) && <i className="ri-check-line text-xl"></i>}
                   </div>
                 ))}
               </div>

@@ -4,26 +4,31 @@ import MaterialFilter from './components/MaterialFilter';
 import MaterialList from './components/MaterialList';
 import MaterialDrawer from './components/MaterialDrawer';
 import ExperimentDrawer from './components/ExperimentDrawer';
+import PhenotypeDrawer from './components/PhenotypeDrawer';
 import BatchActionBar from './components/BatchActionBar';
 import DataAgent from './components/DataAgent';
-import { Material, Experiment, FilterState, initialFilterState } from './types';
+import { Material, Experiment, PhenotypeRecord, FilterState, initialFilterState } from './types';
 
 // Mock Data
 const MOCK_MATERIALS: Material[] = [
   { 
     id: 'M001', name: '陕丹1号', type: '自交系', experimentCount: 12, phenotypeCount: 45, hasGenotype: true, hasEnvironment: true, 
+    genotypeSiteCount: 45230,
     tags: ['抗旱', '高产'], updateTime: '2025-01-20' 
   },
   { 
     id: 'M002', name: '郑单958', type: '杂交种', experimentCount: 28, phenotypeCount: 120, hasGenotype: true, hasEnvironment: true, 
+    genotypeSiteCount: 45150,
     tags: ['广泛种植', '抗病'], updateTime: '2025-01-18' 
   },
   { 
     id: 'M003', name: 'B73', type: '自交系', experimentCount: 156, phenotypeCount: 500, hasGenotype: true, hasEnvironment: false, 
+    genotypeSiteCount: 55200,
     tags: ['模式植物', '参考基因组'], updateTime: '2024-12-30' 
   },
   { 
     id: 'M004', name: 'Mo17', type: '自交系', experimentCount: 140, phenotypeCount: 480, hasGenotype: true, hasEnvironment: false, 
+    genotypeSiteCount: 39800,
     tags: ['模式植物'], updateTime: '2024-12-29' 
   },
   { 
@@ -32,6 +37,7 @@ const MOCK_MATERIALS: Material[] = [
   },
   { 
     id: 'M006', name: 'KW7', type: '野生种', experimentCount: 3, phenotypeCount: 12, hasGenotype: true, hasEnvironment: true, 
+    genotypeSiteCount: 12000,
     tags: ['种质资源', '稀有'], updateTime: '2024-11-15' 
   },
   { 
@@ -40,6 +46,7 @@ const MOCK_MATERIALS: Material[] = [
   },
   { 
     id: 'M008', name: '京科968', type: '杂交种', experimentCount: 45, phenotypeCount: 150, hasGenotype: true, hasEnvironment: true, 
+    genotypeSiteCount: 46210,
     tags: ['高产', '多抗'], updateTime: '2025-01-25' 
   },
 ];
@@ -52,6 +59,7 @@ export default function MaterialManagementPage() {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [detailDrawerMaterial, setDetailDrawerMaterial] = useState<Material | null>(null);
   const [detailDrawerExperiment, setDetailDrawerExperiment] = useState<Experiment | null>(null);
+  const [detailDrawerPhenotype, setDetailDrawerPhenotype] = useState<PhenotypeRecord | null>(null);
 
   // Filter Logic
   const filteredData = useMemo(() => {
@@ -71,6 +79,14 @@ export default function MaterialManagementPage() {
       // Genotype
       if (filters.hasGenotype === 'yes' && !item.hasGenotype) return false;
       if (filters.hasGenotype === 'no' && item.hasGenotype) return false;
+
+      if (filters.siteCountMin) {
+        const min = Number(filters.siteCountMin);
+        if (Number.isFinite(min)) {
+          if (!item.genotypeSiteCount) return false;
+          if (item.genotypeSiteCount < min) return false;
+        }
+      }
       
       // Phenotype
       if (filters.hasPhenotype === 'yes' && item.phenotypeCount === 0) return false;
@@ -85,9 +101,18 @@ export default function MaterialManagementPage() {
   // Handlers
   const handleFilterUpdate = (updates: Partial<FilterState>) => {
     setFilters(prev => ({ ...prev, ...updates }));
-    if (updates.materialType || updates.hasGenotype || updates.experiments || updates.year) {
+    if (updates.materialType || updates.hasGenotype || updates.siteCountMin || updates.experiments || updates.year) {
       setIsFilterOpen(true);
     }
+  };
+
+  const handleDimensionChange = (dimension: string) => {
+    setActiveDimension(dimension);
+    if (dimension === 'material') return;
+    if (dimension === 'experiment') return;
+    if (dimension === 'phenotype') return;
+    if (dimension === 'environment') return;
+    setActiveDimension('material');
   };
 
   const handleSelect = (id: string) => {
@@ -151,7 +176,7 @@ export default function MaterialManagementPage() {
               filters={filters} 
               onFilterChange={setFilters}
               isOpen={isFilterOpen} 
-              onDimensionChange={setActiveDimension} // Pass handler
+              onDimensionChange={handleDimensionChange} // Pass handler
             />
           </div>
 
@@ -162,8 +187,21 @@ export default function MaterialManagementPage() {
               selectedIds={selectedIds}
               onSelect={handleSelect}
               onSelectAll={handleSelectAll}
-              onViewDetail={(item) => setDetailDrawerMaterial(item)}
-              onViewExperiment={(exp) => setDetailDrawerExperiment(exp)}
+              onViewDetail={(item) => {
+                setDetailDrawerExperiment(null);
+                setDetailDrawerPhenotype(null);
+                setDetailDrawerMaterial(item);
+              }}
+              onViewExperiment={(exp) => {
+                setDetailDrawerMaterial(null);
+                setDetailDrawerPhenotype(null);
+                setDetailDrawerExperiment(exp);
+              }}
+              onViewPhenotype={(record) => {
+                setDetailDrawerMaterial(null);
+                setDetailDrawerExperiment(null);
+                setDetailDrawerPhenotype(record);
+              }}
               activeDimension={activeDimension} // Pass active dimension
             />
           </div>
@@ -178,6 +216,12 @@ export default function MaterialManagementPage() {
             isOpen={!!detailDrawerExperiment}
             experiment={detailDrawerExperiment}
             onClose={() => setDetailDrawerExperiment(null)}
+          />
+
+          <PhenotypeDrawer
+            isOpen={!!detailDrawerPhenotype}
+            record={detailDrawerPhenotype}
+            onClose={() => setDetailDrawerPhenotype(null)}
           />
           {/* ... */}
         </div>

@@ -25,6 +25,7 @@ interface FieldMapping {
 interface SheetSelectionStepProps {
   onNext: () => void;
   onBack: () => void;
+  taskType?: 'material' | 'phenotype' | 'environment' | 'genotype';
 }
 
 const MOCK_FILES: FileNode[] = [
@@ -37,6 +38,16 @@ const MOCK_FILES: FileNode[] = [
       { id: 's3', name: 'DUS_Data', rowCount: 350, status: 'mapped', type: 'phenotype' },
     ]
   }
+];
+
+const MOCK_MATERIAL_MAPPINGS: FieldMapping[] = [
+  { original: '材料名称', example: 'E9638', mapped: 'material_id', required: true, unique: true },
+  { original: '系谱', example: 'QQ101×PB277', mapped: 'pedigree', required: true, unique: false },
+  { original: '材料类型', example: '自交系', mapped: 'Material_type', required: true, unique: false },
+  { original: '穗轴颜色', example: '红色', mapped: 'Rachis_color', required: false, unique: false },
+  { original: '籽粒颜色', example: '白色', mapped: 'Grain_color', required: false, unique: false },
+  { original: '籽粒类型', example: '马齿', mapped: 'Grain_type', required: false, unique: false },
+  { original: '转基因', example: '否', mapped: 'Genetically_modified', required: false, unique: false }
 ];
 
 const MOCK_PHENOTYPE_MAPPINGS: FieldMapping[] = [
@@ -67,10 +78,10 @@ const MOCK_GENOTYPE_MAPPINGS: FieldMapping[] = [
   { original: 'Well_Position', example: 'A01', mapped: 'well_position', required: false, unique: true },
 ];
 
-export default function SheetSelectionStep({ onNext, onBack }: SheetSelectionStepProps) {
+export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenotype' }: SheetSelectionStepProps) {
   const [selectedSheetId, setSelectedSheetId] = useState<string>('s1');
   const [sheetUsage, setSheetUsage] = useState<'data' | 'ignore'>('data');
-  const [dataType, setDataType] = useState<'phenotype' | 'environment' | 'genotype'>('phenotype');
+  const dataType: 'phenotype' | 'environment' | 'genotype' = taskType === 'material' ? 'phenotype' : taskType;
   const [hasHeader, setHasHeader] = useState(true);
   const [headerRow, setHeaderRow] = useState<number>(1);
   const [activeMappings, setActiveMappings] = useState<FieldMapping[]>([]);
@@ -80,13 +91,15 @@ export default function SheetSelectionStep({ onNext, onBack }: SheetSelectionSte
   
   // Initialize mappings when dataType changes
   useEffect(() => {
-    const mappings = dataType === 'environment' 
-      ? MOCK_ENVIRONMENT_MAPPINGS 
-      : dataType === 'genotype' 
-        ? MOCK_GENOTYPE_MAPPINGS 
-        : MOCK_PHENOTYPE_MAPPINGS;
+    const mappings = taskType === 'material'
+      ? MOCK_MATERIAL_MAPPINGS
+      : dataType === 'environment' 
+        ? MOCK_ENVIRONMENT_MAPPINGS 
+        : dataType === 'genotype' 
+          ? MOCK_GENOTYPE_MAPPINGS 
+          : MOCK_PHENOTYPE_MAPPINGS;
     setActiveMappings(JSON.parse(JSON.stringify(mappings))); // Deep copy to allow editing
-  }, [dataType]);
+  }, [dataType, taskType]);
 
   const handleMappingChange = (index: number, field: keyof FieldMapping, value: any) => {
     const newMappings = [...activeMappings];
@@ -182,22 +195,6 @@ export default function SheetSelectionStep({ onNext, onBack }: SheetSelectionSte
               </div>
             </div>
 
-            {/* 2. Data Type */}
-            {sheetUsage === 'data' && (
-              <div className="flex items-center gap-3">
-                <label className="text-sm font-medium text-gray-700">类型:</label>
-                <select 
-                  value={dataType}
-                  onChange={(e) => setDataType(e.target.value as any)}
-                  className="px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-teal-500 focus:border-teal-500 bg-white"
-                >
-                  <option value="phenotype">表型数据 (Phenotype)</option>
-                  <option value="environment">环境数据 (Environment)</option>
-                  <option value="genotype">基因型数据 (Genotype)</option>
-                </select>
-              </div>
-            )}
-
             {/* 3. Header Handling */}
             {sheetUsage === 'data' && (
                <div className="flex items-center gap-4 pl-4 border-l border-gray-200 ml-2">
@@ -250,8 +247,7 @@ export default function SheetSelectionStep({ onNext, onBack }: SheetSelectionSte
                  <thead className="bg-gray-50 sticky top-0 z-10 shadow-sm">
                    <tr>
                      <th className="py-2 px-4 border-b border-gray-200 text-gray-500 font-semibold w-1/4 text-xs uppercase tracking-wider">
-                       原始列名 
-                       <span className="ml-1 text-gray-400 font-normal normal-case">(点击可编辑)</span>
+                       原始列名
                      </th>
                      <th className="py-2 px-4 border-b border-gray-200 text-gray-500 font-semibold w-1/4 text-xs uppercase tracking-wider">
                         数据示例 {hasHeader ? `(Row ${headerRow + 1})` : '(Row 1)'}

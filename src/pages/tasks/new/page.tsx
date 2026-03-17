@@ -197,6 +197,7 @@ export default function NewTaskPage() {
                         onChange={handleDataTypeChange}
                         className="w-full border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:border-teal-500 focus:ring-teal-500"
                     >
+                        <option value="材料">材料</option>
                         <option value="基因型">基因型</option>
                         <option value="表型">表型</option>
                         <option value="环境">环境</option>
