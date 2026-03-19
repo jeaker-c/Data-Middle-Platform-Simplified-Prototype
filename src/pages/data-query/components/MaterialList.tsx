@@ -67,6 +67,9 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                 <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">
                   查看
                 </th>
+                <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  下载
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -112,6 +115,11 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                         <i className="ri-eye-line"></i>
                       </button>
                     </div>
+                  </td>
+                  <td className="px-6 py-5 whitespace-nowrap text-right">
+                    <button className="w-8 h-8 rounded-lg border border-gray-200 inline-flex items-center justify-center text-gray-400 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-all">
+                      <i className="ri-download-line"></i>
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -231,6 +239,9 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                 <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">
                   查看
                 </th>
+                <th scope="col" className="px-6 py-3 text-right text-xs font-bold text-gray-400 uppercase tracking-wider">
+                  下载
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -272,6 +283,11 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                         className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:border-indigo-200 transition-all inline-flex"
                       >
                         <i className="ri-eye-line"></i>
+                      </button>
+                    </td>
+                    <td className="px-6 py-5 whitespace-nowrap text-right">
+                      <button className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:text-indigo-600 hover:border-indigo-200 hover:bg-indigo-50 transition-all ml-auto">
+                        <i className="ri-download-line"></i>
                       </button>
                     </td>
                   </tr>
@@ -325,6 +341,9 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
               </th>
               <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                 操作
+              </th>
+              <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                下载
               </th>
             </tr>
           </thead>
@@ -389,9 +408,14 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <button 
                     onClick={() => onViewDetail(item)}
-                    className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-all inline-flex"
+                    className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-all inline-flex ml-auto"
                   >
                     <i className="ri-eye-line"></i>
+                  </button>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <button className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:text-teal-600 hover:border-teal-200 hover:bg-teal-50 transition-all ml-auto">
+                    <i className="ri-download-line"></i>
                   </button>
                 </td>
               </tr>

@@ -55,16 +55,6 @@ export default function MaterialDrawer({ material, isOpen, onClose }: MaterialDr
         </button>
       </div>
 
-      {/* Actions */}
-      <div className="px-6 py-4 border-b border-gray-100 flex gap-3">
-        <button className="flex-1 py-2 px-4 bg-teal-50 text-teal-700 rounded-lg text-sm font-medium hover:bg-teal-100 transition-colors">
-          <i className="ri-download-cloud-2-line mr-1"></i> 下载全部数据
-        </button>
-        <button className="flex-1 py-2 px-4 border border-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
-          查看详情
-        </button>
-      </div>
-
       {/* Tabs */}
       <div className="flex border-b border-gray-200 px-6">
         {['试验', '表型', '基因型', '图像', '系谱'].map((tab) => (
