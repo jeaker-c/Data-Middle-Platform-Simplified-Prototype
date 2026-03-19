@@ -85,6 +85,7 @@ export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenoty
   const [hasHeader, setHasHeader] = useState(true);
   const [headerRow, setHeaderRow] = useState<number>(1);
   const [activeMappings, setActiveMappings] = useState<FieldMapping[]>([]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const selectedFile = MOCK_FILES[0];
   const selectedSheet = selectedFile.sheets.find(s => s.id === selectedSheetId) || selectedFile.sheets[0];
@@ -137,9 +138,9 @@ export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenoty
                       <span className="truncate" title={sheet.name}>{sheet.name}</span>
                     </div>
                     <div className="shrink-0 flex items-center">
-                       {sheet.status === 'mapped' && <span className="w-1.5 h-1.5 rounded-full bg-green-500 block" title="已映射"></span>}
-                       {sheet.status === 'skipped' && <span className="w-1.5 h-1.5 rounded-full bg-gray-300 block" title="已跳过"></span>}
-                       {sheet.status === 'pending' && <span className="w-1.5 h-1.5 rounded-full bg-orange-400 block" title="待处理"></span>}
+                       {sheet.status === 'mapped' && <span className="text-[10px] font-medium text-[#008000]" title="已映射">已映射</span>}
+                       {sheet.status === 'skipped' && <span className="text-[10px] font-medium text-gray-400" title="已跳过">已跳过</span>}
+                       {sheet.status === 'pending' && <span className="text-[10px] font-medium text-[#FFA500]" title="待处理">待处理</span>}
                     </div>
                   </div>
                 ))}
@@ -315,7 +316,7 @@ export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenoty
           <div className="flex items-center gap-4">
              <span className="text-xs text-gray-500">已配置 <span className="font-medium text-gray-900">1</span> / 3 个 Sheet</span>
              <button
-               onClick={onNext}
+               onClick={() => setShowConfirmModal(true)}
                className="px-5 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 font-medium shadow-sm transition-colors flex items-center gap-2 text-sm"
              >
                保存并继续
@@ -324,6 +325,40 @@ export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenoty
           </div>
         </div>
       </div>
+
+      {/* Confirm Modal */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center animate-in fade-in duration-200">
+          <div className="bg-white rounded-xl shadow-xl w-[400px] overflow-hidden">
+            <div className="p-6">
+              <div className="flex items-center gap-4 text-orange-500 mb-4">
+                <i className="ri-error-warning-fill text-4xl"></i>
+                <h3 className="text-lg font-bold text-gray-900">存在未完成映射</h3>
+              </div>
+              <p className="text-sm text-gray-600 pl-14">
+                当前任务中存在未完成字段映射的文件或Sheet表，是否继续执行下一步？
+              </p>
+            </div>
+            <div className="px-6 py-4 bg-gray-50 flex justify-end gap-3 border-t border-gray-100">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+              >
+                取消
+              </button>
+              <button
+                onClick={() => {
+                  setShowConfirmModal(false);
+                  onNext();
+                }}
+                className="px-4 py-2 bg-teal-600 text-white rounded-lg text-sm font-medium hover:bg-teal-700 transition-colors shadow-sm"
+              >
+                继续
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
