@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { PhenotypeRecord } from '../types';
 
 interface PhenotypeDrawerProps {
@@ -9,15 +9,21 @@ interface PhenotypeDrawerProps {
 
 export default function PhenotypeDrawer({ record, isOpen, onClose }: PhenotypeDrawerProps) {
   const observations = useMemo(() => {
-    return [
-      { plot: { row: 53, col: 15 }, materialId: 'WM00634', value: 310, unit: 'CM' },
-      { plot: { row: 53, col: 16 }, materialId: 'WM00635', value: 320, unit: 'CM' },
-      { plot: { row: 53, col: 17 }, materialId: 'WM00636', value: 305, unit: 'CM' },
-      { plot: { row: 53, col: 18 }, materialId: 'WM00637', value: 318, unit: 'CM' },
-      { plot: { row: 53, col: 19 }, materialId: 'WM00638', value: 299, unit: 'CM' },
-      { plot: { row: 53, col: 20 }, materialId: 'WM00639', value: 312, unit: 'CM' }
-    ];
+    return Array.from({ length: 60 }).map((_, idx) => ({
+      plot: { row: 53 + Math.floor(idx / 12), col: 15 + (idx % 12) },
+      materialId: `WM${String(634 + idx).padStart(5, '0')}`,
+      value: 290 + ((idx * 7) % 40),
+      unit: 'CM'
+    }));
   }, []);
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const total = observations.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const safePage = Math.min(page, totalPages);
+  const pageStart = (safePage - 1) * pageSize;
+  const pageRows = observations.slice(pageStart, pageStart + pageSize);
 
   if (!isOpen || !record) return null;
 
@@ -40,67 +46,103 @@ export default function PhenotypeDrawer({ record, isOpen, onClose }: PhenotypeDr
         </button>
       </div>
 
-      <div className="flex-1 overflow-y-auto bg-gray-50/50 p-6">
-        <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
-          <div className="grid grid-cols-2 gap-10">
-            <div>
-              <div className="text-xs font-bold text-gray-400 uppercase mb-2">试验名称 (NAME)</div>
-              <div className="text-lg font-bold text-gray-900">{record.experimentName}</div>
+      <div className="flex-1 overflow-y-auto bg-gray-50/50 p-6 space-y-6">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="grid grid-cols-2">
+            <div className="px-6 py-4 border-b border-gray-100">
+              <div className="text-xs text-gray-500">试验名称</div>
+              <div className="text-sm font-semibold text-gray-900 mt-1">{record.experimentName}</div>
             </div>
-            <div>
-              <div className="text-xs font-bold text-gray-400 uppercase mb-2">性状 (TRAIT)</div>
-              <div className="text-lg font-bold text-gray-900">{record.traitName}</div>
+            <div className="px-6 py-4 border-b border-l border-gray-100">
+              <div className="text-xs text-gray-500">性状</div>
+              <div className="text-sm font-semibold text-gray-900 mt-1">{record.traitName}</div>
             </div>
-            <div>
-              <div className="text-xs font-bold text-gray-400 uppercase mb-2">试验年份</div>
-              <div className="text-lg font-bold text-gray-900 border-b-2 border-teal-100 inline-block pb-0.5">{record.year}</div>
+            <div className="px-6 py-4">
+              <div className="text-xs text-gray-500">试验年份</div>
+              <div className="text-sm font-semibold text-gray-900 mt-1">{record.year}</div>
             </div>
-            <div>
-              <div className="text-xs font-bold text-gray-400 uppercase mb-2">观测地点</div>
-              <div className="flex items-center gap-2 text-gray-700 font-bold">
-                <i className="ri-map-pin-line text-teal-500"></i>
-                <span>{record.siteName}</span>
-              </div>
+            <div className="px-6 py-4 border-l border-gray-100">
+              <div className="text-xs text-gray-500">观测地点</div>
+              <div className="text-sm font-semibold text-gray-900 mt-1">{record.siteName}</div>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="text-teal-600">
-              <i className="ri-pulse-line text-xl"></i>
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between bg-white">
+            <div className="flex items-center gap-3">
+              <div className="text-teal-600">
+                <i className="ri-pulse-line text-xl"></i>
+              </div>
+              <div className="text-lg font-bold text-gray-900">数据点详情</div>
             </div>
-            <div className="text-lg font-bold text-gray-900">数据点详情</div>
+            <div className="flex items-center gap-3">
+              <div className="text-xs font-bold text-gray-500">TOTAL: {total}</div>
+              <select
+                value={pageSize}
+                onChange={(e) => {
+                  setPageSize(Number(e.target.value));
+                  setPage(1);
+                }}
+                className="text-xs border-gray-300 rounded-lg px-2 py-1 focus:ring-teal-500 focus:border-teal-500 bg-white"
+              >
+                <option value={10}>10 / 页</option>
+                <option value={20}>20 / 页</option>
+                <option value={50}>50 / 页</option>
+              </select>
+            </div>
           </div>
-          <div className="bg-teal-50 text-teal-700 text-xs font-bold px-3 py-1 rounded-full">TOTAL: {observations.length}</div>
-        </div>
 
-        <div className="mt-4 px-6 flex items-center gap-6 text-xs font-bold text-gray-400">
-          <div className="w-20">小区标识</div>
-          <div className="flex-1 min-w-0">材料名称</div>
-          <div className="w-24 text-right">性状值</div>
-        </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200 text-sm">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-28">排号</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-28">小区号</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">材料名称</th>
+                  <th className="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider w-28">性状值</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-100">
+                {pageRows.map((o) => (
+                  <tr key={`${o.materialId}-${o.plot.row}-${o.plot.col}`} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 whitespace-nowrap text-gray-700 font-medium">{o.plot.row}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-gray-700 font-medium">{o.plot.col}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-gray-900 font-semibold">{o.materialId}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-right text-gray-900 font-semibold">
+                      {o.value} <span className="text-gray-400 font-bold text-xs">{o.unit}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        <div className="mt-3 space-y-4">
-          {observations.map((o) => (
-            <div key={`${o.materialId}-${o.plot.row}-${o.plot.col}`} className="bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-5 flex items-center justify-between">
-              <div className="flex items-center gap-6 min-w-0">
-                <div className="w-20">
-                  <div className="text-sm font-bold text-gray-400">排号 {o.plot.row}</div>
-                  <div className="text-sm font-bold text-gray-400">小区号 {o.plot.col}</div>
-                </div>
-                <div className="min-w-0">
-                  <div className="text-lg font-bold text-gray-900 truncate">{o.materialId}</div>
-                </div>
-              </div>
-              <div className="text-right w-24">
-                <div className="text-2xl font-extrabold text-gray-900">
-                  {o.value}{' '}
-                  <span className="text-sm font-bold text-gray-300 align-middle">{o.unit}</span>
-                </div>
-              </div>
+          <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between bg-white">
+            <div className="text-xs text-gray-500">
+              第 {safePage} / {totalPages} 页，共 {total} 条
             </div>
-          ))}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={safePage <= 1}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                  safePage <= 1 ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                上一页
+              </button>
+              <button
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={safePage >= totalPages}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-colors ${
+                  safePage >= totalPages ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                下一页
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

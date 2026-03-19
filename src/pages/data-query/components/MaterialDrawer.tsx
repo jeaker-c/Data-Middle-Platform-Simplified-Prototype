@@ -9,8 +9,26 @@ interface MaterialDrawerProps {
 
 export default function MaterialDrawer({ material, isOpen, onClose }: MaterialDrawerProps) {
   const [activeTab, setActiveTab] = useState('试验');
+  const [selectedExperiment, setSelectedExperiment] = useState('2024年度玉米抗旱试验');
+  const [selectedSite, setSelectedSite] = useState('杨凌');
+  const [selectedReplicate, setSelectedReplicate] = useState('重复1');
 
   if (!isOpen || !material) return null;
+
+  const phenotypeExperiments = ['2024年度玉米抗旱试验', '2025年度玉米抗旱试验'];
+  const phenotypeSites = [
+    { id: '杨凌', disabled: false },
+    { id: '张掖', disabled: false }
+  ];
+  const phenotypeReplicates = ['重复1', '重复2', '重复3'];
+  const phenotypeMatrix = [
+    { name: '株高', code: 'PH', value: 310.5, unit: 'CM' },
+    { name: '穗位高', code: 'EH', value: 157.0, unit: 'CM' },
+    { name: '小区重量', code: 'PW', value: 12.5, unit: 'KG' },
+    { name: '小区水份', code: 'PM', value: 27.3, unit: '%' },
+    { name: '穗长', code: 'EL', value: 18.2, unit: 'CM' },
+    { name: '穗粗', code: 'ED', value: 4.6, unit: 'CM' }
+  ];
 
   return (
     <div className="absolute top-0 right-0 h-full w-[400px] bg-white shadow-xl border-l border-gray-200 z-10 flex flex-col animate-in slide-in-from-right duration-300">
@@ -49,7 +67,7 @@ export default function MaterialDrawer({ material, isOpen, onClose }: MaterialDr
 
       {/* Tabs */}
       <div className="flex border-b border-gray-200 px-6">
-        {['试验', '表型', '基因型', '环境', '图像', '血缘'].map((tab) => (
+        {['试验', '表型', '基因型', '图像', '系谱'].map((tab) => (
           <button 
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -66,7 +84,44 @@ export default function MaterialDrawer({ material, isOpen, onClose }: MaterialDr
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-6">
-        {activeTab === '图像' ? (
+        {activeTab === '基因型' ? (
+          <div className="space-y-4">
+            <div className="border rounded-xl bg-white overflow-hidden">
+              <div className="px-4 py-2.5 border-b bg-gray-50 text-sm font-semibold text-gray-900 flex items-center gap-2">
+                <i className="ri-dna-line text-teal-600"></i>
+                基因型质控摘要
+              </div>
+              <div className="p-3">
+                <div className="grid grid-cols-3 gap-2">
+                  <div className="border border-gray-200 rounded-lg p-3">
+                    <div className="text-xs font-semibold text-gray-500">缺失率 (Missing)</div>
+                    <div className="mt-1 text-lg font-bold text-gray-900">0.12%</div>
+                  </div>
+                  <div className="border border-gray-200 rounded-lg p-3">
+                    <div className="text-xs font-semibold text-gray-500">杂合率 (Hetero)</div>
+                    <div className="mt-1 text-lg font-bold text-gray-900">4.80%</div>
+                  </div>
+                  <div className="border border-gray-200 rounded-lg p-3">
+                    <div className="text-xs font-semibold text-gray-500">有效 SNP 数</div>
+                    <div className="mt-1 text-lg font-bold text-gray-900">{material.genotypeSiteCount ?? 45230}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === '系谱' ? (
+          <div className="space-y-4">
+            <div className="border rounded-xl bg-white overflow-hidden">
+              <div className="px-4 py-2.5 border-b bg-gray-50 text-sm font-semibold text-gray-900 flex items-center gap-2">
+                <i className="ri-node-tree text-teal-600"></i>
+                系谱
+              </div>
+              <div className="p-4">
+                <div className="text-sm font-mono text-gray-900">XYNO_004/XYNO_624</div>
+              </div>
+            </div>
+          </div>
+        ) : activeTab === '图像' ? (
           <div className="space-y-6">
             <h3 className="text-sm font-semibold text-gray-900 mb-3">相关图像资源 (3)</h3>
             <div className="grid grid-cols-2 gap-3">
@@ -107,6 +162,101 @@ export default function MaterialDrawer({ material, isOpen, onClose }: MaterialDr
             <div className="p-4 bg-teal-50 rounded-lg border border-teal-100 text-xs text-teal-800">
               <i className="ri-information-line mr-1"></i>
               支持查看该材料在不同生长周期的表型图像记录。
+            </div>
+          </div>
+        ) : activeTab === '表型' ? (
+          <div className="space-y-4">
+            <div className="border rounded-xl bg-white overflow-hidden">
+              <div className="px-4 py-2.5 border-b bg-gray-50 text-sm font-semibold text-gray-900 flex items-center gap-2">
+                <i className="ri-links-line text-teal-600"></i>
+                选择关联试验
+              </div>
+              <div className="p-3 flex flex-wrap gap-2">
+                {phenotypeExperiments.map((exp) => (
+                  <button
+                    key={exp}
+                    onClick={() => setSelectedExperiment(exp)}
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors ${
+                      selectedExperiment === exp
+                        ? 'bg-teal-600 text-white border-teal-600'
+                        : 'bg-white text-gray-700 border-gray-200 hover:border-teal-300 hover:bg-teal-50'
+                    }`}
+                  >
+                    {exp}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="border rounded-xl bg-white overflow-hidden">
+              <div className="px-4 py-2.5 border-b bg-gray-50 text-sm font-semibold text-gray-900 flex items-center gap-2">
+                <i className="ri-map-pin-line text-teal-600"></i>
+                数据来源试验点
+              </div>
+              <div className="p-3 grid grid-cols-2 gap-2">
+                {phenotypeSites.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => {
+                      if (s.disabled) return;
+                      setSelectedSite(s.id);
+                    }}
+                    className={`px-3 py-2.5 rounded-lg border text-xs font-semibold transition-colors ${
+                      s.disabled
+                        ? 'bg-gray-50 text-gray-300 border-gray-100 cursor-not-allowed'
+                        : selectedSite === s.id
+                          ? 'bg-teal-50 text-teal-800 border-teal-200'
+                          : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    {s.id}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="border rounded-xl bg-white overflow-hidden">
+              <div className="px-4 py-2.5 border-b bg-gray-50 text-sm font-semibold text-gray-900 flex items-center gap-2">
+                <i className="ri-repeat-2-line text-teal-600"></i>
+                重复
+              </div>
+              <div className="p-3 grid grid-cols-3 gap-2">
+                {phenotypeReplicates.map((r) => (
+                  <button
+                    key={r}
+                    onClick={() => setSelectedReplicate(r)}
+                    className={`px-3 py-2.5 rounded-lg border text-xs font-semibold transition-colors ${
+                      selectedReplicate === r
+                        ? 'bg-teal-50 text-teal-800 border-teal-200'
+                        : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
+                    }`}
+                  >
+                    {r}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="border rounded-xl bg-white overflow-hidden">
+              <div className="px-4 py-2.5 border-b bg-gray-50 flex items-center justify-between">
+                <div className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                  <i className="ri-pulse-line text-teal-600"></i>
+                  表型数据详情
+                </div>
+                <div className="text-xs font-semibold text-gray-500">记录条数: 10</div>
+              </div>
+              <div className="p-2.5 grid grid-cols-2 gap-2">
+                {phenotypeMatrix.map((m) => (
+                  <div key={m.code} className="border border-gray-200 rounded-md p-2.5">
+                    <div className="text-[11px] text-gray-500 font-semibold truncate">
+                      {m.name} ({m.code})
+                    </div>
+                    <div className="mt-1 text-lg font-bold text-gray-900 leading-none">
+                      {m.value.toFixed(1)} <span className="text-[11px] font-bold text-gray-400">{m.unit}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         ) : (

@@ -9,7 +9,7 @@ export default function GenotypeProcessingStep({ onNext, onBack }: GenotypeProce
   const [selectedSheets, setSelectedSheets] = useState<string[]>(['sheet1']);
   const [currentFile, setCurrentFile] = useState('maize_genotype_v3.xlsx');
   const [isFileMenuOpen, setIsFileMenuOpen] = useState(false);
-  const [sampleCol, setSampleCol] = useState('A');
+  const [sampleCol, setSampleCol] = useState('1');
   const [markerDirection, setMarkerDirection] = useState<'row' | 'col'>('row');
 
   const fileMenuRef = useRef<HTMLDivElement>(null);
@@ -148,14 +148,20 @@ export default function GenotypeProcessingStep({ onNext, onBack }: GenotypeProce
                 <input type="checkbox" checked={selectedSheets.includes('sheet1')} onChange={() => toggleSheet('sheet1')} className="rounded text-teal-600 focus:ring-teal-500 border-gray-300" />
                 <span className="font-medium text-gray-700">Genotype_Matrix</span>
               </div>
-              <span className="text-xs text-gray-500">2400 行</span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-gray-500">2400 行</span>
+                <span className="text-xs text-teal-600 font-medium hover:underline flex items-center gap-1"><i className="ri-eye-line"></i>预览</span>
+              </div>
             </label>
             <label className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-all ${selectedSheets.includes('sheet2') ? 'border-teal-500 bg-teal-50' : 'border-gray-200 hover:bg-gray-50'}`}>
               <div className="flex items-center gap-3">
                 <input type="checkbox" checked={selectedSheets.includes('sheet2')} onChange={() => toggleSheet('sheet2')} className="rounded text-teal-600 focus:ring-teal-500 border-gray-300" />
                 <span className="font-medium text-gray-700">Sample_Info</span>
               </div>
-              <span className="text-xs text-gray-500">120 行</span>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-gray-500">120 行</span>
+                <span className="text-xs text-teal-600 font-medium hover:underline flex items-center gap-1"><i className="ri-eye-line"></i>预览</span>
+              </div>
             </label>
           </div>
         </div>
@@ -175,28 +181,10 @@ export default function GenotypeProcessingStep({ onNext, onBack }: GenotypeProce
                 onChange={(e) => setSampleCol(e.target.value)}
                 className="w-full border-gray-300 rounded-lg focus:ring-teal-500 focus:border-teal-500 text-sm"
               >
+                <option value="1">第一行 (Row 1) ⚡默认</option>
                 <option value="A">第一列 (Column A)</option>
                 <option value="B">第二列 (Column B)</option>
-                <option value="1">第一行 (Row 1)</option>
               </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Marker 排列方向</label>
-              <div className="grid grid-cols-2 gap-3">
-                <label onClick={() => setMarkerDirection('row')} className={`flex flex-col items-center justify-center p-3 rounded-lg border cursor-pointer text-center ${markerDirection === 'row' ? 'border-teal-500 bg-teal-50 text-teal-700' : 'border-gray-200 hover:bg-gray-50'}`}>
-                  <input type="radio" name="direction" checked={markerDirection === 'row'} onChange={() => setMarkerDirection('row')} className="sr-only" />
-                  <i className="ri-layout-row-line text-xl mb-1"></i>
-                  <span className="text-sm font-medium">按行排列</span>
-                  <span className="text-xs opacity-75 mt-1">每行一个 SNP</span>
-                </label>
-                <label onClick={() => setMarkerDirection('col')} className={`flex flex-col items-center justify-center p-3 rounded-lg border cursor-pointer text-center ${markerDirection === 'col' ? 'border-teal-500 bg-teal-50 text-teal-700' : 'border-gray-200 hover:bg-gray-50'}`}>
-                  <input type="radio" name="direction" checked={markerDirection === 'col'} onChange={() => setMarkerDirection('col')} className="sr-only" />
-                  <i className="ri-layout-column-line text-xl mb-1"></i>
-                  <span className="text-sm font-medium">按列排列</span>
-                  <span className="text-xs opacity-75 mt-1">每列一个 SNP</span>
-                </label>
-              </div>
             </div>
           </div>
         </div>
