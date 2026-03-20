@@ -79,6 +79,7 @@ const MOCK_GENOTYPE_MAPPINGS: FieldMapping[] = [
 ];
 
 export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenotype' }: SheetSelectionStepProps) {
+  const [files, setFiles] = useState<FileNode[]>(MOCK_FILES);
   const [selectedSheetId, setSelectedSheetId] = useState<string>('s1');
   const [sheetUsage, setSheetUsage] = useState<'data' | 'ignore'>('data');
   const dataType: 'phenotype' | 'environment' | 'genotype' = taskType === 'material' ? 'phenotype' : taskType;
@@ -87,7 +88,7 @@ export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenoty
   const [activeMappings, setActiveMappings] = useState<FieldMapping[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const selectedFile = MOCK_FILES[0];
+  const selectedFile = files.find(f => f.sheets.some(s => s.id === selectedSheetId)) || files[0];
   const selectedSheet = selectedFile.sheets.find(s => s.id === selectedSheetId) || selectedFile.sheets[0];
   
   // Initialize mappings when dataType changes
@@ -108,6 +109,13 @@ export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenoty
     setActiveMappings(newMappings);
   };
 
+  const handleCompleteConfig = () => {
+    setFiles(prev => prev.map(f => ({
+      ...f,
+      sheets: f.sheets.map(s => s.id === selectedSheetId ? { ...s, status: 'mapped' } : s)
+    })));
+  };
+
   return (
     <div className="flex h-full gap-4">
       {/* Left Sidebar: File & Sheet Tree */}
@@ -116,7 +124,7 @@ export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenoty
           <h3 className="font-semibold text-gray-900 text-sm">文件结构</h3>
         </div>
         <div className="p-3 overflow-y-auto flex-1">
-          {MOCK_FILES.map(file => (
+          {files.map(file => (
             <div key={file.id} className="mb-3">
               <div className="flex items-center gap-2 text-gray-700 font-medium mb-1.5 text-sm">
                 <i className="ri-file-excel-line text-green-600"></i>
@@ -138,7 +146,12 @@ export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenoty
                       <span className="truncate" title={sheet.name}>{sheet.name}</span>
                     </div>
                     <div className="shrink-0 flex items-center">
-                       {sheet.status === 'mapped' && <span className="text-[10px] font-medium text-[#008000]" title="已映射">已映射</span>}
+                       {sheet.status === 'mapped' && (
+                         <div className="flex items-center gap-1">
+                           <i className="ri-check-line text-[#008000] text-xs"></i>
+                           <span className="text-[10px] font-medium text-[#008000]" title="已映射">已映射</span>
+                         </div>
+                       )}
                        {sheet.status === 'skipped' && <span className="text-[10px] font-medium text-gray-400" title="已跳过">已跳过</span>}
                        {sheet.status === 'pending' && <span className="text-[10px] font-medium text-[#FFA500]" title="待处理">待处理</span>}
                     </div>
@@ -166,6 +179,12 @@ export default function SheetSelectionStep({ onNext, onBack, taskType = 'phenoty
                   {selectedSheet.rowCount > 0 ? `${selectedSheet.rowCount} 行数据` : '空表'}
                 </span>
              </div>
+             <button
+               onClick={handleCompleteConfig}
+               className="px-4 py-1.5 bg-teal-600 text-white rounded text-sm font-medium hover:bg-teal-600/80 transition-colors shadow-sm"
+             >
+               完成配置
+             </button>
           </div>
 
           <div className="flex flex-wrap items-center gap-6">

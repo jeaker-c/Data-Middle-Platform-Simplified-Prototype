@@ -72,14 +72,6 @@ export default function Navbar() {
               数据查询与管理
             </button>
             <button
-              onClick={() => navigate('/tools')}
-              className={`text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${
-                showWhiteBg ? 'text-gray-700 hover:text-teal-600' : 'text-white hover:text-teal-200'
-              } ${location.pathname === '/tools' ? 'text-teal-600' : ''}`}
-            >
-              文件工具
-            </button>
-            <button
               onClick={() => navigate('/settings')}
               className={`text-sm font-medium transition-colors cursor-pointer whitespace-nowrap ${
                 showWhiteBg ? 'text-gray-700 hover:text-teal-600' : 'text-white hover:text-teal-200'
