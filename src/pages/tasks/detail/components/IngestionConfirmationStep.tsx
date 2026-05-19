@@ -25,32 +25,39 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
     snpCount: '45,230'
   };
 
-  const [envFiles, setEnvFiles] = useState([
+  const [envFiles] = useState([
     { id: '1', name: '2024Q1_德州基地_环境监测数据.xlsx', size: '1.2 MB', items: 900, status: 'verified', type: 'excel' },
+    { id: '2', name: '2024Q2_南繁中心_环境监测数据.xlsx', size: '1.4 MB', items: 1140, status: 'verified', type: 'excel' },
+    { id: '3', name: '2024Q3_五常试验站_环境监测数据.xlsx', size: '1.1 MB', items: 940, status: 'verified', type: 'excel' },
   ]);
 
   const [searchStation, setSearchStation] = useState('');
-  const [selectedStations, setSelectedStations] = useState<string[]>([]);
+  const [activeFileId, setActiveFileId] = useState('1');
 
-  // Store station selection for each file
-  const [fileStationMap, setFileStationMap] = useState<Record<string, string>>({});
-  const [fileYearMap, setFileYearMap] = useState<Record<string, string>>({}); // Store year selection
+  // Store multi-station selection for each file
+  const [fileStationMap, setFileStationMap] = useState<Record<string, string[]>>({});
+  const [fileYearMap, setFileYearMap] = useState<Record<string, string>>({});
+  const [fileCustomYearMap, setFileCustomYearMap] = useState<Record<string, string>>({});
 
-  const handleStationSelect = (stationId: string) => {
-    setSelectedStations(prev => (
-      prev.includes(stationId) ? prev.filter(id => id !== stationId) : [...prev, stationId]
-    ));
+  const handleStationToggle = (fileId: string, stationId: string) => {
+    setFileStationMap(prev => {
+      const selected = prev[fileId] || [];
+      const nextSelected = selected.includes(stationId)
+        ? selected.filter(id => id !== stationId)
+        : [...selected, stationId];
+      return { ...prev, [fileId]: nextSelected };
+    });
   };
 
   const handleYearSelect = (fileId: string, year: string) => {
     setFileYearMap(prev => ({ ...prev, [fileId]: year }));
+    if (year !== 'custom') {
+      setFileCustomYearMap(prev => ({ ...prev, [fileId]: '' }));
+    }
   };
 
-  const assignStationToFile = (fileId: string, stationId: string) => {
-    setFileStationMap(prev => ({
-      ...prev,
-      [fileId]: stationId
-    }));
+  const handleCustomYearChange = (fileId: string, year: string) => {
+    setFileCustomYearMap(prev => ({ ...prev, [fileId]: year }));
   };
 
   const stations = [
@@ -60,9 +67,23 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
     { id: 'WC-05', name: '五常试验站', location: '黑龙江五常' },
   ];
 
+  const yearOptions = Array.from({ length: 11 }, (_, index) => String(2030 - index));
+
   const filteredStations = searchStation.trim() 
     ? stations.filter(s => s.name.includes(searchStation) || s.id.includes(searchStation))
     : stations;
+
+  const activeStationIds = fileStationMap[activeFileId] || [];
+  const canSyncAllEnvFiles = envFiles.every(file => {
+    const stationIds = fileStationMap[file.id] || [];
+    const selectedYear = fileYearMap[file.id];
+    const customYear = (fileCustomYearMap[file.id] || '').trim();
+    const hasValidYear =
+      selectedYear === 'custom'
+        ? /^\d{4}$/.test(customYear)
+        : !!selectedYear;
+    return stationIds.length > 0 && hasValidYear;
+  });
 
   if (taskType === 'environment') {
     return (
@@ -85,9 +106,11 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
              {envFiles.map(file => (
                <div 
                  key={file.id} 
-                 onClick={() => setSelectedStations(fileStationMap[file.id] ? [fileStationMap[file.id]] : [])}
+                 onClick={() => setActiveFileId(file.id)}
                  className={`group p-5 rounded-2xl border transition-all cursor-pointer flex flex-col gap-4 ${
-                    fileStationMap[file.id] 
+                    activeFileId === file.id
+                      ? 'bg-teal-50/40 border-teal-300 shadow-md shadow-teal-50'
+                      : (fileStationMap[file.id]?.length || 0) > 0 
                       ? 'bg-indigo-50/30 border-indigo-200' 
                       : 'bg-white border-gray-100 hover:border-indigo-200 hover:shadow-md hover:shadow-indigo-50'
                  }`}
@@ -111,10 +134,17 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
 
                    <div className="flex items-center gap-4">
                      <div className="flex flex-col items-end gap-1">
-                       {fileStationMap[file.id] ? (
+                       {(fileStationMap[file.id]?.length || 0) > 0 ? (
                          <div className="flex flex-col items-end">
-                           <span className="text-xs font-bold text-indigo-600">{stations.find(s => s.id === fileStationMap[file.id])?.name}</span>
-                           <span className="text-[10px] text-indigo-400 font-mono">{fileStationMap[file.id]}</span>
+                           <span className="text-xs font-bold text-indigo-600 text-right max-w-[220px]">
+                             {(fileStationMap[file.id] || [])
+                               .map(stationId => stations.find(s => s.id === stationId)?.name)
+                               .filter(Boolean)
+                               .join('、')}
+                           </span>
+                           <span className="text-[10px] text-indigo-400 font-mono">
+                             {(fileStationMap[file.id] || []).join(' / ')}
+                           </span>
                          </div>
                        ) : (
                          <span className="text-xs text-gray-400 italic">待关联试验点</span>
@@ -128,11 +158,23 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
                          onClick={(e) => e.stopPropagation()}
                        >
                          <option value="">选择年份...</option>
-                         <option value="2026">2026</option>
-                         <option value="2025">2025</option>
-                         <option value="2024">2024</option>
-                         <option value="2023">2023</option>
+                         {yearOptions.map(year => (
+                           <option key={year} value={year}>
+                             {year}
+                           </option>
+                         ))}
+                         <option value="custom">自定义年份</option>
                        </select>
+                       {fileYearMap[file.id] === 'custom' && (
+                         <input
+                           type="text"
+                           placeholder="输入年份"
+                           value={fileCustomYearMap[file.id] || ''}
+                           onChange={(e) => handleCustomYearChange(file.id, e.target.value.replace(/[^\d]/g, '').slice(0, 4))}
+                           onClick={(e) => e.stopPropagation()}
+                           className="w-[110px] text-xs border-gray-200 rounded py-1 px-2 focus:ring-teal-500 focus:border-teal-500 text-gray-600"
+                         />
+                       )}
                      </div>
                      
                      <span className="px-3 py-1 bg-green-50 text-green-600 rounded-lg text-xs font-bold uppercase tracking-wider border border-green-100">
@@ -140,33 +182,28 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
                      </span>
                    </div>
                  </div>
-
-                 {/* Confirmation Button moved inside file card */}
-                 <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!fileStationMap[file.id]) {
-                      alert('请先选择目标试验点');
-                      return;
-                    }
-                    if (!fileYearMap[file.id]) {
-                      alert('请选择采集年份');
-                      return;
-                    }
-                    onComplete();
-                  }}
-                  disabled={!fileStationMap[file.id] || !fileYearMap[file.id]}
-                  className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${
-                    fileStationMap[file.id]
-                      ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-md hover:shadow-lg' 
-                      : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  }`}
-                >
-                  <i className="ri-save-3-line"></i>
-                  确认关联并同步
-                </button>
                </div>
              ))}
+           </div>
+
+           <div className="mt-6 pt-6 border-t border-gray-100">
+             <button
+               onClick={onComplete}
+               disabled={!canSyncAllEnvFiles}
+               className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-all text-sm ${
+                 canSyncAllEnvFiles
+                   ? 'bg-teal-600 hover:bg-teal-500 text-white shadow-md hover:shadow-lg'
+                   : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+               }`}
+             >
+               <i className="ri-save-3-line"></i>
+               确认关联并同步
+             </button>
+             {!canSyncAllEnvFiles && (
+               <p className="mt-2 text-xs text-amber-600">
+                    请先完成所有环境数据文件的试验点关联与年份选择，再执行同步。
+               </p>
+             )}
            </div>
         </div>
 
@@ -174,9 +211,26 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
         <div className="w-[380px] space-y-6 shrink-0">
            {/* Station Search */}
            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6">
+             <div className="mb-6">
+               <div className="flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-wider">
+                 <i className="ri-map-pin-line text-teal-500"></i>
+                 匹配目标试验点
+               </div>
+               <div className="mt-2">
+                 <div className="text-[11px] text-gray-500 font-medium">当前文件</div>
+                 <div className="mt-1 text-xs text-teal-600 font-semibold leading-5 break-all">
+                   {envFiles.find(file => file.id === activeFileId)?.name || '-'}
+                 </div>
+               </div>
+             </div>
+
+              <div className="mb-3 rounded-lg bg-teal-50 border border-teal-100 p-3 text-xs text-teal-700">
+                支持多选：同一环境数据可关联多个试验地点
+              </div>
+
               <div className="flex items-center gap-2 mb-6 text-gray-400 text-xs font-bold uppercase tracking-wider">
                 <i className="ri-map-pin-line text-teal-500"></i>
-                匹配目标试验点
+                试验点列表
               </div>
 
               <div className="relative mb-6">
@@ -194,42 +248,55 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
                 {filteredStations.map(station => (
                   <div 
                     key={station.id}
-                    onClick={() => {
-                        handleStationSelect(station.id);
-                        // In a real scenario, we might want to select a file first then assign.
-                        // For this demo, let's assume we are assigning to all unassigned files or just showing selection
-                    }}
+                    onClick={() => handleStationToggle(activeFileId, station.id)}
                     className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between group ${
-                      selectedStations.includes(station.id) 
+                      activeStationIds.includes(station.id) 
                         ? 'bg-teal-600 border-teal-600 text-white shadow-lg shadow-teal-200' 
                         : 'bg-white border-gray-100 hover:border-teal-500 hover:shadow-md'
                     }`}
                   >
                     <div className="flex items-center gap-4">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                        selectedStations.includes(station.id) ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-teal-50 group-hover:text-teal-600'
+                        activeStationIds.includes(station.id) ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-teal-50 group-hover:text-teal-600'
                       }`}>
                         <i className="ri-map-pin-2-line"></i>
                       </div>
                       <div>
-                        <div className={`font-bold text-sm mb-0.5 ${selectedStations.includes(station.id) ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`font-bold text-sm mb-0.5 ${activeStationIds.includes(station.id) ? 'text-white' : 'text-gray-900'}`}>
                           {station.name}
                         </div>
-                        <div className={`text-xs font-mono ${selectedStations.includes(station.id) ? 'text-teal-100' : 'text-gray-400'}`}>
-                          {station.id}
+                        <div className={`text-xs ${activeStationIds.includes(station.id) ? 'text-teal-100' : 'text-gray-500'}`}>
+                          {station.location} · <span className="font-mono">{station.id}</span>
                         </div>
                       </div>
                     </div>
-                    {selectedStations.includes(station.id) && <i className="ri-check-line text-xl"></i>}
+                    {activeStationIds.includes(station.id) && <i className="ri-check-line text-xl"></i>}
                   </div>
                 ))}
               </div>
+
            </div>
 
-           {/* Sync Card - Removed */}
-           {/* <div className="bg-[#0f172a] rounded-[32px] p-8 text-white relative overflow-hidden shadow-2xl shadow-slate-900/20">
-              ... content removed ...
-           </div> */}
+           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-5 text-sm text-gray-600">
+             <div className="font-semibold text-gray-900 mb-2">当前文件已关联试验点</div>
+             {(fileStationMap[activeFileId] || []).length > 0 ? (
+               <div className="flex flex-wrap gap-2">
+                 {(fileStationMap[activeFileId] || []).map(stationId => {
+                   const station = stations.find(item => item.id === stationId);
+                   return (
+                     <span
+                       key={stationId}
+                       className="px-2 py-1 rounded-md bg-teal-50 text-teal-700 border border-teal-100 text-xs"
+                     >
+                       {station?.name || stationId}
+                     </span>
+                   );
+                 })}
+               </div>
+             ) : (
+               <div className="text-xs text-gray-400">尚未选择试验点</div>
+             )}
+           </div>
         </div>
       </div>
     );
@@ -238,80 +305,109 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
   if (taskType === 'image') {
     return (
       <div className="flex flex-col h-full">
-         <div className="flex-1 flex flex-col items-center justify-center -mt-10">
-           {/* Success Icon */}
-           <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mb-6 border border-teal-100">
-             <i className="ri-checkbox-line text-4xl text-teal-600"></i>
-           </div>
-           
-           <h2 className="text-2xl font-bold text-gray-900 mb-2">准备就绪，待入库确认</h2>
-            
-            {/* Stats Cards */}
-            <div className="grid grid-cols-4 gap-6 w-full max-w-5xl mb-12 mt-12">
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col items-center text-center">
-                 <div className="text-xs font-bold text-gray-400 uppercase mb-2">待入库总数</div>
-                 <div className="text-4xl font-bold text-gray-900 flex items-baseline gap-2">
-                   384 <span className="text-sm font-medium text-gray-400">份</span>
-                 </div>
-              </div>
+         <div className="flex-1 flex flex-col items-center justify-center -mt-6">
+           <div className="w-full max-w-5xl">
+             <div className="flex flex-col items-center text-center mb-10">
+               <div className="w-18 h-18 bg-emerald-50 rounded-full flex items-center justify-center mb-5 border border-emerald-100">
+                 <i className="ri-checkbox-circle-line text-4xl text-emerald-600"></i>
+               </div>
+               <h2 className="text-2xl font-bold text-gray-900">资源同步确认</h2>
+               <p className="mt-2 text-sm text-gray-500">请确认本次图像资源的同步范围与处理结果</p>
+             </div>
 
-              <div className="bg-green-50/50 rounded-2xl p-6 border border-green-100 shadow-sm flex flex-col items-center text-center">
-                 <div className="text-xs font-bold text-green-600 uppercase mb-2">匹配现有</div>
-                 <div className="text-4xl font-bold text-green-700 flex items-baseline gap-2">
-                   152 <span className="text-sm font-medium text-green-600/60">份</span>
-                 </div>
-              </div>
-
-              <div className="bg-purple-50/50 rounded-2xl p-6 border border-purple-100 shadow-sm flex flex-col items-center text-center">
-                 <div className="text-xs font-bold text-purple-600 uppercase mb-2">新增材料</div>
-                 <div className="text-4xl font-bold text-purple-700 flex items-baseline gap-2">
-                   2 <span className="text-sm font-medium text-purple-600/60">份</span>
-                 </div>
-              </div>
-
-              <div className="bg-red-50/50 rounded-2xl p-6 border border-red-100 shadow-sm flex flex-col items-center text-center">
-                 <div className="text-xs font-bold text-red-600 uppercase mb-2">异常删除</div>
-                 <div className="text-4xl font-bold text-red-700 flex items-baseline gap-2">
-                   12 <span className="text-sm font-medium text-red-600/60">份</span>
-                 </div>
-              </div>
-           </div>
-
-           {/* Policy Card */}
-           <div className="w-full max-w-5xl bg-gray-900 rounded-3xl p-10 text-white relative overflow-hidden flex flex-col justify-center">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-teal-900/20 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
-              
-              <div className="flex items-start gap-5">
-                 <div className="w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center border border-gray-700 shrink-0 mt-1">
-                    <i className="ri-shield-check-line text-teal-400 text-2xl"></i>
-                 </div>
-                 
-                 <div className="flex-1">
-                   <h3 className="text-xl font-bold leading-relaxed">
-                     系统将自动同步 <span className="text-white">372 份</span>合格图像资源。其中包括 <span className="text-purple-400 font-bold border-b-2 border-purple-400/30 px-1">2 份</span> 新材料条目的自动化创建。
-                   </h3>
-                   <div className="h-px bg-gray-800 w-full my-6"></div>
-                   
-                   <div className="flex items-center justify-between">
-                      <button
-                        onClick={() => window.confirm('确定要取消本次任务吗？') && onBack()}
-                        className="px-8 py-4 bg-gray-800 border border-gray-700 text-gray-300 rounded-2xl font-bold hover:bg-gray-700 hover:text-white transition-all flex items-center gap-2"
-                      >
-                        <i className="ri-delete-bin-line"></i>
-                        取消任务
-                      </button>
-
-                      <button
-                        onClick={onComplete}
-                        className="px-16 py-4 bg-teal-600 text-white rounded-2xl font-bold shadow-lg shadow-teal-900/50 hover:bg-teal-500 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-3 text-lg"
-                      >
-                        <i className="ri-save-3-line"></i>
-                        执行入库同步
-                        <i className="ri-arrow-right-line"></i>
-                      </button>
+             <div className="grid grid-cols-4 gap-4 mb-8">
+               <div className="bg-white rounded-lg p-5 border border-emerald-100 shadow-sm">
+                 <div className="flex items-center justify-between mb-4">
+                   <span className="text-sm font-medium text-gray-500">待同步资源</span>
+                   <div className="w-9 h-9 rounded-md bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                     <i className="ri-gallery-line text-lg"></i>
                    </div>
                  </div>
-              </div>
+                 <div className="text-3xl font-bold text-gray-900">384</div>
+                 <div className="mt-1 text-xs text-gray-400">已完成识别与筛选</div>
+               </div>
+
+               <div className="bg-emerald-50/70 rounded-lg p-5 border border-emerald-100 shadow-sm">
+                 <div className="flex items-center justify-between mb-4">
+                   <span className="text-sm font-medium text-emerald-700">已关联材料</span>
+                   <div className="w-9 h-9 rounded-md bg-white text-emerald-600 flex items-center justify-center border border-emerald-100">
+                     <i className="ri-links-line text-lg"></i>
+                   </div>
+                 </div>
+                 <div className="text-3xl font-bold text-emerald-700">152</div>
+                 <div className="mt-1 text-xs text-emerald-600/80">直接同步到已有材料</div>
+               </div>
+
+               <div className="bg-emerald-50/40 rounded-lg p-5 border border-emerald-100 shadow-sm">
+                 <div className="flex items-center justify-between mb-4">
+                   <span className="text-sm font-medium text-emerald-700">新增材料</span>
+                   <div className="w-9 h-9 rounded-md bg-white text-emerald-600 flex items-center justify-center border border-emerald-100">
+                     <i className="ri-add-circle-line text-lg"></i>
+                   </div>
+                 </div>
+                 <div className="text-3xl font-bold text-emerald-700">2</div>
+                 <div className="mt-1 text-xs text-emerald-600/80">同步时自动创建条目</div>
+               </div>
+
+               <div className="bg-amber-50 rounded-lg p-5 border border-amber-100 shadow-sm">
+                 <div className="flex items-center justify-between mb-4">
+                   <span className="text-sm font-medium text-amber-700">异常剔除</span>
+                   <div className="w-9 h-9 rounded-md bg-white text-amber-600 flex items-center justify-center border border-amber-100">
+                     <i className="ri-delete-bin-6-line text-lg"></i>
+                   </div>
+                 </div>
+                 <div className="text-3xl font-bold text-amber-700">12</div>
+                 <div className="mt-1 text-xs text-amber-600/80">不参与本次同步</div>
+               </div>
+             </div>
+
+             <div className="bg-white rounded-lg border border-emerald-100 shadow-sm overflow-hidden">
+               <div className="px-6 py-5 border-b border-emerald-100 bg-emerald-50/70 flex items-start gap-4">
+                 <div className="w-11 h-11 rounded-md bg-white border border-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                   <i className="ri-shield-check-line text-xl"></i>
+                 </div>
+                 <div className="flex-1">
+                   <h3 className="text-lg font-bold text-gray-900">同步说明</h3>
+                   <p className="mt-1 text-sm text-gray-600 leading-6">
+                     系统将同步 372 份合格图像资源，其中 152 份写入已有材料名下，2 份将自动创建新材料条目，其余异常资源不进入资源库。
+                   </p>
+                 </div>
+               </div>
+
+               <div className="px-6 py-5 grid grid-cols-3 gap-4 border-b border-gray-100">
+                 <div className="rounded-md bg-gray-50 px-4 py-3">
+                   <div className="text-xs text-gray-500">同步方式</div>
+                   <div className="mt-1 text-sm font-semibold text-gray-900">按绑定结果自动归档</div>
+                 </div>
+                 <div className="rounded-md bg-gray-50 px-4 py-3">
+                   <div className="text-xs text-gray-500">资源去向</div>
+                   <div className="mt-1 text-sm font-semibold text-gray-900">图像资源库</div>
+                 </div>
+                 <div className="rounded-md bg-gray-50 px-4 py-3">
+                   <div className="text-xs text-gray-500">执行结果</div>
+                   <div className="mt-1 text-sm font-semibold text-emerald-700">同步后即时生效</div>
+                 </div>
+               </div>
+
+               <div className="px-6 py-5 flex items-center justify-between">
+                 <button
+                   onClick={() => window.confirm('确定要取消本次任务吗？') && onBack()}
+                   className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-md font-medium hover:bg-gray-50 transition-all flex items-center gap-2"
+                 >
+                   <i className="ri-close-line"></i>
+                   返回上一步
+                 </button>
+
+                 <button
+                   onClick={onComplete}
+                   className="px-8 py-3 bg-emerald-600 text-white rounded-md font-medium shadow-sm hover:bg-emerald-700 transition-all flex items-center gap-2"
+                 >
+                   <i className="ri-save-3-line"></i>
+                   确认同步资源
+                   <i className="ri-arrow-right-line"></i>
+                 </button>
+               </div>
+             </div>
            </div>
          </div>
       </div>

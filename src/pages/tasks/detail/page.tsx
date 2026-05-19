@@ -210,36 +210,53 @@ export default function TaskDetailPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col relative">
       {/* Folder Structure Detection Modal */}
       {showFolderModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full overflow-hidden animate-in zoom-in-95 duration-200 relative">
+        <div className="fixed inset-0 bg-slate-900/45 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden animate-in zoom-in-95 duration-200 relative border border-emerald-100">
             {/* Background Decoration */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gray-50 rounded-full -mr-16 -mt-16 -z-10"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-50 rounded-full -mr-16 -mt-16 -z-10"></div>
             
             <div className="p-10">
               {/* Header */}
               <div className="flex items-start gap-6 mb-8">
-                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center shrink-0 border border-indigo-100">
-                  <i className="ri-folder-open-line text-3xl text-indigo-600"></i>
+                <div className="w-16 h-16 bg-emerald-50 rounded-lg flex items-center justify-center shrink-0 border border-emerald-100">
+                  <i className="ri-folder-open-line text-3xl text-emerald-600"></i>
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-gray-900 mb-1">检测到目录结构</h3>
-                  <p className="text-sm font-bold text-indigo-300 uppercase tracking-wider">STRUCTURE DETECTION WARNING</p>
+                  <p className="text-sm text-emerald-700 font-medium">检测到压缩包内存在多级子目录，可选择不同的识别方式</p>
                 </div>
                 {/* Decoration Icon */}
-                <div className="ml-auto opacity-10">
-                   <i className="ri-git-branch-line text-8xl text-gray-400"></i>
+                <div className="ml-auto opacity-10 text-emerald-300">
+                   <i className="ri-git-branch-line text-8xl"></i>
                 </div>
               </div>
 
               {/* Content Card */}
-              <div className="bg-gray-50 rounded-2xl p-8 border border-gray-100 mb-10">
-                <p className="text-lg text-gray-700 font-medium leading-relaxed mb-6">
-                  系统检测到上传的压缩包内含有 <span className="text-indigo-600 font-bold border-b-2 border-indigo-200">多级子目录结构</span>。是否优先以“子文件夹名称”作为材料关联的匹配标识?
+              <div className="bg-emerald-50/60 rounded-lg p-7 border border-emerald-100 mb-8">
+                <div className="flex items-start gap-3 mb-5">
+                  <div className="w-10 h-10 rounded-md bg-white border border-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                    <i className="ri-folder-chart-line text-xl"></i>
+                  </div>
+                  <div>
+                    <div className="text-base font-semibold text-gray-900">识别说明</div>
+                    <div className="mt-1 text-sm text-gray-500">建议根据压缩包组织方式选择更合适的解析方式</div>
+                  </div>
+                </div>
+
+                <p className="text-lg text-gray-700 font-medium leading-relaxed mb-5">
+                  系统检测到上传的压缩包内含有 <span className="text-emerald-700 font-bold">多级子目录结构</span>。是否优先以“子文件夹名称”作为材料关联的匹配标识？
                 </p>
                 
-                <div className="inline-flex items-center px-4 py-2 bg-white rounded-lg border border-gray-200 text-sm font-medium text-gray-500 shadow-sm">
-                  <i className="ri-box-3-line mr-2 text-gray-400"></i>
-                  已识别子目录: <span className="text-gray-900 font-bold ml-1">12 个</span>
+                <div className="flex items-center gap-3">
+                  <div className="inline-flex items-center px-4 py-2.5 bg-white rounded-md border border-emerald-100 text-sm font-medium text-gray-600 shadow-sm">
+                    <i className="ri-box-3-line mr-2 text-emerald-500"></i>
+                    已识别子目录
+                    <span className="text-gray-900 font-bold ml-2">12 个</span>
+                  </div>
+                  <div className="inline-flex items-center px-4 py-2.5 bg-white rounded-md border border-emerald-100 text-sm font-medium text-gray-600 shadow-sm">
+                    <i className="ri-information-line mr-2 text-emerald-500"></i>
+                    目录名称可直接参与材料匹配
+                  </div>
                 </div>
               </div>
 
@@ -247,26 +264,26 @@ export default function TaskDetailPage() {
               <div className="flex gap-4">
                 <button 
                   onClick={handleFolderScanConfirm}
-                  className="flex-1 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-lg shadow-lg shadow-indigo-200 transition-all flex items-center justify-center gap-2"
+                  className="flex-1 py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-md font-bold text-lg shadow-sm transition-all flex items-center justify-center gap-2"
                 >
                   <i className="ri-shield-check-line"></i>
                   确认以目录解析
                 </button>
                 <button 
                   onClick={() => setShowFolderModal(false)}
-                  className="flex-1 py-4 bg-white border-2 border-gray-100 text-gray-600 hover:border-gray-300 hover:bg-gray-50 rounded-xl font-bold text-lg transition-all flex items-center justify-center gap-2"
+                  className="flex-1 py-4 bg-white border border-emerald-100 text-gray-700 hover:border-emerald-300 hover:bg-emerald-50 rounded-md font-bold text-lg transition-all flex items-center justify-center gap-2"
                 >
                   <i className="ri-image-line"></i>
                   仅提取图像文件
                 </button>
               </div>
               
-              <div className="text-center mt-6">
+              <div className="text-center mt-5">
                  <button 
                    onClick={() => setShowFolderModal(false)}
-                   className="text-gray-300 text-xs font-bold uppercase tracking-widest hover:text-gray-500 transition-colors"
+                   className="text-gray-400 text-sm font-medium hover:text-emerald-700 transition-colors"
                  >
-                   Dismiss / 返回上一步
+                   返回上一步
                  </button>
               </div>
             </div>

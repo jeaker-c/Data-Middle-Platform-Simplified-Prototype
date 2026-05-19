@@ -57,6 +57,15 @@ const MOCK_TASKS: Task[] = [
     errorCount: 0,
     updatedAt: '2024-03-23 09:30',
     creator: '孙八'
+  },
+  {
+    id: 'T007',
+    name: '重复材料的表型数据',
+    dataType: '表型数据',
+    status: 'pending_mapping',
+    errorCount: 0,
+    updatedAt: '2024-03-24 10:00',
+    creator: '周九'
   }
 ];
 export default function TaskListPage() {
@@ -95,7 +104,11 @@ export default function TaskListPage() {
 
   const filteredTasks = MOCK_TASKS.filter(task => {
     if (filterType && task.dataType !== filterType) return false;
-    if (filterStatus && task.status !== filterStatus) return false;
+    if (filterStatus) {
+      if (filterStatus === 'in_progress' && !['processing', 'validating'].includes(task.status)) return false;
+      if (filterStatus === 'pending_manual' && !['pending_mapping', 'fixing', 'image_qc'].includes(task.status)) return false;
+      if (filterStatus === 'completed' && task.status !== 'stored') return false;
+    }
     if (searchText && !task.name.includes(searchText) && !task.creator.includes(searchText)) return false;
     return true;
   });
@@ -144,13 +157,9 @@ export default function TaskListPage() {
               onChange={(e) => setFilterStatus(e.target.value)}
             >
               <option value="">全部状态</option>
-              <option value="processing">解析中</option>
-              <option value="pending_mapping">待映射</option>
-              <option value="validating">规则校验中</option>
-              <option value="fixing">需修正</option>
-              <option value="stored">已存储</option>
-              <option value="error">异常</option>
-              <option value="image_qc">图像质检</option>
+              <option value="in_progress">解析中</option>
+              <option value="pending_manual">待人工处理</option>
+              <option value="completed">已完成</option>
             </select>
           </div>
           <div className="flex-1 min-w-[240px]">
@@ -158,7 +167,7 @@ export default function TaskListPage() {
             <div className="relative">
               <input 
                 type="text" 
-                placeholder="搜索文件名 / 创建人" 
+                placeholder="搜索任务名 / 创建人" 
                 className="w-full pl-10 pr-4 rounded-lg border-gray-300 shadow-sm focus:border-teal-500 focus:ring-teal-500 text-sm"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
@@ -174,7 +183,7 @@ export default function TaskListPage() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">任务ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">文件名</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">任务名</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">数据类型</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">异常数</th>

@@ -7,18 +7,31 @@ interface DataCorrectionStepProps {
 }
 
 export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenotype' }: DataCorrectionStepProps) {
-  const [errorCount, setErrorCount] = useState(15);
+  const [errorCount, setErrorCount] = useState(18);
   
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
-  const [phenotypeRows, setPhenotypeRows] = useState([
-    { id: 102, crop_id: 'CROP-2025102', height: '350', ear_height: '85', reason: '株高超出正常范围 (0-300)', fixed: false },
-    { id: 145, crop_id: 'CROP-2025145', height: '175', ear_height: '', reason: '必填字段缺失：穗位高', fixed: false },
-    { id: 288, crop_id: 'CROP-2025001', height: '160', ear_height: '80', reason: '作物编号重复', fixed: false },
-    { id: 289, crop_id: 'CROP-2025289', height: 'abc', ear_height: '82', reason: '株高必须为数值', fixed: false },
+  const phenotypeMaterialNames = ['京科968', '郑单958', '先玉335', '登海605', '迪卡517', '农华101'];
+  const phenotypeExperiments = ['2024年度玉米抗旱试验', '2025年度玉米高产试验', '2025年度玉米区域试验'];
+  const phenotypePlotNos = ['A-01', 'A-02', 'B-03', 'C-05', 'D-07', 'E-09', 'F-11'];
+
+  const [phenotypeRows, setPhenotypeRows] = useState<any[]>([
+    { id: 901, line_no: '208', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'A-02', crop_id: 'CROP-2025208', height: '168', ear_height: '82', reason: '唯一字段「材料名称、试验、排号、行号、作物编号」重复。', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 1, duplicate_origin: 'phenotype-dup-1' },
+    { id: 902, line_no: '208', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'A-02', crop_id: 'CROP-2025208', height: '529', ear_height: '84', reason: '唯一字段「材料名称、试验、排号、行号、作物编号」重复。；株高超出正常范围 (0-300)', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 2, duplicate_origin: 'phenotype-dup-1', needsHeightValidation: true },
+    { id: 903, line_no: '208', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'A-02', crop_id: 'CROP-2025208', height: '526', ear_height: '79', reason: '唯一字段「材料名称、试验、排号、行号、作物编号」重复。；株高超出正常范围 (0-300)', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 3, duplicate_origin: 'phenotype-dup-1', needsHeightValidation: true },
+    { id: 904, line_no: '208', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'A-02', crop_id: 'CROP-2025208', height: '173', ear_height: '86', reason: '唯一字段「材料名称、试验、排号、行号、作物编号」重复。', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 4, duplicate_origin: 'phenotype-dup-1' },
+    { id: 102, line_no: '102', material_name: '京科968', experiment: '2024年度玉米抗旱试验', plot_no: 'A-01', crop_id: 'CROP-2025102', height: '350', ear_height: '85', reason: '株高超出正常范围 (0-300)', fixed: false },
+    { id: 145, line_no: '145', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'B-03', crop_id: 'CROP-2025145', height: '175', ear_height: '', reason: '必填字段缺失：穗位高', fixed: false },
+    { id: 288, line_no: '288', material_name: '先玉335', experiment: '2025年度玉米区域试验', plot_no: 'C-05', crop_id: 'CROP-2025001', height: '160', ear_height: '80', reason: '作物编号重复', fixed: false },
+    { id: 289, line_no: '289', material_name: '登海605', experiment: '2024年度玉米抗旱试验', plot_no: 'D-07', crop_id: 'CROP-2025289', height: 'abc', ear_height: '82', reason: '株高必须为数值', fixed: false },
     ...Array.from({ length: 10 }).map((_, i) => ({
       id: 300 + i,
+      line_no: String(300 + i),
+      material_name: phenotypeMaterialNames[(300 + i) % phenotypeMaterialNames.length],
+      experiment: phenotypeExperiments[(300 + i) % phenotypeExperiments.length],
+      plot_no: phenotypePlotNos[(300 + i) % phenotypePlotNos.length],
       crop_id: `CROP-2025${300 + i}`,
       height: String(100 + i * 10),
       ear_height: String(50 + i * 5),
@@ -27,7 +40,7 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
     }))
   ]);
 
-  const [materialRows, setMaterialRows] = useState([
+  const [materialRows, setMaterialRows] = useState<any[]>([
     { id: 1, name: 'XY25H3007', pedigree: 'XYNO_004/XYNO_624', type: '杂交种', rachis_color: '红', grain_color: '白', grain_type: '硬粒', gmo: '是', reason: '材料名称重复', fixed: false },
     { id: 11, name: 'XY25H3007', pedigree: 'XYNO_552/XYNO_615', type: '杂交种', rachis_color: '1', grain_color: '黄', grain_type: '半马齿', gmo: 'TRUE', reason: '转基因只能填写为是/否', fixed: false },
     { id: 111, name: 'SH000464', pedigree: '中垦玉21母本/NF119母本', type: '', rachis_color: '白', grain_color: '白', grain_type: '马齿', gmo: '', reason: '必填字段缺失', fixed: false },
@@ -48,33 +61,180 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
   const rows = taskType === 'material' ? materialRows : phenotypeRows;
   const setRows = taskType === 'material' ? setMaterialRows : setPhenotypeRows;
 
+  const visibleRows = taskType === 'material'
+    ? rows
+    : (() => {
+        const seenGroups = new Set<string>();
+        return phenotypeRows.reduce<any[]>((acc, row: any) => {
+          if (!row.duplicate_group) {
+            acc.push(row);
+            return acc;
+          }
+
+          if (expandedGroups[row.duplicate_group]) {
+            acc.push(row);
+            return acc;
+          }
+
+          if (!seenGroups.has(row.duplicate_group)) {
+            seenGroups.add(row.duplicate_group);
+            acc.push({
+              ...row,
+              __duplicateSummary: true,
+              duplicate_count: phenotypeRows.filter((item: any) => item.duplicate_group === row.duplicate_group).length
+            });
+          }
+
+          return acc;
+        }, []);
+      })();
+
   // Pagination logic
-  const total = rows.length;
+  const total = visibleRows.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   const safePage = Math.min(page, totalPages);
   const pageStart = (safePage - 1) * pageSize;
-  const pageRows = rows.slice(pageStart, pageStart + pageSize);
+  const pageRows = visibleRows
+    .slice(pageStart, pageStart + pageSize)
+    .map((row: any, index: number) => ({
+      ...row,
+      __serial: pageStart + index + 1
+    }));
+
+  const duplicateReason = '唯一字段「材料名称、试验、排号、行号、作物编号」重复。';
+  const heightLimitReason = '株高超出正常范围 (0-300)';
+  const getCompositeKey = (row: any) =>
+    `${row.material_name}__${row.line_no || row.id}__${row.experiment}__${row.plot_no}__${row.crop_id}`;
+  const isHeightInNormalRange = (row: any) => {
+    const heightValue = Number(row.height);
+    return Number.isFinite(heightValue) && heightValue > 0 && heightValue <= 300;
+  };
+  const getDuplicateRowReason = (row: any, includeDuplicate: boolean) => {
+    const reasons: string[] = [];
+    if (includeDuplicate) reasons.push(duplicateReason);
+    if (row.needsHeightValidation && !isHeightInNormalRange(row)) reasons.push(heightLimitReason);
+    return reasons.join('；');
+  };
+  const getManagedDuplicateState = (row: any, allRows: any[]) => {
+    const hasDuplicate = allRows.some((item: any) => item.id !== row.id && getCompositeKey(item) === getCompositeKey(row));
+    const hasHeightError = !!row.needsHeightValidation && !isHeightInNormalRange(row);
+    return {
+      fixed: !hasDuplicate && !hasHeightError,
+      reason: getDuplicateRowReason(row, hasDuplicate),
+    };
+  };
+  const syncManagedDuplicateRows = (sourceRows: any[]) =>
+    sourceRows.map((row: any) => {
+      if (!row.duplicate_origin) {
+        return row;
+      }
+      const state = getManagedDuplicateState(row, sourceRows);
+      return {
+        ...row,
+        fixed: state.fixed,
+        reason: state.fixed ? row.reason : state.reason,
+      };
+    });
 
   const handleFix = (id: number, field: string, value: string) => {
-    // @ts-ignore
-    setRows(rows.map(row => 
-      row.id === id ? { ...row, [field]: value, fixed: true } : row
-    ));
+    if (taskType === 'material') {
+      setMaterialRows(prev =>
+        prev.map(row =>
+          row.id === id ? { ...row, [field]: value, fixed: true } : row
+        )
+      );
+      return;
+    }
+
+    setPhenotypeRows(prev => {
+      const updatedRows = prev.map((row: any) =>
+        row.id === id ? { ...row, [field]: value } : row
+      );
+      const syncedRows = syncManagedDuplicateRows(updatedRows);
+
+      const targetRow = syncedRows.find((row: any) => row.id === id);
+      if (!targetRow?.duplicate_origin) {
+        if (targetRow?.reason === heightLimitReason) {
+          return syncedRows.map((row: any) =>
+            row.id === id
+              ? {
+                  ...row,
+                  fixed: isHeightInNormalRange(row),
+                  reason: isHeightInNormalRange(row) ? row.reason : heightLimitReason,
+                }
+              : row
+          );
+        }
+
+        return syncedRows.map((row: any) =>
+          row.id === id ? { ...row, fixed: true } : row
+        );
+      }
+
+      return syncedRows;
+    });
   };
 
   const handleDelete = (id: number) => {
-    // @ts-ignore
-    setRows(rows.filter(row => row.id !== id));
+    if (taskType === 'material') {
+      setMaterialRows(prev => prev.filter(row => row.id !== id));
+      return;
+    }
+
+    setPhenotypeRows(prev => {
+      const targetRow = prev.find((row: any) => row.id === id);
+      const nextRows = prev.filter((row: any) => row.id !== id);
+
+      if (!targetRow?.duplicate_group) {
+        return nextRows;
+      }
+
+      const sameGroupRows = nextRows.filter((row: any) => row.duplicate_group === targetRow.duplicate_group);
+
+      if (sameGroupRows.length === 1) {
+        return nextRows.map((row: any) =>
+          row.id === sameGroupRows[0].id
+            ? {
+                ...row,
+                fixed: isHeightInNormalRange(row),
+                reason: isHeightInNormalRange(row) ? row.reason : heightLimitReason,
+                duplicate_group: undefined,
+                duplicate_index: undefined,
+              }
+            : row
+        );
+      }
+
+      return nextRows;
+    });
+  };
+
+  const toggleGroup = (groupId: string) => {
+    setExpandedGroups(prev => ({ ...prev, [groupId]: !prev[groupId] }));
   };
 
   const handleRevalidate = () => {
     // Simulate validation
-    const remainingErrors = rows.filter(r => !r.fixed).length;
-    setErrorCount(remainingErrors);
-    
-    if (remainingErrors === 0) {
-      // All good
+    if (taskType === 'material') {
+      const remainingErrors = rows.filter(r => !r.fixed).length;
+      setErrorCount(remainingErrors);
+      return;
     }
+
+    setPhenotypeRows(prev => {
+      const syncedRows = syncManagedDuplicateRows(prev);
+      const detachedRows = syncedRows.map((row: any) =>
+        row.duplicate_origin && row.fixed && row.duplicate_group
+          ? {
+              ...row,
+              duplicate_group: undefined,
+              duplicate_index: undefined,
+            }
+          : row
+      );
+      setErrorCount(detachedRows.filter((row: any) => !row.fixed).length);
+      return detachedRows;
+    });
   };
 
   const [selectedFile, setSelectedFile] = useState('2024_phenotype_data.xlsx');
@@ -154,6 +314,7 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
           <thead className="bg-gray-50">
             {taskType === 'material' ? (
               <tr>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[64px]">序号</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">行号</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">材料名称</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">系谱</th>
@@ -167,21 +328,71 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
               </tr>
             ) : (
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">行号</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作物编号</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">株高(cm)</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">穗位高</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">错误原因</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[64px]">序号</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[140px]">材料名称</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[72px]">行号</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[170px]">试验</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[80px]">排号</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[130px]">作物编号</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[88px]">株高(cm)</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[88px]">穗位高</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[220px]">错误原因</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[64px]">操作</th>
               </tr>
             )}
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {pageRows.map((row) => (
-              <tr key={row.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.id}</td>
+            {pageRows.map((row: any) => (
+              row.__duplicateSummary ? (
+                <tr key={`summary-${row.duplicate_group}`} className="bg-amber-50/40 hover:bg-amber-50/60">
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-mono">
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => toggleGroup(row.duplicate_group)}
+                        className="w-5 h-5 inline-flex items-center justify-center rounded text-amber-700 hover:bg-amber-100 transition-colors shrink-0"
+                        title="展开重复数据"
+                      >
+                        <i className="ri-arrow-right-s-line text-base"></i>
+                      </button>
+                      <span>{row.__serial}</span>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900 font-medium">
+                    <div className="text-left text-amber-900">{row.material_name}</div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-mono">{row.line_no || row.id}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{row.experiment}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{row.plot_no}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{row.crop_id}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400">--</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400">--</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-amber-700">
+                    <div
+                      className="max-w-[220px] overflow-hidden text-ellipsis whitespace-nowrap"
+                      title={`${row.reason} 当前共 ${row.duplicate_count} 条。`}
+                    >
+                      {row.reason} 当前共 {row.duplicate_count} 条。
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
+                    <button 
+                      onClick={() => handleDelete(row.id)}
+                      className="text-gray-400 hover:text-red-600 transition-colors"
+                      title="删除此行"
+                    >
+                      <i className="ri-delete-bin-line text-lg"></i>
+                    </button>
+                  </td>
+                </tr>
+              ) : (
+              <tr key={row.id} className={row.duplicate_group ? 'bg-amber-50/20 hover:bg-amber-50/40' : 'hover:bg-gray-50'}>
                 {taskType === 'material' ? (
                   <>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-mono">
+                      {row.__serial}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.id}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       <input 
                         type="text"
@@ -251,46 +462,106 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
                   </>
                 ) : (
                   <>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-mono">
+                      <div className="flex items-center gap-1">
+                        {row.duplicate_group && row.duplicate_index === 1 ? (
+                          <button
+                            type="button"
+                            onClick={() => toggleGroup(row.duplicate_group)}
+                            className="w-5 h-5 inline-flex items-center justify-center rounded text-amber-700 hover:bg-amber-100 transition-colors shrink-0"
+                            title="收起重复数据"
+                          >
+                            <i className="ri-arrow-down-s-line text-base"></i>
+                          </button>
+                        ) : row.duplicate_group ? (
+                          <span className="w-5 h-5 shrink-0"></span>
+                        ) : null}
+                        <span>{row.__serial}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                      <input
+                        type="text"
+                        // @ts-ignore
+                        value={row.material_name}
+                        onChange={(e) => handleFix(row.id, 'material_name', e.target.value)}
+                        className={`block w-32 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.duplicate_group ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                      <input
+                        type="text"
+                        // @ts-ignore
+                        value={row.line_no || row.id}
+                        onChange={(e) => handleFix(row.id, 'line_no', e.target.value)}
+                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.duplicate_group ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                      <input
+                        type="text"
+                        // @ts-ignore
+                        value={row.experiment}
+                        onChange={(e) => handleFix(row.id, 'experiment', e.target.value)}
+                        className={`block w-44 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.duplicate_group ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
+                      <input
+                        type="text"
+                        // @ts-ignore
+                        value={row.plot_no}
+                        onChange={(e) => handleFix(row.id, 'plot_no', e.target.value)}
+                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.duplicate_group ? 'border-red-300 bg-red-50' : ''}`}
+                      />
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                       <input 
                         type="text"
                         // @ts-ignore
                         value={row.crop_id}
                         onChange={(e) => handleFix(row.id, 'crop_id', e.target.value)}
                         // @ts-ignore
-                        className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('作物编号') ? 'border-red-300 bg-red-50' : ''}`}
+                        className={`block w-32 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('作物编号') ? 'border-red-300 bg-red-50' : ''}`}
                       />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                       <input 
                         type="text"
                         // @ts-ignore
                         value={row.height}
                         onChange={(e) => handleFix(row.id, 'height', e.target.value)}
                         // @ts-ignore
-                        className={`block w-24 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('株高') ? 'border-red-300 bg-red-50' : ''}`}
+                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('株高') || !isHeightInNormalRange(row) ? 'border-red-300 bg-red-50' : ''}`}
                       />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                       <input 
                         type="text"
                         // @ts-ignore
                         value={row.ear_height}
                         onChange={(e) => handleFix(row.id, 'ear_height', e.target.value)}
                         // @ts-ignore
-                        className={`block w-24 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('穗位高') ? 'border-red-300 bg-red-50' : ''}`}
+                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('穗位高') ? 'border-red-300 bg-red-50' : ''}`}
                       />
                     </td>
                   </>
                 )}
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-red-600">
                    {row.fixed ? (
-                     <span className="text-green-600 flex items-center gap-1">
+                     <span className="text-green-600 flex items-center gap-1 whitespace-nowrap">
                        <i className="ri-check-line"></i> 已修改
                      </span>
-                   ) : row.reason}
+                   ) : (
+                     <div
+                       className="max-w-[220px] overflow-hidden text-ellipsis whitespace-nowrap"
+                       title={row.reason}
+                     >
+                       {row.reason}
+                     </div>
+                   )}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500">
                   <button 
                     onClick={() => handleDelete(row.id)}
                     className="text-gray-400 hover:text-red-600 transition-colors"
@@ -300,7 +571,7 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
                   </button>
                 </td>
               </tr>
-            ))}
+            )))}
           </tbody>
         </table>
         {rows.length === 0 && (

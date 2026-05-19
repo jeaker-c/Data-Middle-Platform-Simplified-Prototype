@@ -6,6 +6,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [species, setSpecies] = useState('玉米');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -19,6 +20,7 @@ export default function LoginPage() {
     // 模拟登录延迟，增加交互感
     setTimeout(() => {
       setIsLoading(false);
+      localStorage.setItem('selectedSpecies', species);
       navigate('/overview');
     }, 800);
   };
@@ -73,6 +75,31 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 block ml-1">
+                物种
+              </label>
+              <div className="relative group">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <i className="ri-leaf-line text-gray-400 group-focus-within:text-teal-500 transition-colors"></i>
+                </div>
+                <select
+                  value={species}
+                  onChange={(e) => setSpecies(e.target.value)}
+                  className="block w-full pl-11 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-200 appearance-none"
+                >
+                  <option value="玉米">玉米</option>
+                  <option value="水稻">水稻</option>
+                  <option value="油菜">油菜</option>
+                  <option value="大豆">大豆</option>
+                  <option value="小麦">小麦</option>
+                </select>
+                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                  <i className="ri-arrow-down-s-line text-gray-400"></i>
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 block ml-1">
                 账号

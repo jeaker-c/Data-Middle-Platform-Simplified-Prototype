@@ -12,6 +12,7 @@ const LoginPage = lazy(() => import("../pages/login/page"));
 const TaskListPage = lazy(() => import("../pages/tasks/page"));
 const NewTaskPage = lazy(() => import("../pages/tasks/new/page"));
 const TaskDetailPage = lazy(() => import("../pages/tasks/detail/page"));
+const UploaderDetailPage = lazy(() => import("../pages/uploaders/page"));
 
 
 const Loading = () => (
@@ -62,6 +63,10 @@ const routes: RouteObject[] = [
   {
     path: "/tasks/:id",
     element: lazyLoad(TaskDetailPage),
+  },
+  {
+    path: "/uploaders/:uploaderId",
+    element: lazyLoad(UploaderDetailPage),
   },
 
   {

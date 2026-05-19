@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 
 const stats = [
   {
@@ -50,13 +51,18 @@ const phenotypeData = [
   { id: 4, name: '玉米生长周期记录_2025.xlsx', size: '4.1 MB', time: '2025-01-08 09:00', user: '王助理', status: 'processing' }
 ];
 
-export default function StatsOverview() {
+export default function StatsOverview({ tabSlot }: { tabSlot?: ReactNode } = {}) {
   return (
     <section className="pb-8">
       <div className="max-w-[1600px] mx-auto px-6">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">数据概览</h2>
-          <p className="text-sm text-gray-500 mt-1">实时监控平台数据状态，掌握最新动态</p>
+        <div className="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">数据概览</h2>
+            <p className="text-sm text-gray-500 mt-1">实时监控平台数据状态，掌握最新动态</p>
+          </div>
+          <div className="flex items-center gap-3">
+            {tabSlot}
+          </div>
         </div>
 
         {/* 统计卡片 */}

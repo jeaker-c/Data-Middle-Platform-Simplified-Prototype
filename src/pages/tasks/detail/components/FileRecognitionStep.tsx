@@ -98,6 +98,31 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
                { name: 'Sheet1', rowCount: 450, colCount: 8, isEmpty: false, isDataTable: true },
                { name: 'Sheet2', rowCount: 450, colCount: 6, isEmpty: false, isDataTable: true }
             ]
+          },
+          {
+            id: '2',
+            name: '2024Q2_南繁中心_环境监测数据.xlsx',
+            type: 'Excel',
+            size: '1.4 MB',
+            sheetCount: 3,
+            status: 'success',
+            sheets: [
+               { name: '气象监测', rowCount: 520, colCount: 9, isEmpty: false, isDataTable: true },
+               { name: '土壤监测', rowCount: 500, colCount: 7, isEmpty: false, isDataTable: true },
+               { name: '灌溉记录', rowCount: 120, colCount: 5, isEmpty: false, isDataTable: true }
+            ]
+          },
+          {
+            id: '3',
+            name: '2024Q3_五常试验站_环境监测数据.xlsx',
+            type: 'Excel',
+            size: '1.1 MB',
+            sheetCount: 2,
+            status: 'success',
+            sheets: [
+               { name: '温湿度监测', rowCount: 480, colCount: 8, isEmpty: false, isDataTable: true },
+               { name: '降雨风速', rowCount: 460, colCount: 6, isEmpty: false, isDataTable: true }
+            ]
           }
         ]);
       } else {
