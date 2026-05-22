@@ -79,7 +79,7 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                     <input type="checkbox" className="rounded text-teal-600 focus:ring-teal-500 border-gray-300" />
                   </td>
                   <td className="px-6 py-5 whitespace-nowrap">
-                    <span className="text-sm font-bold text-gray-700">株高</span>
+                    <span className="text-sm font-bold text-gray-700">树高</span>
                   </td>
                   <td className="px-6 py-5 whitespace-nowrap">
                     <span className="text-sm font-bold text-gray-700">2025年</span>
@@ -103,7 +103,7 @@ export default function MaterialList({ data, selectedIds, onSelect, onSelectAll,
                       <button
                         onClick={() =>
                           onViewPhenotype?.({
-                            traitName: '株高',
+                            traitName: '树高',
                             year: '2025年',
                             experimentName: row.experimentName,
                             siteName: row.siteName,

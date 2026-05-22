@@ -20,16 +20,16 @@ export default function DataValidationStep({ onNext, onBack, taskType = 'phenoty
   };
 
   const phenotypeErrorRows = [
-    { id: 102, crop_id: 'CROP-2025102', height: '350', ear_height: '85', reason: '株高超出正常范围 (0-300)' },
-    { id: 145, crop_id: 'CROP-2025145', height: '175', ear_height: '', reason: '必填字段缺失：穗位高' },
-    { id: 288, crop_id: 'CROP-2025001', height: '160', ear_height: '80', reason: '作物编号重复' },
-    { id: 289, crop_id: 'CROP-2025289', height: 'abc', ear_height: '82', reason: '株高必须为数值' },
+    { id: 102, tree_id: 'PEACH-2025102', height: '350', crown_width: '85', reason: '树高超出正常范围 (0-300)' },
+    { id: 145, tree_id: 'PEACH-2025145', height: '175', crown_width: '', reason: '必填字段缺失：冠幅' },
+    { id: 288, tree_id: 'PEACH-2025001', height: '160', crown_width: '80', reason: '桃树编号重复' },
+    { id: 289, tree_id: 'PEACH-2025289', height: 'abc', crown_width: '82', reason: '树高必须为数值' },
   ];
 
   const materialErrorRows = [
-    { id: 1, name: 'XY25H3007', pedigree: 'XYNO_004/XYNO_624', type: '杂交种', rachis_color: '红', grain_color: '白', grain_type: '硬粒', gmo: '是', reason: '材料名称重复' },
-    { id: 11, name: 'XY25H3007', pedigree: 'XYNO_552/XYNO_615', type: '杂交种', rachis_color: '1', grain_color: '黄', grain_type: '半马齿', gmo: 'TRUE', reason: '转基因只能填写为是/否' },
-    { id: 111, name: 'SH000464', pedigree: '中垦玉21母本/NF119母本', type: '', rachis_color: '白', grain_color: '白', grain_type: '马齿', gmo: '', reason: '必填字段缺失' },
+    { id: 1, name: 'XY25H3007', pedigree: 'XYNO_004/XYNO_624', type: '杂交种', rachis_color: '红', grain_color: '白', grain_type: '扁平形', grafted: '是', reason: '材料名称重复' },
+    { id: 11, name: 'XY25H3007', pedigree: 'XYNO_552/XYNO_615', type: '杂交种', rachis_color: '1', grain_color: '黄', grain_type: '椭圆形', grafted: 'TRUE', reason: '是否嫁接只能填写为是/否' },
+    { id: 111, name: 'SH000464', pedigree: '春雪母本/映霜红母本', type: '', rachis_color: '白', grain_color: '白', grain_type: '圆形', grafted: '', reason: '必填字段缺失' },
   ];
 
   return (
@@ -76,18 +76,18 @@ export default function DataValidationStep({ onNext, onBack, taskType = 'phenoty
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">材料名称</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">系谱</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">材料类型</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">穗轴颜色</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">籽粒颜色</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">籽粒类型</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">转基因</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">果肉颜色</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">果皮颜色</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">果形</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">是否嫁接</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">错误原因</th>
                 </tr>
               ) : (
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">行号</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">作物编号</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">株高(cm)</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">穗位高</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">桃树编号</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">树高(cm)</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">冠幅</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">错误原因</th>
                 </tr>
               )}
@@ -102,13 +102,13 @@ export default function DataValidationStep({ onNext, onBack, taskType = 'phenoty
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.pedigree}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.type}</td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('穗轴颜色') || row.rachis_color === '1' ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('果肉颜色') || row.rachis_color === '1' ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
                       {row.rachis_color}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.grain_color}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{row.grain_type}</td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('转基因') ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
-                      {row.gmo}
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('是否嫁接') ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
+                      {row.grafted}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 flex items-center gap-1">
                       <i className="ri-close-circle-line"></i>
@@ -120,14 +120,14 @@ export default function DataValidationStep({ onNext, onBack, taskType = 'phenoty
                 phenotypeErrorRows.map((row) => (
                   <tr key={row.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{row.id}</td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('作物编号') ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
-                      {row.crop_id}
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('桃树编号') ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
+                      {row.tree_id}
                     </td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('株高') ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('树高') ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
                       {row.height}
                     </td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('穗位高') ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
-                      {row.ear_height || <span className="text-gray-300 italic">空</span>}
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 ${row.reason.includes('冠幅') ? 'bg-red-50 ring-1 ring-inset ring-red-200' : ''}`}>
+                      {row.crown_width || <span className="text-gray-300 italic">空</span>}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600 flex items-center gap-1">
                       <i className="ri-close-circle-line"></i>

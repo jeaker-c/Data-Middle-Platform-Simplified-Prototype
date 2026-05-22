@@ -37,18 +37,18 @@ const stats = [
 
 // 基因型数据列表
 const genotypeData = [
-  { id: 1, name: '玉米基因型数据_2025Q1.vcf', size: '45.2 MB', time: '2025-01-15 14:30', user: '张研究员', status: 'completed' },
-  { id: 2, name: '玉米SNP标记_2025.csv', size: '12.3 MB', time: '2025-01-13 15:20', user: '张研究员', status: 'completed' },
-  { id: 3, name: '玉米基因组测序_2025.fastq', size: '128.5 MB', time: '2025-01-12 09:30', user: '李博士', status: 'processing' },
-  { id: 4, name: '玉米分子标记_2025.txt', size: '8.7 MB', time: '2025-01-11 16:45', user: '王助理', status: 'completed' }
+  { id: 1, name: '桃基因型数据_2025Q1.vcf', size: '45.2 MB', time: '2025-01-15 14:30', user: '张研究员', status: 'completed' },
+  { id: 2, name: '桃SNP标记_2025.csv', size: '12.3 MB', time: '2025-01-13 15:20', user: '张研究员', status: 'completed' },
+  { id: 3, name: '桃基因组测序_2025.fastq', size: '128.5 MB', time: '2025-01-12 09:30', user: '李博士', status: 'processing' },
+  { id: 4, name: '桃分子标记_2025.txt', size: '8.7 MB', time: '2025-01-11 16:45', user: '王助理', status: 'completed' }
 ];
 
 // 表型数据列表
 const phenotypeData = [
-  { id: 1, name: '玉米表型观测_2025春季.xlsx', size: '2.8 MB', time: '2025-01-15 11:20', user: '李博士', status: 'completed' },
-  { id: 2, name: '玉米抗病性评估_2025.xlsx', size: '1.5 MB', time: '2025-01-12 10:30', user: '李博士', status: 'completed' },
-  { id: 3, name: '玉米产量数据_2025.csv', size: '3.2 MB', time: '2025-01-10 14:15', user: '赵教授', status: 'completed' },
-  { id: 4, name: '玉米生长周期记录_2025.xlsx', size: '4.1 MB', time: '2025-01-08 09:00', user: '王助理', status: 'processing' }
+  { id: 1, name: '桃表型观测_2025春季.xlsx', size: '2.8 MB', time: '2025-01-15 11:20', user: '李博士', status: 'completed' },
+  { id: 2, name: '桃抗病性评估_2025.xlsx', size: '1.5 MB', time: '2025-01-12 10:30', user: '李博士', status: 'completed' },
+  { id: 3, name: '桃产量数据_2025.csv', size: '3.2 MB', time: '2025-01-10 14:15', user: '赵教授', status: 'completed' },
+  { id: 4, name: '桃生长周期记录_2025.xlsx', size: '4.1 MB', time: '2025-01-08 09:00', user: '王助理', status: 'processing' }
 ];
 
 export default function StatsOverview({ tabSlot }: { tabSlot?: ReactNode } = {}) {

@@ -7,19 +7,19 @@ interface FieldMappingStepProps {
 
 export default function FieldMappingStep({ onNext, onBack }: FieldMappingStepProps) {
   const [mappings, setMappings] = useState([
-    { src: '作物编号', sample: 'CROP-2025001', target: 'crop_id', required: true, rule: '唯一性校验', status: 'matched' },
-    { src: '株高(cm)', sample: '175', target: 'plant_height', required: true, rule: '数值范围 0-300', status: 'matched' },
-    { src: '穗位高', sample: '95', target: 'ear_height', required: false, rule: '数值范围 0-200', status: 'manual' },
-    { src: '抗倒伏性', sample: '强', target: 'lodging_resistance', required: true, rule: '枚举值校验', status: 'matched' },
+    { src: '桃树编号', sample: 'PEACH-2025001', target: 'tree_id', required: true, rule: '唯一性校验', status: 'matched' },
+    { src: '树高(cm)', sample: '175', target: 'tree_height', required: true, rule: '数值范围 0-300', status: 'matched' },
+    { src: '冠幅', sample: '95', target: 'crown_width', required: false, rule: '数值范围 0-200', status: 'manual' },
+    { src: '抗病性', sample: '强', target: 'disease_resistance', required: true, rule: '枚举值校验', status: 'matched' },
     { src: '备注说明', sample: '无异常', target: 'remarks', required: false, rule: '长度限制 500', status: 'matched' },
     { src: '产量(kg)', sample: '850', target: 'yield_val', required: true, rule: '数值类型', status: 'manual' },
   ]);
 
   const systemFields = [
-    { value: 'crop_id', label: '作物编号' },
-    { value: 'plant_height', label: '株高' },
-    { value: 'ear_height', label: '穗位高' },
-    { value: 'lodging_resistance', label: '抗倒伏性' },
+    { value: 'tree_id', label: '桃树编号' },
+    { value: 'tree_height', label: '树高' },
+    { value: 'crown_width', label: '冠幅' },
+    { value: 'disease_resistance', label: '抗病性' },
     { value: 'remarks', label: '备注' },
     { value: 'yield_val', label: '产量' },
     { value: 'planting_area', label: '种植区域' },

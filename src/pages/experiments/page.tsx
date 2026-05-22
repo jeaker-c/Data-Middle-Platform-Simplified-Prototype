@@ -24,7 +24,7 @@ export default function BreedingProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([
     {
       id: '1',
-      name: '抗倒伏',
+      name: '抗病伏',
       status: '待计算',
       creator: '王组长',
       createDate: '2026/02/01',
@@ -33,7 +33,7 @@ export default function BreedingProjectsPage() {
     },
     {
       id: '2',
-      name: '高蛋白玉米选育计划',
+      name: '高蛋白桃选育计划',
       status: '计算中',
       creator: '李博士',
       createDate: '2026/01/15',
@@ -42,7 +42,7 @@ export default function BreedingProjectsPage() {
     },
     {
       id: '3',
-      name: '黄淮海高产玉米改良项目',
+      name: '黄淮海高产桃改良项目',
       status: '已完成',
       creator: '张科研',
       createDate: '2026/01/10',
@@ -60,7 +60,7 @@ export default function BreedingProjectsPage() {
     },
     {
       id: '5',
-      name: '抗锈病玉米选育计划',
+      name: '抗锈病桃选育计划',
       status: '计算中',
       creator: '李博士',
       createDate: '2026/01/15',
@@ -69,7 +69,7 @@ export default function BreedingProjectsPage() {
     },
     {
       id: '6',
-      name: '抗大斑病玉米改良项目',
+      name: '抗褐腐病桃改良项目',
       status: '已完成',
       creator: '张科研',
       createDate: '2026/01/10',

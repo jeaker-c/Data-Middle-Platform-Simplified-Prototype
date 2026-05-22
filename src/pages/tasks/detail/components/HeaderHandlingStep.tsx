@@ -8,14 +8,14 @@ interface HeaderHandlingStepProps {
 export default function HeaderHandlingStep({ onNext, onBack }: HeaderHandlingStepProps) {
   const [headerRowIndex, setHeaderRowIndex] = useState<number>(0);
   const [columns, setColumns] = useState([
-    '作物编号', '株高(cm)', '穗位高', '抗倒伏性', '备注说明', '产量(kg)', '种植区域', '负责人'
+    '桃树编号', '树高(cm)', '冠幅', '抗病性', '备注说明', '产量(kg)', '种植区域', '负责人'
   ]);
 
   // Mock data for preview
   const previewData = Array.from({ length: 10 }).map((_, rowIndex) => {
     if (rowIndex === 0) return columns; // Current header
     return [
-      `CROP-${2025000 + rowIndex}`,
+      `PEACH-${2025000 + rowIndex}`,
       `${150 + Math.floor(Math.random() * 50)}`,
       `${80 + Math.floor(Math.random() * 20)}`,
       ['强', '中', '弱'][Math.floor(Math.random() * 3)],

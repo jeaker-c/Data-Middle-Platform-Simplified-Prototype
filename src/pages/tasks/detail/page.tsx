@@ -321,12 +321,12 @@ export default function TaskDetailPage() {
               <div className="flex items-center gap-4 text-xs text-gray-500 mt-1">
                 <div className="flex items-center gap-1.5">
                   <i className="ri-file-list-3-line"></i>
-                  <span>任务: {taskType === 'material' ? '2024春季材料数据上传' : taskType === 'phenotype' ? '2024春季表型数据上传' : taskType === 'genotype' ? '玉米群体基因型入库' : taskType === 'environment' ? '2024Q1环境数据入库' : '2026年参试品种图片'}</span>
+                  <span>任务: {taskType === 'material' ? '2024春季材料数据上传' : taskType === 'phenotype' ? '2024春季表型数据上传' : taskType === 'genotype' ? '桃群体基因型入库' : taskType === 'environment' ? '2024Q1环境数据入库' : '2026年参试品种图片'}</span>
                 </div>
                 <span className="w-0.5 h-0.5 bg-gray-300 rounded-full"></span>
                 <div className="flex items-center gap-1.5">
                   <i className="ri-database-2-line"></i>
-                  <span>数据集: 玉米种质资源库_2024</span>
+                  <span>数据集: 桃种质资源库_2024</span>
                 </div>
                 <span className="w-0.5 h-0.5 bg-gray-300 rounded-full"></span>
                 <div className="flex items-center gap-1.5">

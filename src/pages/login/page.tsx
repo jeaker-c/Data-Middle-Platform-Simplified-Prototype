@@ -6,7 +6,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [species, setSpecies] = useState('玉米');
+  const [species, setSpecies] = useState('桃');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -88,11 +88,11 @@ export default function LoginPage() {
                   onChange={(e) => setSpecies(e.target.value)}
                   className="block w-full pl-11 pr-10 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all duration-200 appearance-none"
                 >
-                  <option value="玉米">玉米</option>
-                  <option value="水稻">水稻</option>
+                  <option value="桃">桃</option>
+                  <option value="桃">桃</option>
                   <option value="油菜">油菜</option>
-                  <option value="大豆">大豆</option>
-                  <option value="小麦">小麦</option>
+                  <option value="桃">桃</option>
+                  <option value="桃">桃</option>
                 </select>
                 <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                   <i className="ri-arrow-down-s-line text-gray-400"></i>

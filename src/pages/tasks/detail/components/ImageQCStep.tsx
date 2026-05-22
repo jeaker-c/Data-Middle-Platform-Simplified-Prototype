@@ -19,20 +19,20 @@ export default function ImageQCStep({ onNext, onBack, taskType = 'image' }: Imag
 
   // Mock Data
   const imageQcList: QCItem[] = [
-    { id: '1', fileName: 'IMG_A001_Corn.jpg', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 A001' },
-    { id: '2', fileName: 'IMG_A002_Soybean.png', checkItem: '格式合规', status: 'error', message: '限制格式为 JPG，检测到 PNG' },
-    { id: '3', fileName: 'IMG_A002_Soybean_Copy.jpg', checkItem: '重名校验', status: 'warning', message: '名称与已有记录重复' },
+    { id: '1', fileName: 'IMG_A001_Peach.jpg', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 A001' },
+    { id: '2', fileName: 'IMG_A002_Peach.png', checkItem: '格式合规', status: 'error', message: '限制格式为 JPG，检测到 PNG' },
+    { id: '3', fileName: 'IMG_A002_Peach_Copy.jpg', checkItem: '重名校验', status: 'warning', message: '名称与已有记录重复' },
     { id: '4', fileName: '损坏的图片文件.jpg', checkItem: '文件完整性', status: 'fatal', message: '图片头信息损坏，无法读取' },
-    { id: '5', fileName: 'IMG_B003_Rice.jpg', checkItem: '库匹配', status: 'error', message: '材料编号 B003 在库中不存在' },
-    { id: '6', fileName: 'A004_Wheat.webp', checkItem: '格式合规', status: 'error', message: '不支持 WebP 格式' },
+    { id: '5', fileName: 'IMG_B003_Peach.jpg', checkItem: '库匹配', status: 'error', message: '材料编号 B003 在库中不存在' },
+    { id: '6', fileName: 'A004_Peach.webp', checkItem: '格式合规', status: 'error', message: '不支持 WebP 格式' },
     // Fill some passed items to make list longer
-    { id: '7', fileName: 'IMG_C005_Corn.jpg', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 C005' },
-    { id: '8', fileName: 'IMG_C006_Corn.jpg', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 C006' },
+    { id: '7', fileName: 'IMG_C005_Peach.jpg', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 C005' },
+    { id: '8', fileName: 'IMG_C006_Peach.jpg', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 C006' },
   ];
 
   const directoryQcList: QCItem[] = [
-    { id: '1', fileName: 'A001_CORN/', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 A001' },
-    { id: '2', fileName: 'B002_SOYBEAN/', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 B002' },
+    { id: '1', fileName: 'A001_PEACH/', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 A001' },
+    { id: '2', fileName: 'B002_PEACH/', checkItem: '库匹配', status: 'passed', message: '成功匹配材料库 B002' },
     { id: '3', fileName: 'C999_TEST/', checkItem: '库匹配', status: 'error', message: '未找到对应材料' },
     { id: '4', fileName: 'D004_INVALID/', checkItem: '库匹配', status: 'error', message: '未找到对应材料' },
   ];

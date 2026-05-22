@@ -17,7 +17,7 @@ const MOCK_MATERIALS: Material[] = [
     tags: ['抗旱', '高产'], updateTime: '2025-01-20' 
   },
   { 
-    id: 'M002', name: '郑单958', type: '杂交种', experimentCount: 28, phenotypeCount: 120, hasGenotype: true, hasEnvironment: true, 
+    id: 'M002', name: '春雪', type: '杂交种', experimentCount: 28, phenotypeCount: 120, hasGenotype: true, hasEnvironment: true, 
     genotypeSiteCount: 45150,
     tags: ['广泛种植', '抗病'], updateTime: '2025-01-18' 
   },
@@ -32,8 +32,8 @@ const MOCK_MATERIALS: Material[] = [
     tags: ['模式植物'], updateTime: '2024-12-29' 
   },
   { 
-    id: 'M005', name: '西农979', type: '杂交种', experimentCount: 8, phenotypeCount: 0, hasGenotype: false, hasEnvironment: true, 
-    tags: ['小麦', '抗寒'], updateTime: '2025-01-10' 
+    id: 'M005', name: '久保', type: '杂交种', experimentCount: 8, phenotypeCount: 0, hasGenotype: false, hasEnvironment: true, 
+    tags: ['桃', '抗寒'], updateTime: '2025-01-10' 
   },
   { 
     id: 'M006', name: 'KW7', type: '野生种', experimentCount: 3, phenotypeCount: 12, hasGenotype: true, hasEnvironment: true, 
@@ -41,11 +41,11 @@ const MOCK_MATERIALS: Material[] = [
     tags: ['种质资源', '稀有'], updateTime: '2024-11-15' 
   },
   { 
-    id: 'M007', name: '豫玉22', type: '杂交种', experimentCount: 15, phenotypeCount: 30, hasGenotype: false, hasEnvironment: false, 
+    id: 'M007', name: '白如玉', type: '杂交种', experimentCount: 15, phenotypeCount: 30, hasGenotype: false, hasEnvironment: false, 
     tags: ['老品种'], updateTime: '2024-10-20' 
   },
   { 
-    id: 'M008', name: '京科968', type: '杂交种', experimentCount: 45, phenotypeCount: 150, hasGenotype: true, hasEnvironment: true, 
+    id: 'M008', name: '中华寿桃', type: '杂交种', experimentCount: 45, phenotypeCount: 150, hasGenotype: true, hasEnvironment: true, 
     genotypeSiteCount: 46210,
     tags: ['高产', '多抗'], updateTime: '2025-01-25' 
   },

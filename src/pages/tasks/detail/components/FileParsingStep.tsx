@@ -8,7 +8,7 @@ export default function FileParsingStep({ onNext }: FileParsingStepProps) {
   const files = [
     {
       id: 1,
-      name: '2025年度作物种植数据.xlsx',
+      name: '2025年度桃树种植数据.xlsx',
       type: 'Excel (.xlsx)',
       rows: 1245,
       cols: 24,

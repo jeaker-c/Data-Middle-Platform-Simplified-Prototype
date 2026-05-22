@@ -13,37 +13,37 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
   const [pageSize, setPageSize] = useState(10);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
 
-  const phenotypeMaterialNames = ['京科968', '郑单958', '先玉335', '登海605', '迪卡517', '农华101'];
-  const phenotypeExperiments = ['2024年度玉米抗旱试验', '2025年度玉米高产试验', '2025年度玉米区域试验'];
+  const phenotypeMaterialNames = ['中华寿桃', '春雪', '映霜红', '突围', '曙光', '锦绣黄桃'];
+  const phenotypeExperiments = ['2024年度桃抗旱试验', '2025年度桃高产试验', '2025年度桃区域试验'];
   const phenotypePlotNos = ['A-01', 'A-02', 'B-03', 'C-05', 'D-07', 'E-09', 'F-11'];
 
   const [phenotypeRows, setPhenotypeRows] = useState<any[]>([
-    { id: 901, line_no: '208', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'A-02', crop_id: 'CROP-2025208', height: '168', ear_height: '82', reason: '唯一字段「材料名称、试验、排号、行号、作物编号」重复。', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 1, duplicate_origin: 'phenotype-dup-1' },
-    { id: 902, line_no: '208', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'A-02', crop_id: 'CROP-2025208', height: '529', ear_height: '84', reason: '唯一字段「材料名称、试验、排号、行号、作物编号」重复。；株高超出正常范围 (0-300)', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 2, duplicate_origin: 'phenotype-dup-1', needsHeightValidation: true },
-    { id: 903, line_no: '208', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'A-02', crop_id: 'CROP-2025208', height: '526', ear_height: '79', reason: '唯一字段「材料名称、试验、排号、行号、作物编号」重复。；株高超出正常范围 (0-300)', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 3, duplicate_origin: 'phenotype-dup-1', needsHeightValidation: true },
-    { id: 904, line_no: '208', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'A-02', crop_id: 'CROP-2025208', height: '173', ear_height: '86', reason: '唯一字段「材料名称、试验、排号、行号、作物编号」重复。', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 4, duplicate_origin: 'phenotype-dup-1' },
-    { id: 102, line_no: '102', material_name: '京科968', experiment: '2024年度玉米抗旱试验', plot_no: 'A-01', crop_id: 'CROP-2025102', height: '350', ear_height: '85', reason: '株高超出正常范围 (0-300)', fixed: false },
-    { id: 145, line_no: '145', material_name: '郑单958', experiment: '2025年度玉米高产试验', plot_no: 'B-03', crop_id: 'CROP-2025145', height: '175', ear_height: '', reason: '必填字段缺失：穗位高', fixed: false },
-    { id: 288, line_no: '288', material_name: '先玉335', experiment: '2025年度玉米区域试验', plot_no: 'C-05', crop_id: 'CROP-2025001', height: '160', ear_height: '80', reason: '作物编号重复', fixed: false },
-    { id: 289, line_no: '289', material_name: '登海605', experiment: '2024年度玉米抗旱试验', plot_no: 'D-07', crop_id: 'CROP-2025289', height: 'abc', ear_height: '82', reason: '株高必须为数值', fixed: false },
+    { id: 901, line_no: '208', material_name: '春雪', experiment: '2025年度桃高产试验', plot_no: 'A-02', tree_id: 'PEACH-2025208', height: '168', crown_width: '82', reason: '唯一字段「材料名称、试验、排号、行号、桃树编号」重复。', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 1, duplicate_origin: 'phenotype-dup-1' },
+    { id: 902, line_no: '208', material_name: '春雪', experiment: '2025年度桃高产试验', plot_no: 'A-02', tree_id: 'PEACH-2025208', height: '529', crown_width: '84', reason: '唯一字段「材料名称、试验、排号、行号、桃树编号」重复。；树高超出正常范围 (0-300)', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 2, duplicate_origin: 'phenotype-dup-1', needsHeightValidation: true },
+    { id: 903, line_no: '208', material_name: '春雪', experiment: '2025年度桃高产试验', plot_no: 'A-02', tree_id: 'PEACH-2025208', height: '526', crown_width: '79', reason: '唯一字段「材料名称、试验、排号、行号、桃树编号」重复。；树高超出正常范围 (0-300)', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 3, duplicate_origin: 'phenotype-dup-1', needsHeightValidation: true },
+    { id: 904, line_no: '208', material_name: '春雪', experiment: '2025年度桃高产试验', plot_no: 'A-02', tree_id: 'PEACH-2025208', height: '173', crown_width: '86', reason: '唯一字段「材料名称、试验、排号、行号、桃树编号」重复。', fixed: false, duplicate_group: 'phenotype-dup-1', duplicate_index: 4, duplicate_origin: 'phenotype-dup-1' },
+    { id: 102, line_no: '102', material_name: '中华寿桃', experiment: '2024年度桃抗旱试验', plot_no: 'A-01', tree_id: 'PEACH-2025102', height: '350', crown_width: '85', reason: '树高超出正常范围 (0-300)', fixed: false },
+    { id: 145, line_no: '145', material_name: '春雪', experiment: '2025年度桃高产试验', plot_no: 'B-03', tree_id: 'PEACH-2025145', height: '175', crown_width: '', reason: '必填字段缺失：冠幅', fixed: false },
+    { id: 288, line_no: '288', material_name: '映霜红', experiment: '2025年度桃区域试验', plot_no: 'C-05', tree_id: 'PEACH-2025001', height: '160', crown_width: '80', reason: '桃树编号重复', fixed: false },
+    { id: 289, line_no: '289', material_name: '突围', experiment: '2024年度桃抗旱试验', plot_no: 'D-07', tree_id: 'PEACH-2025289', height: 'abc', crown_width: '82', reason: '树高必须为数值', fixed: false },
     ...Array.from({ length: 10 }).map((_, i) => ({
       id: 300 + i,
       line_no: String(300 + i),
       material_name: phenotypeMaterialNames[(300 + i) % phenotypeMaterialNames.length],
       experiment: phenotypeExperiments[(300 + i) % phenotypeExperiments.length],
       plot_no: phenotypePlotNos[(300 + i) % phenotypePlotNos.length],
-      crop_id: `CROP-2025${300 + i}`,
+      tree_id: `PEACH-2025${300 + i}`,
       height: String(100 + i * 10),
-      ear_height: String(50 + i * 5),
+      crown_width: String(50 + i * 5),
       reason: '格式校验不通过',
       fixed: false
     }))
   ]);
 
   const [materialRows, setMaterialRows] = useState<any[]>([
-    { id: 1, name: 'XY25H3007', pedigree: 'XYNO_004/XYNO_624', type: '杂交种', rachis_color: '红', grain_color: '白', grain_type: '硬粒', gmo: '是', reason: '材料名称重复', fixed: false },
-    { id: 11, name: 'XY25H3007', pedigree: 'XYNO_552/XYNO_615', type: '杂交种', rachis_color: '1', grain_color: '黄', grain_type: '半马齿', gmo: 'TRUE', reason: '转基因只能填写为是/否', fixed: false },
-    { id: 111, name: 'SH000464', pedigree: '中垦玉21母本/NF119母本', type: '', rachis_color: '白', grain_color: '白', grain_type: '马齿', gmo: '', reason: '必填字段缺失', fixed: false },
+    { id: 1, name: 'XY25H3007', pedigree: 'XYNO_004/XYNO_624', type: '杂交种', rachis_color: '红', grain_color: '白', grain_type: '扁平形', grafted: '是', reason: '材料名称重复', fixed: false },
+    { id: 11, name: 'XY25H3007', pedigree: 'XYNO_552/XYNO_615', type: '杂交种', rachis_color: '1', grain_color: '黄', grain_type: '椭圆形', grafted: 'TRUE', reason: '是否嫁接只能填写为是/否', fixed: false },
+    { id: 111, name: 'SH000464', pedigree: '春雪母本/映霜红母本', type: '', rachis_color: '白', grain_color: '白', grain_type: '圆形', grafted: '', reason: '必填字段缺失', fixed: false },
     ...Array.from({ length: 10 }).map((_, i) => ({
       id: 200 + i,
       name: `TEST_MAT_${i}`,
@@ -51,8 +51,8 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
       type: '自交系',
       rachis_color: '白',
       grain_color: '黄',
-      grain_type: '马齿',
-      gmo: '否',
+      grain_type: '圆形',
+      grafted: '否',
       reason: '未匹配到基础数据',
       fixed: false
     }))
@@ -101,10 +101,10 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
       __serial: pageStart + index + 1
     }));
 
-  const duplicateReason = '唯一字段「材料名称、试验、排号、行号、作物编号」重复。';
-  const heightLimitReason = '株高超出正常范围 (0-300)';
+  const duplicateReason = '唯一字段「材料名称、试验、排号、行号、桃树编号」重复。';
+  const heightLimitReason = '树高超出正常范围 (0-300)';
   const getCompositeKey = (row: any) =>
-    `${row.material_name}__${row.line_no || row.id}__${row.experiment}__${row.plot_no}__${row.crop_id}`;
+    `${row.material_name}__${row.line_no || row.id}__${row.experiment}__${row.plot_no}__${row.tree_id}`;
   const isHeightInNormalRange = (row: any) => {
     const heightValue = Number(row.height);
     return Number.isFinite(heightValue) && heightValue > 0 && heightValue <= 300;
@@ -319,10 +319,10 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">材料名称</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">系谱</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">材料类型</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">穗轴颜色</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">籽粒颜色</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">籽粒类型</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">转基因</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">果肉颜色</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">果皮颜色</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">果形</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">是否嫁接</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">错误原因</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
               </tr>
@@ -333,9 +333,9 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[72px]">行号</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[170px]">试验</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[80px]">排号</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[130px]">作物编号</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[88px]">株高(cm)</th>
-                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[88px]">穗位高</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[130px]">桃树编号</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[88px]">树高(cm)</th>
+                <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[88px]">冠幅</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[220px]">错误原因</th>
                 <th className="px-4 py-2.5 text-left text-xs font-medium text-gray-500 uppercase tracking-wider min-w-[64px]">操作</th>
               </tr>
@@ -364,7 +364,7 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 font-mono">{row.line_no || row.id}</td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{row.experiment}</td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{row.plot_no}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{row.crop_id}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">{row.tree_id}</td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400">--</td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400">--</td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-amber-700">
@@ -428,7 +428,7 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
                         value={row.rachis_color}
                         onChange={(e) => handleFix(row.id, 'rachis_color', e.target.value)}
                         // @ts-ignore
-                        className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('穗轴颜色') || row.rachis_color === '1' ? 'border-red-300 bg-red-50' : ''}`}
+                        className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('果肉颜色') || row.rachis_color === '1' ? 'border-red-300 bg-red-50' : ''}`}
                       />
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -453,10 +453,10 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
                       <input 
                         type="text"
                         // @ts-ignore
-                        value={row.gmo}
-                        onChange={(e) => handleFix(row.id, 'gmo', e.target.value)}
+                        value={row.grafted}
+                        onChange={(e) => handleFix(row.id, 'grafted', e.target.value)}
                         // @ts-ignore
-                        className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('转基因') ? 'border-red-300 bg-red-50' : ''}`}
+                        className={`block w-full text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('是否嫁接') ? 'border-red-300 bg-red-50' : ''}`}
                       />
                     </td>
                   </>
@@ -519,10 +519,10 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
                       <input 
                         type="text"
                         // @ts-ignore
-                        value={row.crop_id}
-                        onChange={(e) => handleFix(row.id, 'crop_id', e.target.value)}
+                        value={row.tree_id}
+                        onChange={(e) => handleFix(row.id, 'tree_id', e.target.value)}
                         // @ts-ignore
-                        className={`block w-32 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('作物编号') ? 'border-red-300 bg-red-50' : ''}`}
+                        className={`block w-32 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('桃树编号') ? 'border-red-300 bg-red-50' : ''}`}
                       />
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
@@ -532,17 +532,17 @@ export default function DataCorrectionStep({ onNext, onBack, taskType = 'phenoty
                         value={row.height}
                         onChange={(e) => handleFix(row.id, 'height', e.target.value)}
                         // @ts-ignore
-                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('株高') || !isHeightInNormalRange(row) ? 'border-red-300 bg-red-50' : ''}`}
+                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('树高') || !isHeightInNormalRange(row) ? 'border-red-300 bg-red-50' : ''}`}
                       />
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-900">
                       <input 
                         type="text"
                         // @ts-ignore
-                        value={row.ear_height}
-                        onChange={(e) => handleFix(row.id, 'ear_height', e.target.value)}
+                        value={row.crown_width}
+                        onChange={(e) => handleFix(row.id, 'crown_width', e.target.value)}
                         // @ts-ignore
-                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('穗位高') ? 'border-red-300 bg-red-50' : ''}`}
+                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500 ${row.reason.includes('冠幅') ? 'border-red-300 bg-red-50' : ''}`}
                       />
                     </td>
                   </>

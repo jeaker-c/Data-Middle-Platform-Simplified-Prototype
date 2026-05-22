@@ -187,11 +187,11 @@ export default function MaterialFilter({ filters, onFilterChange, isOpen, onDime
                   onChange={(e) => handleChange('phenotypeTrait', e.target.value)}
                 >
                   <option value="">所有性状</option>
-                  <option value="株高">株高 (Plant Height)</option>
-                  <option value="穗位高">穗位高 (Ear Height)</option>
-                  <option value="穗长">穗长 (Ear Length)</option>
+                  <option value="树高">树高 (Plant Height)</option>
+                  <option value="冠幅">冠幅 (Crown Width)</option>
+                  <option value="果径">果径 (Fruit Diameter)</option>
                   <option value="产量">产量 (Yield)</option>
-                  <option value="倒折率">倒折率 (Stalk Lodging)</option>
+                  <option value="裂果率">裂果率 (Stalk Lodging)</option>
                 </select>
               </div>
               <p className="text-xs text-gray-500 mt-1">按性状名称查看统计数据。</p>

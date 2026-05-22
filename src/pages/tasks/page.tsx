@@ -15,7 +15,7 @@ interface Task {
 const MOCK_TASKS: Task[] = [
   {
     id: 'T001',
-    name: '2024春季玉米育种数据.xlsx',
+    name: '2024春季桃育种数据.xlsx',
     dataType: '表型数据',
     status: 'pending_mapping',
     errorCount: 0,

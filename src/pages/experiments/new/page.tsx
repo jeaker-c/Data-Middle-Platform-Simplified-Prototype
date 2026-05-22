@@ -6,7 +6,7 @@ export default function ParameterConfigPage() {
   const navigate = useNavigate();
   const [projectName, setProjectName] = useState('');
   const [strategyName, setStrategyName] = useState('');
-  const [coreArea, setCoreArea] = useState('新泽西玉米区');
+  const [coreArea, setCoreArea] = useState('新泽西桃区');
   const [plantingPeriod, setPlantingPeriod] = useState('');
   const [selectedStrategy, setSelectedStrategy] = useState('品种开发');
   const [activeGoalTab, setActiveGoalTab] = useState('self-bred');
@@ -14,7 +14,7 @@ export default function ParameterConfigPage() {
   const handleReset = () => {
     setProjectName('');
     setStrategyName('');
-    setCoreArea('新泽西玉米区');
+    setCoreArea('新泽西桃区');
     setPlantingPeriod('');
     setSelectedStrategy('品种开发');
   };
@@ -116,9 +116,9 @@ export default function ParameterConfigPage() {
                     value={coreArea}
                     onChange={(e) => setCoreArea(e.target.value)}
                   >
-                    <option>新泽西玉米区</option>
-                    <option>爱荷华大豆区</option>
-                    <option>伊利诺伊小麦区</option>
+                    <option>新泽西桃区</option>
+                    <option>佐治亚桃区</option>
+                    <option>加州桃区</option>
                   </select>
                 </div>
                 <div>
@@ -218,9 +218,9 @@ export default function ParameterConfigPage() {
                     <h3 className="text-sm font-medium text-gray-700 mb-3">农艺性状</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                       {[
-                        '散粉期', '吐丝期', '抽雄期', '雄穗分枝数',
-                        '秃尖长', '抗倒', '蛋白', '雄穗主轴长',
-                        '穗上叶片角', '穗位高', '株高'
+                        '开花期', '落花期', '硬核期', '结果枝数',
+                        '果径', '抗病', '蛋白', '主干高',
+                        '分枝角', '冠幅', '树高'
                       ].map((trait, index) => (
                         <div key={index}>
                           <div className="flex items-center gap-2 mb-2">
@@ -244,8 +244,8 @@ export default function ParameterConfigPage() {
                     <h3 className="text-sm font-medium text-gray-700 mb-3">抗病性状</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {[
-                        '黄锈叶斑病', '镰孢菌(病)', '茎腐病', '南方锈病',
-                        '灰斑病(级)', '玉米根腐病', '大斑病(级)', '小斑病(级)',
+                        '黄锈叶斑病', '镰孢菌(病)', '流胶病', '南方锈病',
+                        '灰斑病(级)', '桃根腐病', '褐腐病(级)', '穿孔病(级)',
                         '甘蔗花叶病'
                       ].map((trait, index) => (
                         <div key={index}>
@@ -333,8 +333,8 @@ export default function ParameterConfigPage() {
                     <h3 className="text-sm font-medium text-gray-700 mb-3">组合农艺性状</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                       {[
-                        '株高', '穗位高', '生育期', '倒伏率', '倒折率',
-                        '空秆率', '双穗率', '出籽率', '百粒重'
+                        '树高', '冠幅', '生育期', '落果率', '裂果率',
+                        '病果率', '双果率', '可溶性固形物', '单果重'
                       ].map((trait, index) => (
                         <div key={index}>
                           <div className="flex items-center gap-2 mb-2">
@@ -358,9 +358,9 @@ export default function ParameterConfigPage() {
                     <h3 className="text-sm font-medium text-gray-700 mb-3">组合抗病性状</h3>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       {[
-                        '大斑病', '小斑病', '茎腐病', '穗腐病',
-                        '瘤黑粉病', '丝黑穗病', '矮花叶病', '弯孢叶斑病',
-                        '粗缩病'
+                        '褐腐病', '穿孔病', '流胶病', '炭疽病',
+                        '根癌病', '缩叶病', '疮痂病', '黑星病',
+                        '花叶病'
                       ].map((trait, index) => (
                         <div key={index}>
                           <div className="flex items-center gap-2 mb-2">

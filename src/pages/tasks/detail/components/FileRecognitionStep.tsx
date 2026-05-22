@@ -42,11 +42,11 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
     const timer = setTimeout(() => {
       if (taskType === 'directory_scan') {
          setDirectoryFiles([
-            { id: '1', path: 'A001_Corn/', name: 'IMG_001.jpg', resolution: '1920x1080', status: 'valid' },
-            { id: '2', path: 'A001_Corn/', name: 'IMG_002.jpg', resolution: '1920x1080', status: 'valid' },
-            { id: '3', path: 'B002_Soybean/', name: 'Side_View.png', resolution: '3840x2160', status: 'valid' },
-            { id: '4', path: 'B002_Soybean/', name: 'Top_View.jpg', resolution: '1024x768', status: 'valid' },
-            { id: '5', path: 'C003_Rice/', name: 'IMG_Invalid.bmp', resolution: 'N/A', status: 'invalid_format' },
+            { id: '1', path: 'A001_Peach/', name: 'IMG_001.jpg', resolution: '1920x1080', status: 'valid' },
+            { id: '2', path: 'A001_Peach/', name: 'IMG_002.jpg', resolution: '1920x1080', status: 'valid' },
+            { id: '3', path: 'B002_Peach/', name: 'Side_View.png', resolution: '3840x2160', status: 'valid' },
+            { id: '4', path: 'B002_Peach/', name: 'Top_View.jpg', resolution: '1024x768', status: 'valid' },
+            { id: '5', path: 'C003_Peach/', name: 'IMG_Invalid.bmp', resolution: 'N/A', status: 'invalid_format' },
          ]);
       } else if (taskType === 'phenotype' || taskType === 'material') {
         setFiles([
@@ -89,7 +89,7 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
         setFiles([
           {
             id: '1',
-            name: '2024Q1_德州基地_环境监测数据.xlsx',
+            name: '2024Q1_平谷基地_环境监测数据.xlsx',
             type: 'Excel',
             size: '1.2 MB',
             sheetCount: 2,
@@ -128,11 +128,11 @@ export default function FileRecognitionStep({ onNext, taskType }: FileRecognitio
       } else {
          // Image task
          setImageFiles([
-             { id: '1', name: 'IMG_A001_Corn.jpg', type: 'JPG', resolution: '1920x1080', status: 'success' },
-             { id: '2', name: 'IMG_A002_Soybean.png', type: 'PNG', resolution: '3840x2160', status: 'success' },
-             { id: '3', name: 'IMG_B003_Rice.jpg', type: 'JPG', resolution: '1024x768', status: 'success' },
+             { id: '1', name: 'IMG_A001_Peach.jpg', type: 'JPG', resolution: '1920x1080', status: 'success' },
+             { id: '2', name: 'IMG_A002_Peach.png', type: 'PNG', resolution: '3840x2160', status: 'success' },
+             { id: '3', name: 'IMG_B003_Peach.jpg', type: 'JPG', resolution: '1024x768', status: 'success' },
              { id: '4', name: '损坏的图片文件.jpg', type: 'JPG', resolution: '0x0', status: 'error' },
-             { id: '5', name: 'A004_Wheat.webp', type: 'WEBP', resolution: '1280x720', status: 'warning' },
+             { id: '5', name: 'A004_Peach.webp', type: 'WEBP', resolution: '1280x720', status: 'warning' },
          ]);
       }
       setLoading(false);

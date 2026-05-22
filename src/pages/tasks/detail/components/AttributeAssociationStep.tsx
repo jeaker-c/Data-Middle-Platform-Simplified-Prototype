@@ -25,22 +25,22 @@ export default function AttributeAssociationStep({ onNext, onBack, taskType = 'i
   const imagePreviewData: PreviewItem[] = [
     { 
       id: '1', 
-      fileName: 'IMG_A001_Corn.jpg', 
-      systemParsedId: autoExtractId ? 'A001' : 'IMG_A001_Corn', 
-      matchedTarget: 'A001 (玉米-金302)', 
+      fileName: 'IMG_A001_Peach.jpg', 
+      systemParsedId: autoExtractId ? 'A001' : 'IMG_A001_Peach', 
+      matchedTarget: 'A001 (桃-黄露)', 
       matchDepth: 'exact' 
     },
     { 
       id: '2', 
-      fileName: 'IMG_a002_Soybean.png', 
-      systemParsedId: autoExtractId ? 'a002' : 'IMG_a002_Soybean', 
-      matchedTarget: (autoExtractId && ignoreCase) ? 'A002 (大豆-鲁青1号)' : null, 
+      fileName: 'IMG_a002_Peach.png', 
+      systemParsedId: autoExtractId ? 'a002' : 'IMG_a002_Peach', 
+      matchedTarget: (autoExtractId && ignoreCase) ? 'A002 (桃-早香)' : null, 
       matchDepth: (autoExtractId && ignoreCase) ? 'exact' : 'none' 
     },
     { 
       id: '3', 
-      fileName: 'IMG_B003_Rice.jpg', 
-      systemParsedId: autoExtractId ? 'B003' : 'IMG_B003_Rice', 
+      fileName: 'IMG_B003_Peach.jpg', 
+      systemParsedId: autoExtractId ? 'B003' : 'IMG_B003_Peach', 
       matchedTarget: null, 
       matchDepth: 'none' 
     },
@@ -49,16 +49,16 @@ export default function AttributeAssociationStep({ onNext, onBack, taskType = 'i
   const directoryPreviewData: PreviewItem[] = [
     { 
       id: '1', 
-      fileName: 'A001_CORN/', 
-      systemParsedId: autoExtractId ? 'A001' : 'A001_CORN', 
-      matchedTarget: 'A001 (玉米-金302)', 
+      fileName: 'A001_PEACH/', 
+      systemParsedId: autoExtractId ? 'A001' : 'A001_PEACH', 
+      matchedTarget: 'A001 (桃-黄露)', 
       matchDepth: 'exact' 
     },
     { 
       id: '2', 
-      fileName: 'B002_SOYBEAN/', 
-      systemParsedId: autoExtractId ? 'B002' : 'B002_SOYBEAN', 
-      matchedTarget: 'B002 (大豆-鲁青1号)', 
+      fileName: 'B002_PEACH/', 
+      systemParsedId: autoExtractId ? 'B002' : 'B002_PEACH', 
+      matchedTarget: 'B002 (桃-早香)', 
       matchDepth: 'exact' 
     },
     { 
@@ -146,7 +146,7 @@ export default function AttributeAssociationStep({ onNext, onBack, taskType = 'i
                   <p className="text-xs text-gray-400 mt-2">
                     {matchLogic === 'exact' 
                       ? '要求文件名与库内字段字符完全一致。' 
-                      : '允许文件名包含目标字段关键词（如：A001_Corn 匹配 A001）。'}
+                      : '允许文件名包含目标字段关键词（如：A001_Peach 匹配 A001）。'}
                   </p>
                 </div>
 

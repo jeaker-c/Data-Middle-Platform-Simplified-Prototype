@@ -9,25 +9,25 @@ interface MaterialDrawerProps {
 
 export default function MaterialDrawer({ material, isOpen, onClose }: MaterialDrawerProps) {
   const [activeTab, setActiveTab] = useState('试验');
-  const [selectedExperiment, setSelectedExperiment] = useState('2024年度玉米抗旱试验');
+  const [selectedExperiment, setSelectedExperiment] = useState('2024年度桃抗旱试验');
   const [selectedSite, setSelectedSite] = useState('杨凌');
   const [selectedReplicate, setSelectedReplicate] = useState('重复1');
 
   if (!isOpen || !material) return null;
 
-  const phenotypeExperiments = ['2024年度玉米抗旱试验', '2025年度玉米抗旱试验'];
+  const phenotypeExperiments = ['2024年度桃抗旱试验', '2025年度桃抗旱试验'];
   const phenotypeSites = [
     { id: '杨凌', disabled: false },
     { id: '张掖', disabled: false }
   ];
   const phenotypeReplicates = ['重复1', '重复2', '重复3'];
   const phenotypeMatrix = [
-    { name: '株高', code: 'PH', value: 310.5, unit: 'CM' },
-    { name: '穗位高', code: 'EH', value: 157.0, unit: 'CM' },
-    { name: '小区重量', code: 'PW', value: 12.5, unit: 'KG' },
+    { name: '树高', code: 'PH', value: 310.5, unit: 'CM' },
+    { name: '冠幅', code: 'EH', value: 157.0, unit: 'CM' },
+    { name: '单株产量', code: 'PW', value: 12.5, unit: 'KG' },
     { name: '小区水份', code: 'PM', value: 27.3, unit: '%' },
-    { name: '穗长', code: 'EL', value: 18.2, unit: 'CM' },
-    { name: '穗粗', code: 'ED', value: 4.6, unit: 'CM' }
+    { name: '果径', code: 'EL', value: 18.2, unit: 'CM' },
+    { name: '横径', code: 'ED', value: 4.6, unit: 'CM' }
   ];
 
   return (
@@ -135,7 +135,7 @@ export default function MaterialDrawer({ material, isOpen, onClose }: MaterialDr
                     <i className="ri-eye-line"></i>
                   </button>
                 </div>
-                <span className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-1.5 py-0.5 rounded">抽穗期</span>
+                <span className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-1.5 py-0.5 rounded">膨大期</span>
               </div>
               <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative group">
                 <div className="absolute inset-0 flex items-center justify-center text-gray-400 bg-gray-50">
@@ -257,7 +257,7 @@ export default function MaterialDrawer({ material, isOpen, onClose }: MaterialDr
                   <div className="space-y-3">
                       {[1, 2, 3].map(i => (
                           <div key={i} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                              <div className="font-medium text-gray-900 text-sm">202{5-i}年度玉米抗旱试验</div>
+                              <div className="font-medium text-gray-900 text-sm">202{5-i}年度桃抗旱试验</div>
                               <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
                                   <span><i className="ri-calendar-line"></i> 202{5-i}</span>
                                   <span><i className="ri-map-pin-line"></i> 杨凌</span>

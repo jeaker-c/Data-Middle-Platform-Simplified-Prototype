@@ -82,9 +82,6 @@ export default function Footer() {
               <a href="#" className="text-teal-100 text-sm hover:text-white transition-colors cursor-pointer">
                 Cookie政策
               </a>
-              <a href="#" className="text-teal-100 text-sm hover:text-white transition-colors cursor-pointer">
-                技术支持：耘阵科技
-              </a>
             </div>
           </div>
         </div>

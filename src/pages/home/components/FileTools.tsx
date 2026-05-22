@@ -196,7 +196,7 @@ export default function FileTools() {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">性状字段范围</label>
                       <textarea
-                        placeholder="输入性状字段的合理范围，例如：株高: 50-200cm"
+                        placeholder="输入性状字段的合理范围，例如：树高: 50-200cm"
                         rows={4}
                         className="w-full px-4 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none"
                       ></textarea>

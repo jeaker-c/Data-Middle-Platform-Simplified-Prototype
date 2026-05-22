@@ -39,9 +39,9 @@ export default function DataAgent({ onFilterUpdate }: DataAgentProps) {
       let responseText = '';
       const updates: Partial<FilterState> = {};
 
-      if (userMsg.includes('玉米') && userMsg.includes('抗旱')) {
-        responseText = '已为您筛选“2024年度玉米抗旱试验”相关的材料。';
-        updates.experiments = ['2024年度玉米抗旱试验'];
+      if (userMsg.includes('桃') && userMsg.includes('抗旱')) {
+        responseText = '已为您筛选“2024年度桃抗旱试验”相关的材料。';
+        updates.experiments = ['2024年度桃抗旱试验'];
         updates.year = '2024';
         updates.globalSearch = '抗旱';
       } else if (userMsg.includes('产量') && userMsg.includes('高')) {
@@ -103,7 +103,7 @@ export default function DataAgent({ onFilterUpdate }: DataAgentProps) {
           <textarea
             className="w-full bg-transparent border-none focus:ring-0 resize-none text-sm max-h-24"
             rows={2}
-            placeholder="试着说：筛选2024年产量大于800的玉米材料..."
+            placeholder="试着说：筛选2024年产量大于800的桃材料..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {

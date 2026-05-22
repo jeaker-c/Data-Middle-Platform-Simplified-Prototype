@@ -16,62 +16,62 @@ const availableTags = ['2025年', '第一季度', '春季', 'SNP', '抗病性', 
 const mockData = [
   {
     id: 1,
-    name: '玉米基因型数据_2025Q1.vcf',
+    name: '桃基因型数据_2025Q1.vcf',
     type: 'genotype',
     size: '45.2 MB',
     date: '2025-01-15 14:30',
     uploader: '张研究员',
-    tags: ['基因型', '2025年', '第一季度', '玉米'],
+    tags: ['基因型', '2025年', '第一季度', '桃'],
     description: 'VCF格式，包含1000个样本的SNP数据'
   },
   {
     id: 2,
-    name: '玉米表型观测_2025春季.xlsx',
+    name: '桃表型观测_2025春季.xlsx',
     type: 'phenotype',
     size: '2.8 MB',
     date: '2025-01-15 11:20',
     uploader: '李博士',
-    tags: ['表型', '2025年', '春季', '玉米'],
-    description: '包含株高、穗长、粒重等15个性状数据'
+    tags: ['表型', '2025年', '春季', '桃'],
+    description: '包含树高、果径、粒重等15个性状数据'
   },
   {
     id: 3,
-    name: '玉米田间照片_2025_01.jpg',
+    name: '桃田间照片_2025_01.jpg',
     type: 'image',
     size: '8.5 MB',
     date: '2025-01-14 16:45',
     uploader: '王助理',
-    tags: ['图片', '2025年', '田间观测', '玉米'],
-    description: '玉米生长期田间观测照片'
+    tags: ['图片', '2025年', '田间观测', '桃'],
+    description: '桃生长期田间观测照片'
   },
   {
     id: 4,
-    name: '玉米抗病性基因分析.vcf',
+    name: '桃抗病性基因分析.vcf',
     type: 'genotype',
     size: '32.1 MB',
     date: '2025-01-13 09:15',
     uploader: '张研究员',
-    tags: ['基因型', '2025年', 'SNP', '抗病性', '玉米'],
+    tags: ['基因型', '2025年', 'SNP', '抗病性', '桃'],
     description: '抗病性相关基因位点数据'
   },
   {
     id: 5,
-    name: '玉米生长观测视频.mp4',
+    name: '桃生长观测视频.mp4',
     type: 'video',
     size: '156.3 MB',
     date: '2025-01-12 14:20',
     uploader: '赵教授',
-    tags: ['视频', '2025年', '田间观测', '玉米'],
-    description: '玉米生长周期延时摄影'
+    tags: ['视频', '2025年', '田间观测', '桃'],
+    description: '桃生长周期延时摄影'
   },
   {
     id: 6,
-    name: '玉米产量性状数据.xlsx',
+    name: '桃产量性状数据.xlsx',
     type: 'phenotype',
     size: '4.2 MB',
     date: '2025-01-10 10:30',
     uploader: '李博士',
-    tags: ['表型', '2025年', '第一季度', '玉米'],
+    tags: ['表型', '2025年', '第一季度', '桃'],
     description: '包含产量、千粒重等性状数据'
   }
 ];
@@ -315,7 +315,7 @@ export default function DataPreview() {
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      placeholder="例如：查找2025年1月的玉米基因型数据"
+                      placeholder="例如：查找2025年1月的桃基因型数据"
                       value={chatInput}
                       onChange={(e) => setChatInput(e.target.value)}
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}

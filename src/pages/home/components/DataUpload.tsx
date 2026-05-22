@@ -59,9 +59,9 @@ const uploadFeatures = [
 ];
 
 const uploadHistory = [
-  { name: '玉米基因型数据_2025Q1.vcf', status: 'completed', progress: 100, time: '2025-01-15 14:30' },
-  { name: '玉米表型观测_2025春季.xlsx', status: 'completed', progress: 100, time: '2025-01-15 11:20' },
-  { name: '玉米田间照片_2025.zip', status: 'processing', progress: 67, time: '上传中' }
+  { name: '桃基因型数据_2025Q1.vcf', status: 'completed', progress: 100, time: '2025-01-15 14:30' },
+  { name: '桃表型观测_2025春季.xlsx', status: 'completed', progress: 100, time: '2025-01-15 11:20' },
+  { name: '桃田间照片_2025.zip', status: 'processing', progress: 67, time: '上传中' }
 ];
 
 export default function DataUpload() {

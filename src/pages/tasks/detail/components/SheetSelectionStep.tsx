@@ -44,18 +44,18 @@ const MOCK_MATERIAL_MAPPINGS: FieldMapping[] = [
   { original: '材料名称', example: 'E9638', mapped: 'material_id', required: true, unique: true },
   { original: '系谱', example: 'QQ101×PB277', mapped: 'pedigree', required: true, unique: false },
   { original: '材料类型', example: '自交系', mapped: 'Material_type', required: true, unique: false },
-  { original: '穗轴颜色', example: '红色', mapped: 'Rachis_color', required: false, unique: false },
-  { original: '籽粒颜色', example: '白色', mapped: 'Grain_color', required: false, unique: false },
-  { original: '籽粒类型', example: '马齿', mapped: 'Grain_type', required: false, unique: false },
-  { original: '转基因', example: '否', mapped: 'Genetically_modified', required: false, unique: false }
+  { original: '果肉颜色', example: '红色', mapped: 'Flesh_color', required: false, unique: false },
+  { original: '果皮颜色', example: '白色', mapped: 'Skin_color', required: false, unique: false },
+  { original: '果形', example: '圆形', mapped: 'Fruit_shape', required: false, unique: false },
+  { original: '是否嫁接', example: '否', mapped: 'Grafted', required: false, unique: false }
 ];
 
 const MOCK_PHENOTYPE_MAPPINGS: FieldMapping[] = [
   { original: 'Accession_ID', example: 'KA134', mapped: 'material_id', required: true, unique: true },
   { original: 'Plot_No', example: 'P01-01', mapped: 'plot_id', required: true, unique: true },
   { original: 'Rep', example: '1', mapped: 'replication', required: true, unique: false },
-  { original: 'Plant_Height_cm', example: '120.5', mapped: 'plant_height', required: true, unique: false },
-  { original: 'Ear_Height_cm', example: '45.2', mapped: 'ear_height', required: false, unique: false },
+  { original: 'Plant_Height_cm', example: '120.5', mapped: 'tree_height', required: true, unique: false },
+  { original: 'Ear_Height_cm', example: '45.2', mapped: 'crown_width', required: false, unique: false },
   { original: 'Yield_kg_ha', example: '8500', mapped: 'yield', required: true, unique: false },
   { original: 'Moisture_%', example: '14.5', mapped: 'moisture', required: true, unique: false },
   { original: 'Harvest_Date', example: '2024-09-15', mapped: 'harvest_date', required: false, unique: false },

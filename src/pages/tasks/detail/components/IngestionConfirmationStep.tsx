@@ -26,7 +26,7 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
   };
 
   const [envFiles] = useState([
-    { id: '1', name: '2024Q1_德州基地_环境监测数据.xlsx', size: '1.2 MB', items: 900, status: 'verified', type: 'excel' },
+    { id: '1', name: '2024Q1_平谷基地_环境监测数据.xlsx', size: '1.2 MB', items: 900, status: 'verified', type: 'excel' },
     { id: '2', name: '2024Q2_南繁中心_环境监测数据.xlsx', size: '1.4 MB', items: 1140, status: 'verified', type: 'excel' },
     { id: '3', name: '2024Q3_五常试验站_环境监测数据.xlsx', size: '1.1 MB', items: 940, status: 'verified', type: 'excel' },
   ]);
@@ -61,7 +61,7 @@ export default function IngestionConfirmationStep({ onComplete, onBack, taskType
   };
 
   const stations = [
-    { id: 'DZ-E01', name: '德州基地-东区', location: '山东德州' },
+    { id: 'DZ-E01', name: '平谷基地-东区', location: '山东德州' },
     { id: 'SY-12', name: '南繁中心-12号地', location: '海南三亚' },
     { id: 'BJ-CP-01', name: '昌平气象站', location: '北京昌平' },
     { id: 'WC-05', name: '五常试验站', location: '黑龙江五常' },

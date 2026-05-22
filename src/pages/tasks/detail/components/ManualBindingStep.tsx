@@ -35,9 +35,9 @@ export default function ManualBindingStep({ onNext, onBack }: ManualBindingStepP
 
   // Mock Data: Items that need fixing with status
   const [fixItems, setFixItems] = useState<FixItem[]>([
-    { id: '1', fileName: '玉米材料001主穗图', thumbnail: '', issueType: 'unmatched', status: 'new' },
-    { id: '2', fileName: '水稻材料003田间图', thumbnail: '', issueType: 'unmatched', status: 'pending' },
-    { id: '3', fileName: '大豆材料002叶片图', thumbnail: '', issueType: 'format', status: 'matched' },
+    { id: '1', fileName: '桃材料001果实特写图', thumbnail: '', issueType: 'unmatched', status: 'new' },
+    { id: '2', fileName: '桃材料003田间图', thumbnail: '', issueType: 'unmatched', status: 'pending' },
+    { id: '3', fileName: '桃材料002叶片图', thumbnail: '', issueType: 'format', status: 'matched' },
     { id: '4', fileName: '异常图像样本004', thumbnail: '', issueType: 'corrupted', status: 'pending' },
   ]);
 
@@ -102,8 +102,8 @@ export default function ManualBindingStep({ onNext, onBack }: ManualBindingStepP
 
   // Mock Data: Search Results
   const allSearchResults: SearchResult[] = [
-    { id: 'M001', name: '超级水稻深优1号', code: '材料003' },
-    { id: 'M002', name: '抗盐碱稻3号', code: '材料004' },
+    { id: 'M001', name: '春蜜桃', code: '材料003' },
+    { id: 'M002', name: '黄金蜜桃', code: '材料004' },
     { id: 'M003', name: '丰产麦21', code: '材料109' },
   ];
 

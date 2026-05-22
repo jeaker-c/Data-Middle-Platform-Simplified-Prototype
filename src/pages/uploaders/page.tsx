@@ -20,7 +20,7 @@ const uploaderProfiles = [
     totalUploads: 392,
     weeklyUploads: 65,
     successRate: 97.8,
-    recentTasks: ['德州基地Q2环境监测上传', '玉米基因型批次校验', '图像采集结果同步'],
+    recentTasks: ['平谷基地Q2环境监测上传', '桃基因型批次校验', '图像采集结果同步'],
   },
   {
     id: 'u3',
